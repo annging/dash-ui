@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/api/merchant/list',
+    url: 'http://47.107.137.16:8090/system/merchant/getMerchants',
     method: 'get',
     params: query
   })

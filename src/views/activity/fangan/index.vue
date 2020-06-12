@@ -54,7 +54,7 @@
               label="封面"
               width="120">
               <template slot-scope="row">
-                <img :src="row.cover" style="width: 100px;height: 60px;">
+                <img :src="row.imgUrl" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
@@ -81,17 +81,24 @@
               label="浏览"
               width="100">
               <template slot-scope="{row}">
-                <span>1000</span>
+                <span>{{ row.browse }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="领取"
               width="100">
               <template slot-scope="{row}">
-                <span>88</span>
+                <span>{{ row.receive }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column
+              label="是否推荐"
+              width="100">
+              <template slot-scope="{row}">
+                <span>{{ row.isRecommend ? '是' : '否' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="240">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -105,7 +112,7 @@
               </template>
             </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
       </el-row>
     </div>
     <!--<div class="secondary-sidebar"></div>-->
@@ -113,6 +120,8 @@
 </template>
 
 <script>
+import qs from 'qs'
+import axios from 'axios'
 import { fetchSchemeList } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
@@ -125,11 +134,12 @@ export default {
       listLoading: true,
       listQuery: {
         searchStr: '',
-        page: 1,
-        limit: 20,
-        sort: '+id',
-        type: '',
-        industry: ''
+        current: 1,
+        size: 20
+      },
+      listFilter: {
+        type: 1,
+        industry: 1
       },
       clientHeight: '',
       maxHeight: 400,
@@ -160,8 +170,8 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchSchemeList(this.listQuery).then(response => {
-        this.list = response.data.items
+      fetchSchemeList(this.listQuery, {"type": 1}).then(response => {
+        this.list = response.data.records
         this.total = response.data.total
 
         // Just to simulate the time of the request
@@ -169,6 +179,7 @@ export default {
           this.listLoading = false
         }, 1.5 * 1000)
       })
+       
     },
     handleFilter() {
       this.listQuery.page = 1

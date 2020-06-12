@@ -87,6 +87,24 @@ export function formatTime(time, option) {
 }
 
 /**
+ * 判断一个时间是否过期
+ * @param {number} time
+ * @returns {string}
+ */
+export function dateToNow(time) {
+  const now = Date.now();
+
+  var ret = time.getTime() - now.getTime();
+  ret = Math.round( ret/1000 );
+
+  if(ret>0) {
+    return '有效'
+  } else {
+    return '已过期'
+  }
+}
+
+/**
  * @param {string} url
  * @returns {Object}
  */

@@ -42,7 +42,7 @@
 	            label="头像"
 	            width="60">
 	            <template slot-scope="row">
-	              <img :src="row.avatar" style="width: 40px;height: 40px;">
+	              <img :src="row.logo" style="width: 40px;height: 40px;">
 	            </template>
 	          </el-table-column>
 	          <el-table-column
@@ -54,50 +54,50 @@
 	          <el-table-column
 	            label="活动总数">
 	            <template slot-scope="{row}">
-			          <span>{{ row.activity.total }}</span>
+			          <span>{{ 'no' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="访问人数">
 	            <template slot-scope="{row}">
-			          <span>{{row.activity.fangwen}}</span>
+			          <span>{{ 'no' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="参与人数">
 	            <template slot-scope="{row}">
-			          <span>{{row.activity.canyu}}</span>
+			          <span>{{ 'no' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="累计收入">
 	            <template slot-scope="{row}">
-			          <span>{{row.account.incharge}}</span>
+			          <span>{{ 'no' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="门店数量">
 	            <template slot-scope="{row}">
-			          <span>{{row.stores}}</span>
+			          <span>{{row.storeCount}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="员工数量">
 	            <template slot-scope="{row}">
-			          <span>{{row.staffs}}</span>
+			          <span>{{ 'no' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="会员"
 	            width="">
 	            <template slot-scope="{row}">
-	            	<span>{{ row.level.name }}</span>
+	            	<span>{{ row.vipLevel }}</span>
 		          </template>
 		        </el-table-column>
 		        <el-table-column
-	            label="会员状态">
+	            label="会员过期时间">
 	            <template slot-scope="{row}">
-	            	<el-tag size="mini">{{ row.level.status }}</el-tag>
+	            	<span>{{ row.vipEndTime }}</span>
 		          </template>
 		        </el-table-column>
 	          <el-table-column label="操作">
@@ -112,7 +112,7 @@
 	            </template>
 	          </el-table-column>
 	        </el-table>
-	        <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+	        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
 	      </el-row>
 	    </div>
 	  	<!--<div class="secondary-sidebar"></div>-->
@@ -132,9 +132,8 @@ export default {
       listLoading: true,
       listQuery: {
 	      searchStr: '',
-	      page: 1,
-	      limit: 20,
-	      sort: '+id'
+	      current: 1,
+	      size: 20
 	    }
     };
   },
@@ -145,7 +144,7 @@ export default {
   	getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+        this.list = response.data.records
         this.total = response.data.total
 
         // Just to simulate the time of the request
@@ -175,6 +174,9 @@ export default {
     // 添加商家
     goCreate() {
     	this.$router.push({ path: '/merchant/create' });
+    },
+    handleView(index, row) {
+    	console.log('查看商家主页')
     }
   }
 }

@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { fetchMerchantRzList, fetchMerchantRz } from '@/api/merchant'
+import { fetchList } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -106,9 +106,8 @@ export default {
       listLoading: true,
       listQuery: {
         searchStr: '',
-        page: 1,
-        limit: 20,
-        sort: '+id',
+        current: 1,
+        size: 20,
         type: ''
       },
       dialogVisible: false,
@@ -125,7 +124,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchMerchantRzList(this.listQuery).then(response => {
+      fetchList(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
 

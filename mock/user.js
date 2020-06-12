@@ -36,12 +36,12 @@ export default [
       if (!token) {
         return {
           code: 60204,
-          message: 'Account and password are incorrect.'
+          msg: 'Account and password are incorrect.'
         }
       }
 
       return {
-        code: 20000,
+        code: 200,
         data: token
       }
     }
@@ -59,12 +59,12 @@ export default [
       if (!info) {
         return {
           code: 50008,
-          message: 'Login failed, unable to get user details.'
+          msg: 'Login failed, unable to get user details.'
         }
       }
 
       return {
-        code: 20000,
+        code: 200,
         data: info
       }
     }
@@ -76,7 +76,7 @@ export default [
     type: 'post',
     response: _ => {
       return {
-        code: 20000,
+        code: 200,
         data: 'success'
       }
     }

@@ -18,34 +18,61 @@
             :on-success="handleSuccess"
             :on-preview="handlePicturePreview"
             :on-remove="handleRemove">
-            <img v-if="schemeForm.cover" :src="schemeForm.cover" class="avatar">
+            <img v-if="schemeForm.imgUrl" :src="schemeForm.imgUrl" class="avatar">
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <el-dialog
             :visible.sync="dialogVisible"
             :modal-append-to-body="false"
             :append-to-body="true">
-            <img width="100%" :src="schemeForm.cover" alt="">
+            <img width="100%" :src="schemeForm.imgUrl" alt="">
           </el-dialog>
         </el-form-item>
+        <el-form-item label="标签">
+           <el-select
+            v-model="schemeForm.label"
+            multiple
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请选择方案标签">
+            <el-option
+              v-for="item in labelOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="方案介绍">
-           <tinymce v-model="schemeForm.desc" :height="380" />
+           <el-input type="textarea" autosize v-model="schemeForm.explain"></el-input>
+        </el-form-item>
+        <el-form-item label="功能亮点">
+           <el-input type="textarea" autosize v-model="schemeForm.lightSpot"></el-input>
+        </el-form-item>
+        <el-form-item label="营销玩法">
+           <el-input type="textarea" autosize v-model="schemeForm.gameplay"></el-input>
         </el-form-item>
         <el-form-item label="活动类型">
           <el-select v-model="schemeForm.type" placeholder="请选择活动类型">
             <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="活动类型">
-          <el-select v-model="schemeForm.industry" placeholder="请选择活动类型">
+        <el-form-item label="活动行业">
+          <el-select v-model="schemeForm.industry" placeholder="请选择行业">
             <el-option v-for="item in industrys" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
         </el-form-item>
+        <el-form-item label="会员门槛">
+          <el-select v-model="schemeForm.vipLevel" placeholder="请选择会员等级">
+            <el-option v-for="item in vipLevels" :key="item.key" :label="item.label" :value="item.key" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="虚拟浏览量">
-          <el-input v-model="schemeForm.addView"></el-input>
+          <el-input v-model="schemeForm.browse"></el-input>
         </el-form-item>
         <el-form-item label="虚拟参与量">
-          <el-input v-model="schemeForm.addParticipate"></el-input>
+          <el-input v-model="schemeForm.receive"></el-input>
         </el-form-item>
         <el-form-item label="权重">
           <el-input v-model="schemeForm.power" placeholder="值越大，越靠前"></el-input>
@@ -62,28 +89,32 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
+import { addActivityScheme } from '@/api/activity'
 
 const defaultForm = {
     title: '', //方案标题
-    cover: '',
+    imgUrl: '',
     type: '',
     industry: '',
-    desc: '',
-    addView: 0,
-    addParticipate: 0,
+    explain: '',
+    lightSpot: '',
+    gameplay: '',
+    browse: 0,
+    receive: 0,
+    vipLevel: '',
     power: '',
+    label: '',
     id: ''
 }
 
 export default {
   name: 'CreateScheme',
-  components: { Tinymce },
   data() {
     return {
       schemeForm: Object.assign({}, defaultForm),
       activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
       industrys: [{ key: 1, label: '教育' }, { key: 2, label: '体育' }, { key: 3, label: '珠宝' }],
+      vipLevels: [{ key: 1, label: '普通会员' }],
       rules: {
         title: [
           { required: true, message: '请输入方案标题', trigger: 'blur' },
@@ -106,12 +137,22 @@ export default {
         ]
       },
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      labelOptions: [{
+        value: '老带新',
+        label: '老带新'
+      }, {
+        value: '裂变',
+        label: '裂变'
+      }]
     }
   },
   methods: {
     onSubmit() {
       console.log('submit!');
+      addActivityScheme(this.schemeForm).then(response => {
+        console.log(response)
+      })
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
@@ -129,7 +170,7 @@ export default {
       console.log(file, fileList);
     },
     handleSuccess(res, file) {
-      this.schemeForm.cover = URL.createObjectURL(file.raw);
+      this.schemeForm.imgUrl = URL.createObjectURL(file.raw);
     },
     handlePicturePreview() {
       this.dialogVisible = true;

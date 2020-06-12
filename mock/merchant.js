@@ -79,45 +79,5 @@ const data1 = Mock.mock({
 
 
 export default [
-  {
-    url: '/api/merchant/list',
-    type: 'get',
-    response: config => {
-      const { searchStr , page = 1, limit = 20, sort } = config.query
-
-      let mockList = List.filter(item => {
-        if (searchStr && item.name.indexOf(searchStr) < 0) return false
-        return true
-      })
-
-      if (sort === '-id') {
-        mockList = mockList.reverse()
-      }
-
-      const merchantList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
-
-      return {
-        code: 20000,
-        data: {
-          total: mockList.length,
-          items: merchantList
-        }
-      }
-    }
-  },
-  {
-    url: '/api/merchantrz/list',
-    type: 'get',
-    response: config => {
-      const items = data1.items
-      return {
-        code: 20000,
-        data: {
-          total: items.length,
-          items: items
-        }
-      }
-    }
-  }
 ]
 

@@ -26,7 +26,8 @@ import request from '@/utils/request.js'
     // 在整个程序生命周期中，只需要 init(options); 一次即可
     // 如果需要变更七牛云配置，再次调用 init(options); 即可
     function init(options) {
-		request({url:'api/v1/upload/token',method:'GET',data:{}}).then(tkres=>{
+		request({url:'https://www.tuantuanzhan.cn/api/v1/upload/token',method:'GET',data:{}}).then(tkres=>{
+            consoe.log(tkres);
 			uni.setStorageSync('QINIU-TOKEN',tkres);
 			options.uptoken=tkres;
 			updateConfigWithOptions(options);
