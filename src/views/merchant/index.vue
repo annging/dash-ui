@@ -144,13 +144,11 @@ export default {
   	getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.records
-        this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+      	if(response.data) {
+	        this.list = response.data.records
+	        this.total = response.data.total
+	      }
+        this.listLoading = false
       })
     },
     handleFilter() {

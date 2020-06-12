@@ -13,11 +13,11 @@
           prefix-icon="el-icon-search"
           size="small"
           @keyup.enter.native="handleFilter" />
-        <el-select size="small" v-model="listQuery.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
+        <el-select size="small" v-model="listFilter.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
           <el-option  label="全部类型" value="" />
           <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
         </el-select>
-        <el-select size="small" v-model="listQuery.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="行业">
+        <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="行业">
           <el-option  label="全部行业" value="" />
           <el-option v-for="item in industrys" :key="item.key" :label="item.label" :value="item.key" />
         </el-select>
@@ -53,7 +53,7 @@
             <el-table-column
               label="封面"
               width="120">
-              <template slot-scope="row">
+              <template slot-scope="{row}">
                 <img :src="row.imgUrl" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
@@ -122,7 +122,7 @@
 <script>
 import qs from 'qs'
 import axios from 'axios'
-import { fetchSchemeList } from '@/api/activity'
+import { fetchSchemeList, deleteScheme } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
@@ -138,8 +138,8 @@ export default {
         size: 20
       },
       listFilter: {
-        type: 1,
-        industry: 1
+        type: '',
+        industry: ''
       },
       clientHeight: '',
       maxHeight: 400,
@@ -170,16 +170,11 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchSchemeList(this.listQuery, {"type": 1}).then(response => {
+      fetchSchemeList(this.listQuery, this.listFilter).then(response => {
         this.list = response.data.records
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
-       
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -211,11 +206,20 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        //todo 删除
-        this.$message({
-          type: 'success',
-          message: '操作成功!'
-        });
+        deleteScheme(this.id).then(res => {
+          if (res.code * 1 === 200 ) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            });
+          }
+        })
+        
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -228,7 +232,10 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          //todo something
+          deleteScheme(this.id).then(response => {
+            this.schemeForm = response.data
+            this.listLoading = false
+          })
           this.$message({
             type: 'success',
             message: '推荐方案成功，推荐值: ' + value

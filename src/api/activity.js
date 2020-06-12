@@ -11,16 +11,29 @@ export function fetchList(query) {
 // 获取方案列表
 export function fetchSchemeList(query, data) {
   return request({
-    url: 'http://47.107.137.16:8090/system/activity/getActivityScheme?size=' + query.size + '&current=' + query.current,
+    url: '/system/activity/getActivityScheme?size=' + query.size + '&current=' + query.current,
     method: 'post',
-    data
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
   })
 }
 
 // 新增方案
 export function addActivityScheme(data) {
   return request({
-    url: 'http://47.107.137.16:8090/system/activity/addActivityScheme',
+    url: '/system/activity/addActivityScheme',
     method: 'post',
     data,
     transformRequest: [function (data) {
@@ -44,20 +57,46 @@ export function addActivityScheme(data) {
   })
 }
 
-export function fetchActivity(id) {
+export function fetchScheme(id) {
   return request({
-    url: '/api/activity',
+    url: '/system/activity/getActivitySchemeInfo',
     method: 'get',
-    params: { id }
+    params: { schemeId: id }
+  })
+}
+
+export function deleteScheme(id) {
+  return request({
+    url: '/system/activity/deleteScheme',
+    method: 'get',
+    params: { schemeId: id }
   })
 }
 
 
-export function updateActivity(data) {
+export function updateActivityScheme(data) {
   return request({
-    url: '/api/activity/update',
+    url: '/system/activity/updateActivityScheme',
     method: 'post',
-    data
+    data,
+    transformRequest: [function (data) {
+      // Do whatever you want to transform the data
+      console.log(data);
+      let l = Object.keys(data).length;
+      let i = 0;
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]);
+        if (i < l -1) {
+          ret = ret + '&';
+          i++
+        }
+      }
+      return ret
+    }],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   })
 }
 

@@ -11,13 +11,15 @@
         </el-form-item>
         <el-form-item label="封面图">
           <el-upload
+            :data="dataObj"
             :multiple="false"
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://upload-z2.qiniup.com"
             :show-file-list="false"
             :on-success="handleSuccess"
             :on-preview="handlePicturePreview"
-            :on-remove="handleRemove">
+            :on-remove="handleRemove"
+            :before-upload="beforeUpload">
             <img v-if="schemeForm.imgUrl" :src="schemeForm.imgUrl" class="avatar">
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -74,8 +76,13 @@
         <el-form-item label="虚拟参与量">
           <el-input v-model="schemeForm.receive"></el-input>
         </el-form-item>
-        <el-form-item label="权重">
-          <el-input v-model="schemeForm.power" placeholder="值越大，越靠前"></el-input>
+        <el-form-item label="是否推荐">
+          <el-switch
+            v-model="schemeForm.isRecommend"
+            active-color="#13ce66"
+            :active-value="1"
+            inactive-value="0">
+          </el-switch>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即添加</el-button>
@@ -90,6 +97,7 @@
 
 <script>
 import { addActivityScheme } from '@/api/activity'
+import { getToken } from '@/api/qiniu'
 
 const defaultForm = {
     title: '', //方案标题
@@ -102,7 +110,7 @@ const defaultForm = {
     browse: 0,
     receive: 0,
     vipLevel: '',
-    power: '',
+    isRecommend: 0,
     label: '',
     id: ''
 }
@@ -144,33 +152,59 @@ export default {
       }, {
         value: '裂变',
         label: '裂变'
-      }]
+      }],
+      dataObj: { token: '' }
     }
+  },
+  created() {
+    this.fetchToken()
   },
   methods: {
     onSubmit() {
       console.log('submit!');
-      addActivityScheme(this.schemeForm).then(response => {
-        console.log(response)
+      addActivityScheme(this.schemeForm).then(res => {
+        if (res.code * 1 == 200) {
+          this.$message({
+            message: '创建方案成功',
+            type: 'success'
+          })
+          setTimeout(() => {
+            this.$router.push({ path: '/activity/fangan/index' });
+          }, 1.5 * 1000)
+        } else {
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          });
+        }
       })
     },
-    beforeAvatarUpload(file) {
+    beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
-      }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isLt2M;
+    },
+    fetchToken() {
+      const _self = this
+      return new Promise((resolve, reject) => {
+        getToken().then(response => {
+          const token = response.data
+          _self._data.dataObj.token = token
+          resolve(true)
+        }).catch(err => {
+          console.log(err)
+          reject(false)
+        })
+      })
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
     handleSuccess(res, file) {
-      this.schemeForm.imgUrl = URL.createObjectURL(file.raw);
+      this.schemeForm.imgUrl = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key;
     },
     handlePicturePreview() {
       this.dialogVisible = true;

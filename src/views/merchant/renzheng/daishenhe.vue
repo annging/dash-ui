@@ -40,19 +40,7 @@
             <el-table-column
               label="认证类型">
               <template slot-scope="{row}">
-                <span>{{ row.type }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="申请人">
-              <template slot-scope="{row}">
-                <span>申请人昵称</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="提交时间">
-              <template slot-scope="{row}">
-                <span>{{row.create_time}}</span>
+                <span>{{ row.authType == 1 ? '个人认证': '企业认证' }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -75,7 +63,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+          <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>
         <el-dialog
           title="认证资料"
@@ -94,7 +82,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/merchant'
+import { fetchList, fetchMerchant } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -107,14 +95,16 @@ export default {
       listQuery: {
         searchStr: '',
         current: 1,
-        size: 20,
-        type: ''
+        size: 20
+      },
+      listFilter: {
+        authStatus: 1 // 待审核  2认证通过  4认证失败
       },
       dialogVisible: false,
       renzheng: {
         authInfo: '',
         authType: 1, // 认证类型 1 个人认证, 2 企业认证
-        merchantId: 0
+        authStatus: 1
       }
     };
   },
@@ -124,14 +114,12 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+      fetchList(this.listQuery, this.listFilter).then(response => {
+        if(response.data) {
+          this.list = response.data.records
+          this.total = response.data.total
+        }
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -154,10 +142,9 @@ export default {
     },
     // 查看商家认证资料
     handleView(index, row) {
-      //to do 获取商家认证资料
-      /*fetchMerchantRz(row.id).then(response => {
-        this.renzheng = response.data
-      })*/
+      this.renzheng.authType = row.authType;
+      this.renzheng.authInfo = row.authInfo;
+      this.renzheng.authStatus = row.authStatus;
       this.dialogVisible = true
     },
     handleClose(done) {

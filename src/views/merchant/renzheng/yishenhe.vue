@@ -13,6 +13,13 @@
             size="small"
             class="filter-item"
             @keyup.enter.native="handleFilter" />
+          <el-select size="small" v-model="listFilter.authStatus + ''" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
+            <el-option  label="认证通过" value="2" />
+            <el-option  label="认证失败" value="4" />
+          </el-select>
+          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+            搜索
+          </el-button>
         </el-row>
         <el-row class="list">
           <el-table
@@ -47,19 +54,13 @@
             <el-table-column
               label="认证类型">
               <template slot-scope="{row}">
-                <span>{{ row.type }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="申请人">
-              <template slot-scope="{row}">
-                <span>申请人昵称</span>
+                <span>{{ row.authType == 1 ? '个人认证': '企业认证' }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="提交时间">
               <template slot-scope="{row}">
-                <span>{{row.create_time}}</span>
+                <span>{{ 'no' }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -73,11 +74,11 @@
             <el-table-column
               label="审核结果">
               <template slot-scope="{row}">
-                <span>{{row.status}}</span>
+                <span>{{row.authStatus == 2 ? '认证通过' : '认证失败' }}</span>
               </template>
             </el-table-column>
           </el-table>
-          <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+          <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>
         <el-dialog
           title="认证资料"
@@ -96,7 +97,7 @@
 </template>
 
 <script>
-import { fetchMerchantRzList} from '@/api/merchant'
+import { fetchList, fetchMerchant } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -108,10 +109,11 @@ export default {
       listLoading: true,
       listQuery: {
         searchStr: '',
-        page: 1,
-        limit: 20,
-        sort: '+id',
-        type: ''
+        current: 1,
+        size: 20
+      },
+      listFilter: {
+        authStatus: 2 // 1待审核  2认证通过  4认证失败
       },
       dialogVisible: false,
       renzheng: {
@@ -127,14 +129,12 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchMerchantRzList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+      fetchList(this.listQuery, this.listFilter).then(response => {
+        if(response.data) {
+          this.list = response.data.records
+          this.total = response.data.total
+        }
+        this.listLoading = false
       })
     },
     handleFilter() {

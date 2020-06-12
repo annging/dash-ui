@@ -211,7 +211,7 @@ export const constantRoutes = [
             path: 'yishenhe',
             name: 'yishenhe',
             component: () => import('@/views/merchant/renzheng/yishenhe'),
-            meta: { title: '已审核', activeMenu: '/merchant/renzheng' },
+            meta: { title: '认证通过', activeMenu: '/merchant/renzheng' },
             hidden: true
           }
         ]

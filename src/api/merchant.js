@@ -1,10 +1,23 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function fetchList(query, data) {
   return request({
-    url: 'http://47.107.137.16:8090/system/merchant/getMerchants',
-    method: 'get',
-    params: query
+    url: '/system/merchant/getMerchants?size=' + query.size + '&current=' + query.current,
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
   })
 }
 
@@ -26,8 +39,8 @@ export function fetchMerchantRz(id) {
 
 export function fetchMerchant(id) {
   return request({
-    url: '/api/merchant/detail',
+    url: '/system/merchant/getMerchantInfo',
     method: 'get',
-    params: { id }
+    params: { schemeId: id }
   })
 }
