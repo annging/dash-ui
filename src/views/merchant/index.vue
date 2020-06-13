@@ -41,7 +41,7 @@
 	          <el-table-column
 	            label="头像"
 	            width="60">
-	            <template slot-scope="row">
+	            <template slot-scope="{row}">
 	              <img :src="row.logo" style="width: 40px;height: 40px;">
 	            </template>
 	          </el-table-column>
@@ -54,25 +54,25 @@
 	          <el-table-column
 	            label="活动总数">
 	            <template slot-scope="{row}">
-			          <span>{{ 'no' }}</span>
+			          <span>{{ row.merchantAggregate.activityCount }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="访问人数">
 	            <template slot-scope="{row}">
-			          <span>{{ 'no' }}</span>
+			          <span>{{row.merchantAggregate.visitCount}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="参与人数">
 	            <template slot-scope="{row}">
-			          <span>{{ 'no' }}</span>
+			          <span>{{row.merchantAggregate.participationCount}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="累计收入">
 	            <template slot-scope="{row}">
-			          <span>{{ 'no' }}</span>
+			          <span>{{row.merchantAggregate.totalIncome}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
@@ -84,7 +84,7 @@
 	          <el-table-column
 	            label="员工数量">
 	            <template slot-scope="{row}">
-			          <span>{{ 'no' }}</span>
+			          <span>{{ row.merchantAggregate.employeeCount }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column

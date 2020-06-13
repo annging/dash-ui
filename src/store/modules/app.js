@@ -15,7 +15,9 @@ const mutations = {
     if (state.sidebar.opened) {
       Cookies.set('sidebarStatus', 1)
     } else {
-      Cookies.set('sidebarStatus', 0)
+      // Cookies.set('sidebarStatus', 0)
+      // 暂时默认打开侧边栏
+      Cookies.set('sidebarStatus', 1)
     }
   },
   CLOSE_SIDEBAR: (state, withoutAnimation) => {

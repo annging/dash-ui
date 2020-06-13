@@ -55,11 +55,11 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleShenhe(scope.$index, scope.row, 1)">通过</el-button>
+                  @click="handleShenhe(scope.$index, scope.row, 2)">通过</el-button>
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="handleShenhe(scope.$index, scope.row, 0)">不通过</el-button>
+                  @click="handleShenhe(scope.$index, scope.row, 4)">不通过</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { fetchList, fetchMerchant } from '@/api/merchant'
+import { fetchList, fetchMerchant, isOrNoAuthentication } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -153,15 +153,20 @@ export default {
     },
     handleShenhe(index, row, status) {
       //处理审核
-      this.$confirm('确认商家认证资料' + (status === 1 ? '通过' : '未通过') +'审核?', '提示', {
+      this.$confirm('确认商家认证资料' + (status === 2 ? '通过' : '未通过') +'审核?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '操作成功!'
-        });
+        isOrNoAuthentication({id: row.id, authStatus: status}).then(response => {
+          if(response.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.list.splice(index, 1);
+          }
+        })
       }).catch(() => {
         this.$message({
           type: 'info',

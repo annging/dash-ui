@@ -21,21 +21,15 @@ export function fetchList(query, data) {
   })
 }
 
-export function fetchMerchantRzList(query) {
+export function isOrNoAuthentication(query) {
   return request({
-    url: '/api/merchantrz/list',
-    method: 'get',
+    url: '/system/merchant/isOrNoAuthentication',
+    method: 'post',
     params: query
   })
 }
 
-export function fetchMerchantRz(id) {
-  return request({
-    url: '/api/merchantrz/detail',
-    method: 'get',
-    params: { id }
-  })
-}
+
 
 export function fetchMerchant(id) {
   return request({

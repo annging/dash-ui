@@ -40,8 +40,8 @@
             <el-table-column
               label="封面"
               width="120">
-              <template slot-scope="row">
-                <img :src="row.cover" style="width: 100px;height: 60px;">
+              <template slot-scope="{row}">
+                <img :src="row.imgUrl" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
@@ -54,49 +54,46 @@
               label="类型"
               width="100">
               <template slot-scope="{row}">
-                <span>{{ row.type }}</span>
+                <span>{{ activityTypes[row.type] || row.type }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="行业"
               width="100">
               <template slot-scope="{row}">
-                <span>{{row.industry}}</span>
+                <span>{{ industrys[row.industry] || row.industry }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="浏览"
               width="100">
               <template slot-scope="{row}">
-                <span>1000</span>
+                <span>{{ row.browse }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="领取"
               width="100">
               <template slot-scope="{row}">
-                <span>88</span>
+                <span>{{ row.receive }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="推荐值"
+              label="是否推荐"
               width="100">
               <template slot-scope="{row}">
-                <span>2</span>
+                <span>{{ row.isRecommend ? '是' : '否' }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleRecommend(scope.$index, scope.row, 0)">取消推荐</el-button>
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
+                  @click="handleDetele(scope.$index, scope.row)">取消推荐</el-button>
               </template>
             </el-table-column>
         </el-table>
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
       </el-row>
     </div>
     <!--<div class="secondary-sidebar"></div>-->
@@ -104,8 +101,10 @@
 </template>
 
 <script>
-import { fetchSchemeList } from '@/api/activity'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import qs from 'qs'
+import axios from 'axios'
+import { fetchSchemeList, deleteScheme, updateActivityScheme } from '@/api/activity'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
   components: { Pagination },
@@ -116,12 +115,18 @@ export default {
       listLoading: true,
       listQuery: {
         searchStr: '',
-        page: 1,
-        limit: 20,
-        sort: '+id'
+        current: 1,
+        size: 20
+      },
+      listFilter: {
+        type: '',
+        industry: '',
+        isRecommend: 1
       },
       clientHeight: '',
-      maxHeight: 400
+      maxHeight: 400,
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      industrys: { 1: '教育' ,  2: '体育' ,  3: '珠宝' }
     };
   },
   watch: {
@@ -147,14 +152,10 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchSchemeList(this.listQuery).then(response => {
-        this.list = response.data.items
+      fetchSchemeList(this.listQuery, this.listFilter).then(response => {
+        this.list = response.data.records
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -175,34 +176,33 @@ export default {
       }
       this.handleFilter()
     },
-    goCreate() {
-      this.$router.push({ path: '/activity/fangan/create' });
-    },
-    handleEdit(index, row) {
-      this.$router.push({ path: '/activity/fangan/edit/' + row.id });
-    },
     handleDetele(index, row) {
-      this.$confirm('确认删除该方案?', '提示', {
+      this.$confirm('确认取消推荐?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        //todo 删除
-        this.$message({
-          type: 'success',
-          message: '操作成功!'
-        });
+        row.isRecommend = 0
+        updateActivityScheme(row).then(res => {
+          if (res.code * 1 === 200 ) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            });
+            this.list.splice(index, 1);
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            });
+          }
+        })
+        
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消操作'
         });          
-      });
-    },
-    handleRecommend(index, row, status) {
-      this.$message({
-        type: 'success',
-        message: '取消推荐成功!'
       });
     }
   }
@@ -241,5 +241,8 @@ export default {
   .el-menu--horizontal>.el-menu-item.is-active {
     border-bottom: 1px solid #000;
     color: #303133;
+  }
+  .filter-item {
+    margin-right: 10px;
   }
 </style>

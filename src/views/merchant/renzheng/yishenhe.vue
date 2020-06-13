@@ -13,9 +13,9 @@
             size="small"
             class="filter-item"
             @keyup.enter.native="handleFilter" />
-          <el-select size="small" v-model="listFilter.authStatus + ''" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
-            <el-option  label="认证通过" value="2" />
-            <el-option  label="认证失败" value="4" />
+          <el-select size="small" v-model="listFilter.authStatus" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
+            <el-option  label="认证通过" :value="2" />
+            <el-option  label="认证失败" :value="4" />
           </el-select>
           <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索

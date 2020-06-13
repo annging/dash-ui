@@ -15,11 +15,11 @@
           @keyup.enter.native="handleFilter" />
         <el-select size="small" v-model="listFilter.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
           <el-option  label="全部类型" value="" />
-          <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
+          <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
         </el-select>
         <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="行业">
           <el-option  label="全部行业" value="" />
-          <el-option v-for="item in industrys" :key="item.key" :label="item.label" :value="item.key" />
+          <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="key" />
         </el-select>
         <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
@@ -67,14 +67,14 @@
               label="类型"
               width="100">
               <template slot-scope="{row}">
-                <span>{{ row.type }}</span>
+                <span>{{ activityTypes[row.type] || row.type }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="行业"
               width="100">
               <template slot-scope="{row}">
-                <span>{{row.industry}}</span>
+                <span>{{ industrys[row.industry] || row.industry }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -101,6 +101,7 @@
             <el-table-column label="操作" width="240">
               <template slot-scope="scope">
                 <el-button
+                  v-if="!scope.row.isRecommend"
                   size="mini"
                   @click="handleRecommend(scope.$index, scope.row)">推荐</el-button>
                 <el-button
@@ -122,7 +123,7 @@
 <script>
 import qs from 'qs'
 import axios from 'axios'
-import { fetchSchemeList, deleteScheme } from '@/api/activity'
+import { fetchSchemeList, deleteScheme, updateActivityScheme } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
@@ -143,8 +144,8 @@ export default {
       },
       clientHeight: '',
       maxHeight: 400,
-      activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
-      industrys: [{ key: 1, label: '教育' }, { key: 2, label: '体育' }, { key: 3, label: '珠宝' }]
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      industrys: { 1: '教育' ,  2: '体育' ,  3: '珠宝' }
     };
   },
   watch: {
@@ -228,18 +229,26 @@ export default {
       });
     },
     handleRecommend(index, row) {
-       this.$prompt('请输入推荐值，值越大，越靠前', '推荐方案', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-        }).then(({ value }) => {
-          deleteScheme(this.id).then(response => {
-            this.schemeForm = response.data
-            this.listLoading = false
+      this.$confirm('推荐方案?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+          row.isRecommend = 1
+          updateActivityScheme(row).then(res => {
+            if (res.code * 1 === 200 ) {
+              this.$message({
+                type: 'success',
+                message: '操作成功!'
+              });
+              this.list[index].isRecommend = 1;
+            } else {
+              this.$message({
+                type: 'error',
+                message: res.msg
+              });
+            }
           })
-          this.$message({
-            type: 'success',
-            message: '推荐方案成功，推荐值: ' + value
-          });
         }).catch(() => {
           this.$message({
             type: 'info',
