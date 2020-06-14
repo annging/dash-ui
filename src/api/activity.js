@@ -1,10 +1,23 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function getSpecialActivity(query, data) {
   return request({
-    url: '/api/activity/list',
-    method: 'get',
-    params: query
+    url: '/system/management/activity/getSpecialActivity?size=' + query.size + '&current=' + query.current,
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
   })
 }
 
@@ -99,12 +112,3 @@ export function updateActivityScheme(data) {
     }
   })
 }
-
-export function fetchActivtyFenxiao(id) {
-  return request({
-    url: '/api/activity/detail/fenxiao',
-    method: 'get',
-    params: { id }
-  })
-}
-

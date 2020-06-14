@@ -2,31 +2,23 @@
   <div class="main-content">
     <div class="left-container">
       <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item index="1" :route="{path:'/account/isRecommend'}">首页推荐</el-menu-item>
+        <el-menu-item index="1" :route="{path:'/platform/recommendActivity/'}">首页推荐</el-menu-item>
       </el-menu>
-      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-          <el-input
-            v-model="listQuery.searchStr"
-            placeholder="请输入内容"
-            prefix-icon="el-icon-search"
-            size="small"
-            @keyup.enter.native="handleFilter" />
-        </el-row>
-        <el-row class="list">
-          <el-table
-            v-loading="listLoading"
-            :data="list"
-            border
-            fit
-            highlight-current-row
-            style="width: 100%"
-            size="small"
-            :header-cell-style="{
-              'background-color': '#f7f9fa',
-              'color': '#637282;'
-            }"
-            @sort-change="sortChange"
-            >
+      <el-row class="list">
+        <el-table
+          v-loading="listLoading"
+          :data="list"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          size="small"
+          :header-cell-style="{
+            'background-color': '#f7f9fa',
+            'color': '#637282;'
+          }"
+          @sort-change="sortChange"
+          >
             <el-table-column
               prop="id"
               label="ID"
@@ -37,48 +29,54 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="活动封面"
-              width="120">
-              <template slot-scope="row">
-                <img :src="row.cover" style="width: 100px;height: 60px;">
+              label="音乐">
+              <template slot-scope="{row}">
+                <span>{{ row.name }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="活动标题"
+              label="url"
               width="300">
               <template slot-scope="{row}">
-                <span>{{ row.title }}</span>
+                <span>{{ row.url }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="活动类型">
+              label="分类"
+              width="100">
               <template slot-scope="{row}">
-                <span>{{ row.type }}</span>
+                <span>{{ row.firstClass + '-' + row.secondClass }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="权重">
+              label="创建时间">
               <template slot-scope="{row}">
-                <span>1</span>
+                <span>{{ row.createdAt }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="setRecommend(scope.$index, scope.row)">取消推荐</el-button>
+                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                  size="mini"
+                  @click="handleDetele(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
-          </el-table>
-        </el-row>
-      </div>
-      <!--<div class="secondary-sidebar"></div>-->
+        </el-table>
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+      </el-row>
+    </div>
+    <!--<div class="secondary-sidebar"></div>-->
   </div>
 </template>
 
 <script>
-import { fetchList } from '@/api/activity'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import qs from 'qs'
+import axios from 'axios'
+import { getSpecialActivity } from '@/api/activity'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
   components: { Pagination },
@@ -89,9 +87,11 @@ export default {
       listLoading: true,
       listQuery: {
         searchStr: '',
-        page: 1,
-        limit: 20,
-        sort: '+id'
+        current: 1,
+        size: 20
+      },
+      listFilter: {
+        isRecommend: 1
       },
       clientHeight: '',
       maxHeight: 400
@@ -120,18 +120,14 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+      getSpecialActivity(this.listQuery, this.listFilter).then(response => {
+        this.list = response.data.records
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
     sortChange(data) {
@@ -147,21 +143,6 @@ export default {
         this.listQuery.sort = '-id'
       }
       this.handleFilter()
-    },
-    // 推荐到首页
-    setRecommend(index, row) {
-      console.log('推荐到首页');
-      this.$message({
-        type: 'success',
-        message: '成功推荐到首页!'
-      });
-    },
-    setAnli(index, row, status) {
-      console.log('优秀案例');
-      this.$message({
-        type: 'success',
-        message: '取消优秀案例!'
-      });
     }
   }
 }
@@ -199,5 +180,8 @@ export default {
   .el-menu--horizontal>.el-menu-item.is-active {
     border-bottom: 1px solid #000;
     color: #303133;
+  }
+  .filter-item {
+    margin-right: 10px;
   }
 </style>

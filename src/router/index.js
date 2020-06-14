@@ -79,7 +79,7 @@ export const constantRoutes = [
         meta: { title: '音乐' }
       },
       {
-        path: 'recommendFanan',
+        path: 'recommendAnli',
         component: () => import('@/views/activity/anliRecommend'),
         name: '优秀案例',
         meta: { title: '优秀案例' }
