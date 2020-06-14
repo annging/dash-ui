@@ -145,7 +145,7 @@ export default {
       clientHeight: '',
       maxHeight: 400,
       activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
-      industrys: { 1: '教育' ,  2: '体育' ,  3: '珠宝' }
+      industrys: { 1: '教育' ,  2: '体育' ,  3: '珠宝', 4: '汽车', 5: '批发零售业', 6: '制造业', 7: '建筑装修', 8: '交通运输', 9: '住宿和餐饮业', 10: '金融', 11: '房产' }
     };
   },
   watch: {
@@ -207,12 +207,13 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteScheme(this.id).then(res => {
+        deleteScheme(row.id).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
               message: '操作成功!'
             });
+            this.list.splice(index, 1);
           } else {
             this.$message({
               type: 'error',
