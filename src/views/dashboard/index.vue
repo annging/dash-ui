@@ -7,14 +7,14 @@
     </div>
     <div class="secondary-sidebar">
       <div class="" style="margin-top: 30px;">
+        <el-button slot="reference" type="primary" size="medium" class="btn-create" @click="goFangan">创建方案 ▾</el-button>
         <el-popover
           width="200"
           v-model="createPopvisible"
-          trigger="click">
+          trigger="click" style="display: none">
           <div class="newActvity-section">
             <span class="popover-content-item">
               <div class="popover--item">
-                <svg-icon icon-class="pintuan" />
                 <div class="text">拼团</div>
               </div>
             </span>
@@ -88,6 +88,11 @@ export default {
   data() {
     return {
       createPopvisible: false // 创建活动弹窗
+    }
+  },
+  methods: {
+    goFangan() {
+      this.$router.push({ path: '/activity/fangan/create' });
     }
   }
 }
