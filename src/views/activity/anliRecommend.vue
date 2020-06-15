@@ -29,39 +29,33 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="音乐">
+              label="封面图">
               <template slot-scope="{row}">
-                <span>{{ row.name }}</span>
+                <img :src="row.cover" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
-              label="url"
-              width="300">
+              label="title">
               <template slot-scope="{row}">
-                <span>{{ row.url }}</span>
+                <span>{{ row.title }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="分类"
-              width="100">
+              label="类型">
               <template slot-scope="{row}">
-                <span>{{ row.firstClass + '-' + row.secondClass }}</span>
+                <span>{{ activityTypes[row.type] }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="创建时间">
+              label="价格">
               <template slot-scope="{row}">
-                <span>{{ row.createdAt }}</span>
+                <span>{{ 'no' }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                  size="mini"
-                  @click="handleDetele(scope.$index, scope.row)">删除</el-button>
+            <el-table-column
+              label="商家ID">
+              <template slot-scope="{row}">
+                <span>{{row.merchantId}}</span>
               </template>
             </el-table-column>
         </el-table>
@@ -94,7 +88,8 @@ export default {
         isGood: 1
       },
       clientHeight: '',
-      maxHeight: 400
+      maxHeight: 400,
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' }
     };
   },
   watch: {
@@ -108,19 +103,29 @@ export default {
   },
   mounted(){
       // 获取浏览器可视区域高度
-      this.clientHeight =  `${document.documentElement.clientHeight}`;
-      let that = this;
+      this.clientHeight =  `${document.documentElement.clientHeight}`
+      let that = this
       window.onresize = function temp() {
-        that.clientHeight = `${document.documentElement.clientHeight}`;
-      };
+        that.clientHeight = `${document.documentElement.clientHeight}`
+      }
     },
   methods: {
     changeFixed(clientHeight){
-      this.maxHeight = clientHeight - 85 - 110 - 100;
+      this.maxHeight = clientHeight - 85 - 110 - 100
     },
     getList() {
       this.listLoading = true
       getSpecialActivity(this.listQuery, this.listFilter).then(response => {
+        if (response.data.records.length > 0) {
+          response.data.records.forEach(item => {
+          if (item.cover && item.cover != 'string') {
+              item.cover = JSON.parse(item.cover);
+            }
+            if (item.activitySetting) {
+              item.activitySetting = JSON.parse(item.activitySetting);
+            }
+          });
+        }
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false

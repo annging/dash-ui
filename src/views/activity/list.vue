@@ -41,7 +41,7 @@
             <el-table-column
               label="封面"
               width="120">
-              <template slot-scope="row">
+              <template slot-scope="{row}">
                 <img :src="row.cover" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
@@ -159,7 +159,17 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
+        if (response.data.records.length > 0) {
+          response.data.records.forEach(item => {
+          if (item.cover && item.cover != 'string') {
+              item.cover = JSON.parse(item.cover);
+            }
+            if (item.activitySetting) {
+              item.activitySetting = JSON.parse(item.activitySetting);
+            }
+          });
+        }
+        this.list = response.data.records
         this.total = response.data.total
 
         // Just to simulate the time of the request

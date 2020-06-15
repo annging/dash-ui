@@ -273,12 +273,12 @@ export const constantRoutes = [
       {
         path: 'tixianshenhe',
         name: 'tixianshenhe',
-        redirect: '/account/tixianshenhe/tixiandaishenhe',
+        redirect: '/account/tixianshenhe/daishenhe',
         component: () => import('@/views/account/tixianshenhe'),
         meta: { title: '提现审核' },
         children: [
           {
-            path: 'tixiandaishenhe',
+            path: 'daishenhe',
             name: 'tixiandaishenhe',
             component: () => import('@/views/account/tixianshenhe/daishenhe'),
             meta: { title: '待审核', activeMenu: '/account/tixianshenhe' },
@@ -286,7 +286,7 @@ export const constantRoutes = [
           },
           {
             path: 'yitongguo',
-            name: 'yitongguo',
+            name: 'tixianyitongguo',
             component: () => import('@/views/account/tixianshenhe/yitongguo'),
             meta: { title: '提现记录', activeMenu: '/account/tixianshenhe' },
             hidden: true
