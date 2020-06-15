@@ -144,7 +144,7 @@ export default {
     return {
       schemeForm: Object.assign({}, defaultForm),
       activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
-      industrys: { 1: '教育' ,  2: '体育' ,  3: '珠宝', 4: '汽车', 5: '批发零售业', 6: '制造业', 7: '建筑装修', 8: '交通运输', 9: '住宿和餐饮业', 10: '金融', 11: '房产' },
+      industrys: { 1: '教育/培训' ,  2: '丽人/美发' ,  3: '亲子/乐园', 4: '运动健身', 5: '休闲/玩乐', 6: '美容/SPA', 7: '嬌纱/摄影', 8: '家居/装修', 9: '生活服务', 10: '餐饮美食', 11: '母婴', 12: '洗车', 13: '服装' },
       vipLevels: [{ key: 1, label: '普通会员' }],
       rules: {
         title: [
