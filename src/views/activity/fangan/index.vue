@@ -19,7 +19,7 @@
         </el-select>
         <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="行业">
           <el-option  label="全部行业" value="" />
-          <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="key" />
+          <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="value" />
         </el-select>
         <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
