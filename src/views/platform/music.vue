@@ -215,7 +215,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchMusicList(this.listQuery, this.listFilter).then(response => {
+      fetchMusicList(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
