@@ -30,6 +30,27 @@
             <img width="100%" :src="schemeForm.imgUrl" alt="">
           </el-dialog>
         </el-form-item>
+        <el-form-item label="banner图片">
+          <el-upload
+            :data="dataObj"
+            :multiple="false"
+            class="avatar-uploader"
+            action="http://upload-z2.qiniup.com"
+            :show-file-list="false"
+            :on-success="handleSuccess1"
+            :on-preview="handlePicturePreview1"
+            :on-remove="handleRemove1"
+            :before-upload="beforeUpload">
+            <img v-if="schemeForm.bannerImg" :src="schemeForm.bannerImg" class="avatar1">
+            <i  v-else class="el-icon-plus avatar-uploader-icon1"></i>
+          </el-upload>
+          <el-dialog
+            :visible.sync="dialogVisible1"
+            :modal-append-to-body="false"
+            :append-to-body="true">
+            <img width="100%" :src="schemeForm.bannerImg" alt="">
+          </el-dialog>
+        </el-form-item>
         <el-form-item label="标签">
            <el-select
             v-model="schemeForm.label"
@@ -103,6 +124,7 @@ import { getToken } from '@/api/qiniu'
 const defaultForm = {
     title: '', //方案标题
     imgUrl: '',
+    bannerImg: '',
     type: '',
     industry: '',
     explain: '',
@@ -148,6 +170,7 @@ export default {
       },
       dialogImageUrl: '',
       dialogVisible: false,
+      dialogVisible1: false,
       labelOptions: [{
         value: '老带新',
         label: '老带新'
@@ -217,11 +240,20 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
+    handleRemove1(file, fileList) {
+      console.log(file, fileList);
+    },
     handleSuccess(res, file) {
       this.schemeForm.imgUrl = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key;
     },
+    handleSuccess1(res, file) {
+      this.schemeForm.bannerImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key;
+    },
     handlePicturePreview() {
       this.dialogVisible = true;
+    },
+    handlePicturePreview1() {
+      this.dialogVisible1 = true;
     },
     cancel() {
       this.$router.push({ path: '/activity/fangan/index' });
@@ -278,6 +310,19 @@ export default {
   .avatar {
     width: 178px;
     height: 178px;
+    display: block;
+  }
+  .avatar-uploader-icon1 {
+    font-size: 28px;
+    color: #8c939d;
+    width: 350px;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+  }
+  .avatar1 {
+    width: 350px;
+    height: 200px;
     display: block;
   }
 </style>
