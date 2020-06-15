@@ -37,7 +37,8 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请选择方案标签">
+            placeholder="请选择方案标签"
+            style="width: 600px">
             <el-option
               v-for="item in labelOptions"
               :key="item.value"
@@ -47,13 +48,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="方案介绍">
-           <el-input type="textarea" autosize v-model="schemeForm.explain"></el-input>
+           <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="schemeForm.explain"></el-input>
         </el-form-item>
         <el-form-item label="功能亮点">
-           <el-input type="textarea" autosize v-model="schemeForm.lightSpot"></el-input>
+           <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="schemeForm.lightSpot"></el-input>
         </el-form-item>
         <el-form-item label="营销玩法">
-           <el-input type="textarea" autosize v-model="schemeForm.gameplay"></el-input>
+           <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="schemeForm.gameplay"></el-input>
         </el-form-item>
         <el-form-item label="活动类型">
           <el-select v-model="schemeForm.type" placeholder="请选择活动类型">

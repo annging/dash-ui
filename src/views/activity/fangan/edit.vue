@@ -37,7 +37,8 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请选择方案标签">
+            placeholder="请选择方案标签"
+            style="width: 600px">
             <el-option
               v-for="item in labelOptions"
               :key="item.value"
@@ -168,6 +169,7 @@ export default {
       this.listLoading = true
       fetchScheme(this.id).then(response => {
         this.schemeForm = response.data
+        this.schemeForm.label = this.schemeForm.label.split(',')
         this.listLoading = false
       })
     },
