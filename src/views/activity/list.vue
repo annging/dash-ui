@@ -141,7 +141,8 @@ export default {
       }
     },
   created() {
-    this.getList()
+    this.listLoading = false
+    // this.getList()
   },
   mounted(){
       // 获取浏览器可视区域高度
