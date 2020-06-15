@@ -183,7 +183,7 @@ export default {
         type: 'warning'
       }).then(() => {
         row.isRecommend = 0
-        updateActivityScheme(row).then(res => {
+        updateActivityScheme({id: row.id, isRecommend: 0}).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',

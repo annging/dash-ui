@@ -103,7 +103,11 @@
                 <el-button
                   v-if="!scope.row.isRecommend"
                   size="mini"
-                  @click="handleRecommend(scope.$index, scope.row)">推荐</el-button>
+                  @click="handleRecommend(scope.$index, scope.row, 1)">推荐</el-button>
+                <el-button
+                  v-else
+                  size="mini"
+                  @click="handleRecommend(scope.$index, scope.row, 0)">取消推荐</el-button>
                 <el-button
                   size="mini"
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -229,14 +233,14 @@ export default {
         });          
       });
     },
-    handleRecommend(index, row) {
-      this.$confirm('推荐方案?', '提示', {
+    handleRecommend(index, row, status) {
+      this.$confirm(status ? '' : '取消' + '推荐方案?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
           row.isRecommend = 1
-          updateActivityScheme(row).then(res => {
+          updateActivityScheme({id: row.id, isRecommend: status}).then(res => {
             if (res.code * 1 === 200 ) {
               this.$message({
                 type: 'success',
