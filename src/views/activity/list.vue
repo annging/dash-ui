@@ -25,9 +25,7 @@
             :header-cell-style="{
               'background-color': '#f7f9fa',
               'color': '#637282;'
-            }"
-            @sort-change="sortChange"
-            >
+            }">
             <el-table-column
               fixed
               prop="id"
@@ -42,7 +40,7 @@
               label="封面"
               width="120">
               <template slot-scope="{row}">
-                <img :src="row.cover" style="width: 100px;height: 60px;">
+                <img :src="row.cover[0]" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
@@ -55,26 +53,26 @@
             <el-table-column
               label="类型">
               <template slot-scope="{row}">
-                <span>{{ row.type }}</span>
+                <span>{{ activityTypes[row.type] }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="价格">
               <template slot-scope="{row}">
-                <span>{{row.finalPrice}}</span>
+                <span>{{  }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="活动时间"
               width="150">
               <template slot-scope="{row}">
-                <span>{{row.startTime}} <br/>- <br/>{{row.endTime}} </span>
+                <span>{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
               </template>
             </el-table-column>
             <el-table-column
               label="商家">
               <template slot-scope="{row}">
-                <span>{{row.merchant.name}}</span>
+                <span>{{row.merchantId}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -99,14 +97,14 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="setRecommend(scope.$index, scope.row)">推荐到首页</el-button>
+                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend')">推荐到首页</el-button>
                   <el-button
                   size="mini"
-                  @click="setAnli(scope.$index, scope.row)">设为优秀案例</el-button>
+                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood')">设为优秀案例</el-button>
               </template>
             </el-table-column>
           </el-table>
-          <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+          <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>
       </div>
       <!--<div class="secondary-sidebar"></div>-->
@@ -114,7 +112,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/activity'
+import { getActivitys, setActivityWithGoodOrRecommend } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -123,15 +121,18 @@ export default {
     return {
       list: [],
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         searchStr: '',
-        page: 1,
-        limit: 20,
-        sort: '+id'
+        current: 1,
+        size: 20
+      },
+      listFilter: {
+        type: ''
       },
       clientHeight: '',
-      maxHeight: 400
+      maxHeight: 400,
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' }
     };
   },
   watch: {
@@ -142,7 +143,7 @@ export default {
     },
   created() {
     this.listLoading = false
-    // this.getList()
+    this.getList()
   },
   mounted(){
       // 获取浏览器可视区域高度
@@ -158,7 +159,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      getActivitys(this.listQuery, this.listFilter).then(response => {
         if (response.data.records.length > 0) {
           response.data.records.forEach(item => {
           if (item.cover && item.cover != 'string') {
@@ -171,45 +172,40 @@ export default {
         }
         this.list = response.data.records
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
     // 推荐到首页
-    setRecommend(index, row) {
-      console.log('推荐到首页');
-      this.$message({
-        type: 'success',
-        message: '成功推荐到首页!'
-      });
-    },
-    setAnli(index, row) {
-      console.log('优秀案例');
-      this.$message({
-        type: 'success',
-        message: '已经设为优秀案例!'
-      });
+    setActivityWithGoodOrRecommend(index, row, type) {
+      let data = {}
+      if(type === 'isRecommend') {
+        data ={
+          id: row.id,
+          isRecommend: 1
+        }
+      } else if(type === 'isGood') {
+        data ={
+          id: row.id,
+          isRecommend: 1
+        }
+      }
+      setActivityWithGoodOrRecommend(data).then(response => {
+        if(response.code === '200') {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
+          })
+        }
+      })
     }
   }
 }

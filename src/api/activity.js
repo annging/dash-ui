@@ -86,7 +86,6 @@ export function deleteScheme(id) {
   })
 }
 
-
 export function updateActivityScheme(data) {
   return request({
     url: '/system/activity/updateActivityScheme',
@@ -110,5 +109,37 @@ export function updateActivityScheme(data) {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
+  })
+}
+
+// 获取活动列表
+export function getActivitys(query, data) {
+  return request({
+    url: '/system/activity/getActivitys',
+    method: 'post',
+    params: query,
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
+  })
+}
+
+//首页推荐或设为优秀案例
+export function setActivityWithGoodOrRecommend(query) {
+  return request({
+    url: '/system/management/activity/setActivityWithGoodOrRecommend',
+    method: 'post',
+    params: query
   })
 }
