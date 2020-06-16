@@ -81,7 +81,7 @@ export function fetchScheme(id) {
 export function deleteScheme(id) {
   return request({
     url: '/system/activity/deleteScheme',
-    method: 'get',
+    method: 'delete',
     params: { schemeId: id }
   })
 }
