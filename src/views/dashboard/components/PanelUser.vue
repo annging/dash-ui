@@ -26,14 +26,6 @@
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
-              访问次数<el-tooltip content="访问小程序内所有页面总次数，多
-个页面之间跳转、同一页面的重复
-访问计为多次访问" placement="top" effect="light"><el-button type="text" icon="el-icon-question"></el-button></el-tooltip>
-            </div>
-            <div class="card-panel-num">500</div>
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
               打开次数<el-tooltip content="打开小程序总次数，用户从打开小
 程序到主动关闭小程序或超时退出
 计为一次" placement="top" effect="light"><el-button type="text" icon="el-icon-question"></el-button></el-tooltip>
