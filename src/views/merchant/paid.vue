@@ -136,7 +136,7 @@ export default {
     return {
       list: null,
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         searchStr: '',
         page: 1,
@@ -148,7 +148,7 @@ export default {
     };
   },
   created() {
-    this.getList()
+    // this.getList()
   },
   methods: {
     getList() {

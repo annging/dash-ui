@@ -70,7 +70,7 @@
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="累计收入">
+	            label="累计收入(元)">
 	            <template slot-scope="{row}">
 			          <span>{{row.merchantAggregate.totalIncome}}</span>
 			        </template>
@@ -78,7 +78,7 @@
 	          <el-table-column
 	            label="门店数量">
 	            <template slot-scope="{row}">
-			          <span>{{row.storeCount}}</span>
+			          <span>{{row.storeCount || row.stores.length}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
@@ -91,13 +91,14 @@
 	            label="会员"
 	            width="">
 	            <template slot-scope="{row}">
-	            	<span>{{ row.vipLevel }}</span>
+	            	<span>{{ levels[row.vipLevel] }}</span>
 		          </template>
 		        </el-table-column>
 		        <el-table-column
-	            label="会员过期时间">
+	            label="会员过期时间"
+	            width="140px">
 	            <template slot-scope="{row}">
-	            	<span>{{ row.vipEndTime }}</span>
+	            	<span>{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
 		          </template>
 		        </el-table-column>
 	          <el-table-column label="操作">
@@ -134,7 +135,8 @@ export default {
 	      searchStr: '',
 	      current: 1,
 	      size: 20
-	    }
+	    },
+	    levels: { 1: '普通会员' }
     };
   },
   created() {
