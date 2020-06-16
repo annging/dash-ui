@@ -3,7 +3,7 @@
 	  	<div class="left-container">
 	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/account/tixianshenhe/daishenhe'}">待审核</el-menu-item>
-		      	<el-menu-item index="2" :route="{path:'/account/tixianshenhe/yitongguo'}">提现记录</el-menu-item>
+		      	<el-menu-item index="2" :route="{path:'/account/tixianshenhe/yitongguo'}">审核记录</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
         </el-row>
@@ -32,25 +32,25 @@
             <el-table-column
               label="用户">
               <template slot-scope="{row}">
-                <span>{{ row.userId }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="可提现(元)">
-              <template slot-scope="{row}">
-                <span>{{ no }}</span>
+                <span>{{ row.user.nickName }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="提现金额(元)">
               <template slot-scope="{row}">
-                <span>{{ row.withdraw_fee }}</span>
+                <span>{{ row.withdrawFee.toFixed(2) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="预计到账金额(元)">
+              <template slot-scope="{row}">
+                <span>{{ row.receivableFee.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="申请时间">
               <template slot-scope="{row}">
-                <span>{{row.created_at}}</span>
+                <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作">

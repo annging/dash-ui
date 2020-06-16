@@ -3,12 +3,12 @@
 	  	<div class="left-container">
 	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/account/tixianshenhe/daishenhe'}">待审核</el-menu-item>
-            <el-menu-item index="2" :route="{path:'/account/tixianshenhe/yitongguo'}">提现记录</el-menu-item>
+            <el-menu-item index="2" :route="{path:'/account/tixianshenhe/yitongguo'}">审核记录</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
           <el-select size="small" v-model="listFilter.status" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="审核结果">
             <el-option  label="已经到账" :value="2" />
-            <el-option  label="审核失败" :value="3" />
+            <el-option  label="审核不通过" :value="3" />
           </el-select>
           <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
@@ -26,9 +26,7 @@
             :header-cell-style="{
               'background-color': '#f7f9fa',
               'color': '#637282;'
-            }"
-            @sort-change="sortChange"
-            >
+            }">
             <el-table-column
               prop="id"
               label="ID"
@@ -39,27 +37,33 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="用户">
+              label="申请用户">
               <template slot-scope="{row}">
-                <span>{{ row.userId }}</span>
+                <span>{{ row.user.nickName }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="提现金额(元)">
               <template slot-scope="{row}">
-                <span>{{ row.withdraw_fee }}</span>
+                <span>{{ row.withdrawFee.toFixed(2) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="预计到账金额(元)">
+              <template slot-scope="{row}">
+                <span>{{ row.receivableFee.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="申请时间">
               <template slot-scope="{row}">
-                <span>{{row.created_at}}</span>
+                <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss")}}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="审核时间">
               <template slot-scope="{row}">
-                <span>{{row.updated_at}}</span>
+                <span>{{ row.updatedAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -80,7 +84,7 @@ export default {
     return {
       list: null,
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         searchStr: '',
         current: 1,
