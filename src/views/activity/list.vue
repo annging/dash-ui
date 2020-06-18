@@ -59,7 +59,7 @@
             <el-table-column
               label="价格">
               <template slot-scope="{row}">
-                <span>{{  }}</span>
+                <span>{{ row.basePrice === 0 ? '免费' : row.basePrice.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
