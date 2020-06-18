@@ -1,8 +1,10 @@
 <template>
   <div class="main-content">
     <div class="left-container">
-      <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item index="1" :route="{path:'/platform/recommendActivity/'}">首页推荐</el-menu-item>
+      <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
+        <el-menu-item index="1" :route="{path:'/activity/list'}">活动列表</el-menu-item>
+        <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
+        <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
       <el-row class="list">
         <el-table
@@ -16,9 +18,7 @@
           :header-cell-style="{
             'background-color': '#f7f9fa',
             'color': '#637282;'
-          }"
-          @sort-change="sortChange"
-          >
+          }">
             <el-table-column
               prop="id"
               label="ID"
@@ -29,39 +29,53 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="音乐">
+              label="封面图">
               <template slot-scope="{row}">
-                <span>{{ row.name }}</span>
+                <img :src="row.cover" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
-              label="url"
-              width="300">
+              label="title">
               <template slot-scope="{row}">
-                <span>{{ row.url }}</span>
+                <span>{{ row.title }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="分类"
-              width="100">
+              label="类型">
               <template slot-scope="{row}">
-                <span>{{ row.firstClass + '-' + row.secondClass }}</span>
+                <span>{{ activityTypes[row.type] }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="创建时间">
+              label="活动时间"
+              width="150">
               <template slot-scope="{row}">
-                <span>{{ row.createdAt }}</span>
+                <span>{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
               </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column
+              label="价格">
+              <template slot-scope="{row}">
+                <span>{{ row.basePrice === 0 ? '免费' : row.basePrice.toFixed(2) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="商家ID">
+              <template slot-scope="{row}">
+                <span>{{row.merchantId}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="状态">
+              <template slot-scope="{row}">
+                <span>{{row.status}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="240">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                  size="mini"
-                  @click="handleDetele(scope.$index, scope.row)">删除</el-button>
+                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend', 0)">取消首页推荐</el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -75,7 +89,7 @@
 <script>
 import qs from 'qs'
 import axios from 'axios'
-import { getSpecialActivity } from '@/api/activity'
+import { getSpecialActivity, setActivityWithGoodOrRecommend } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
@@ -94,7 +108,8 @@ export default {
         isRecommend: 1
       },
       clientHeight: '',
-      maxHeight: 400
+      maxHeight: 400,
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' }
     };
   },
   watch: {
@@ -108,19 +123,29 @@ export default {
   },
   mounted(){
       // 获取浏览器可视区域高度
-      this.clientHeight =  `${document.documentElement.clientHeight}`;
-      let that = this;
+      this.clientHeight =  `${document.documentElement.clientHeight}`
+      let that = this
       window.onresize = function temp() {
-        that.clientHeight = `${document.documentElement.clientHeight}`;
-      };
+        that.clientHeight = `${document.documentElement.clientHeight}`
+      }
     },
   methods: {
     changeFixed(clientHeight){
-      this.maxHeight = clientHeight - 85 - 110 - 100;
+      this.maxHeight = clientHeight - 85 - 110 - 100
     },
     getList() {
       this.listLoading = true
       getSpecialActivity(this.listQuery, this.listFilter).then(response => {
+        if (response.data.records.length > 0) {
+          response.data.records.forEach(item => {
+          if (item.cover && item.cover != 'string') {
+              item.cover = JSON.parse(item.cover);
+            }
+            if (item.activitySetting) {
+              item.activitySetting = JSON.parse(item.activitySetting);
+            }
+          });
+        }
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
@@ -130,19 +155,36 @@ export default {
       this.listQuery.current = 1
       this.getList()
     },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+    // 推荐到首页
+    setActivityWithGoodOrRecommend(index, row, type, status) {
+      let data = {}
+      if(type === 'isRecommend') {
+        data ={
+          id: row.id,
+          isRecommend: status
+        }
+      } else if(type === 'isGood') {
+        data ={
+          id: row.id,
+          isGood: status
+        }
       }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
+      setActivityWithGoodOrRecommend(data).then(response => {
+        if(response.code === '200') {
+          if(status == 0) {
+            this.list.splice(index, 1)
+          }
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
+          })
+        }
+      })
     }
   }
 }

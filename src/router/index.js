@@ -79,18 +79,6 @@ export const constantRoutes = [
         meta: { title: '音乐' }
       },
       {
-        path: 'recommendAnli',
-        component: () => import('@/views/activity/anliRecommend'),
-        name: '优秀案例',
-        meta: { title: '优秀案例' }
-      },
-      {
-        path: 'recommendActivity',
-        name: ' recommendActivity',
-        component: () => import('@/views/activity/recommend'),
-        meta: { title: '首页推荐' }
-      },
-      {
         path: 'level',
         name: ' level',
         component: () => import('@/views/platform/level'),
@@ -126,6 +114,20 @@ export const constantRoutes = [
             meta: { title: '活动详情', activeMenu: '/activity/index' }
           }
         ]
+      },
+      {
+        path: 'recommendAnli',
+        component: () => import('@/views/activity/anliRecommend'),
+        name: '优秀案例',
+        meta: { title: '优秀案例' },
+        hidden: true
+      },
+      {
+        path: 'recommendActivity',
+        name: ' recommendActivity',
+        component: () => import('@/views/activity/recommend'),
+        meta: { title: '首页推荐' },
+        hidden: true
       },
       {
         path: 'fangan',

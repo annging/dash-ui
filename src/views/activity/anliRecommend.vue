@@ -1,8 +1,10 @@
 <template>
   <div class="main-content">
     <div class="left-container">
-      <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item index="1" :route="{path:'/platform/recommendAnli/'}">优秀案例</el-menu-item>
+      <el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
+        <el-menu-item index="1" :route="{path:'/activity/list'}">活动列表</el-menu-item>
+        <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
+        <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
       <el-row class="list">
         <el-table
@@ -16,9 +18,7 @@
           :header-cell-style="{
             'background-color': '#f7f9fa',
             'color': '#637282;'
-          }"
-          @sort-change="sortChange"
-          >
+          }">
             <el-table-column
               prop="id"
               label="ID"
@@ -47,15 +47,35 @@
               </template>
             </el-table-column>
             <el-table-column
+              label="活动时间"
+              width="150">
+              <template slot-scope="{row}">
+                <span>{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="价格">
               <template slot-scope="{row}">
-                <span>{{ 'no' }}</span>
+                <span>{{ row.basePrice === 0 ? '免费' : row.basePrice.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="商家ID">
               <template slot-scope="{row}">
                 <span>{{row.merchantId}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="状态">
+              <template slot-scope="{row}">
+                <span>{{row.status}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="240">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood', 0)">取消优秀案例</el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -69,7 +89,7 @@
 <script>
 import qs from 'qs'
 import axios from 'axios'
-import { getSpecialActivity } from '@/api/activity'
+import { getSpecialActivity, setActivityWithGoodOrRecommend } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
@@ -135,19 +155,36 @@ export default {
       this.listQuery.current = 1
       this.getList()
     },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
+    // 推荐到首页
+    setActivityWithGoodOrRecommend(index, row, type, status) {
+      let data = {}
+      if(type === 'isRecommend') {
+        data ={
+          id: row.id,
+          isRecommend: status
+        }
+      } else if(type === 'isGood') {
+        data ={
+          id: row.id,
+          isGood: status
+        }
       }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
+      setActivityWithGoodOrRecommend(data).then(response => {
+        if(response.code === '200') {
+          if(status == 0) {
+            this.list.splice(index, 1)
+          }
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
+          })
+        }
+      })
     }
   }
 }

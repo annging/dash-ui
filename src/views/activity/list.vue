@@ -2,7 +2,9 @@
   <div class="main-content">
     <div class="left-container">
       <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item index="1" :route="{path:'/account/store/list/'}">活动列表</el-menu-item>
+        <el-menu-item index="1" :route="{path:'/activity/list'}">活动列表</el-menu-item>
+        <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
+        <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
           <el-input
