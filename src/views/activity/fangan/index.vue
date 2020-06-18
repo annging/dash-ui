@@ -234,7 +234,7 @@ export default {
       });
     },
     handleRecommend(index, row, status) {
-      this.$confirm(status ? '' : '取消' + '推荐方案?', '提示', {
+      this.$confirm((status ? '' : '取消') + '推荐方案?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
