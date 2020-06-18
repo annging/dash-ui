@@ -190,7 +190,7 @@ export default {
       } else if(type === 'isGood') {
         data ={
           id: row.id,
-          isRecommend: 1
+          isGood: 1
         }
       }
       setActivityWithGoodOrRecommend(data).then(response => {
