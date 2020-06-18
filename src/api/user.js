@@ -21,6 +21,32 @@ export function fetchList(query, data) {
   })
 }
 
+export function saveOrUpdateUser(data) {
+  return request({
+    url: '/system/user/saveOrUpdate',
+    method: 'post',
+    data,
+    transformRequest: [function (data) {
+      // Do whatever you want to transform the data
+      console.log(data);
+      let l = Object.keys(data).length;
+      let i = 0;
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]);
+        if (i < l -1) {
+          ret = ret + '&';
+          i++
+        }
+      }
+      return ret
+    }],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
 export function login(query) {
   return request({
     url: '/system/login',

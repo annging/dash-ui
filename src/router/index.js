@@ -233,6 +233,13 @@ export const constantRoutes = [
         name: 'userManagement',
         component: () => import('@/views/user/index'),
         meta: { title: '用户列表' }
+      },
+      {
+        path: 'black',
+        name: 'userBlack',
+        component: () => import('@/views/user/black'),
+        meta: { title: '小黑屋' },
+        hidden: true
       }
     ]
   }, // 用户管理

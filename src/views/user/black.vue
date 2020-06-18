@@ -1,7 +1,7 @@
 <template>
 	<div class="main-content">
 	  	<div class="left-container">
-	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
+	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/user/black'}">小黑屋</el-menu-item>
 	    	</el-menu>
@@ -113,7 +113,7 @@ export default {
     return {
       list: null,
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
 	      searchStr: '',
 	      current: 1,
@@ -125,7 +125,7 @@ export default {
     };
   },
   created() {
-	  this.getList()
+	  // this.getList()
 	},
   methods: {
   	getList() {
