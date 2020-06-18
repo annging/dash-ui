@@ -113,7 +113,7 @@
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 <el-button
                   size="mini"
-                  @click="handleDetele(scope.$index, scope.row)">删除</el-button>
+                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -205,7 +205,7 @@ export default {
     handleEdit(index, row) {
       this.$router.push({ path: '/activity/fangan/edit/' + row.id });
     },
-    handleDetele(index, row) {
+    handleDelete(index, row) {
       this.$confirm('确认删除该方案?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
