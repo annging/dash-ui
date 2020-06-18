@@ -78,13 +78,14 @@
            <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="schemeForm.gameplay"></el-input>
         </el-form-item>
         <el-form-item label="活动类型">
-          <el-select v-model="schemeForm.type" placeholder="请选择活动类型">
+          <el-select v-model="schemeForm.type" placeholder="请选择活动类型" >
             <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="活动行业">
-          <el-select v-model="schemeForm.industry" placeholder="请选择行业">
-            <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="value" />
+          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable 
+            allow-create>
+            <el-option v-for="(value, key, index) in industrys" :key="value" :label="value" :value="value" />
           </el-select>
         </el-form-item>
         <el-form-item label="会员门槛">
