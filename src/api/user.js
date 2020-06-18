@@ -21,6 +21,14 @@ export function fetchList(query, data) {
   })
 }
 
+export function login(query) {
+  return request({
+    url: '/system/login',
+    method: 'post',
+    params: query
+  })
+}
+
 export function getInfo(token) {
   return request({
     url: '/vue-admin-template/user/info',
