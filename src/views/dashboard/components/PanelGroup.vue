@@ -56,7 +56,8 @@
             <div class="card-panel-text">
               总收入额
             </div>
-            <count-to :start-val="0" :end-val="marketingData.incomeTotal" :duration="3600" class="card-panel-num count-money" />
+            <div class="card-panel-num count-money">{{ marketingData.incomeTotal }}</div>
+            <!--<count-to :start-val="0" :end-val="marketingData.incomeTotal" :duration="3600" class="card-panel-num count-money" />-->
           </div>
         </div>
       </el-col>
