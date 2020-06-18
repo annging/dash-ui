@@ -2,8 +2,10 @@
   <div class="main-content">
     <div class="dashboard-container">
       <!--<div class="dashboard-text">name: {{ name }}</div>-->
-      <panel-group />
-      <panel-user />
+      <panel-group
+      :marketingData=marketingData />
+      <panel-user
+      :userData=userData />
     </div>
     <div class="secondary-sidebar">
       <div class="" style="margin-top: 30px;">
@@ -71,6 +73,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { marketingData, userData } from '@/api/statistics'
 import PanelGroup from './components/PanelGroup'
 import PanelUser from './components/PanelUser'
 
@@ -87,10 +90,40 @@ export default {
   },
   data() {
     return {
-      createPopvisible: false // 创建活动弹窗
+      createPopvisible: false, // 创建活动弹窗
+      marketingData: {
+        accumulationPeople: 0,
+        activityTotal: 0,
+        incomeTotal: 0,
+        merchantsTotal: 0
+      },
+      userData: {
+        newUser: 0,
+        openCount: 0,
+        visitPeople: 0
+      },
+      userDataQuery: {
+        time: ''
+      }
     }
   },
+  created() {
+    this.fetchData()
+  },
   methods: {
+    fetchData() {
+      marketingData().then(response => {
+        if(response.data) {
+          this.marketingData = response.data
+        }
+      })
+      this.userDataQuery.time = new Date()
+      userData(this.userDataQuery).then(response => {
+        if(response.data) {
+          this.userData = response.data
+        }
+      })
+    },
     goFangan() {
       this.$router.push({ path: '/activity/fangan/create' });
     }

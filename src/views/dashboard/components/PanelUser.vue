@@ -15,14 +15,14 @@
               新用户数<el-tooltip content="首次访问小程序页面的用户数，同
 一用户多次访问不重复计" placement="top" effect="light"><el-button type="text" icon="el-icon-question"></el-button></el-tooltip>
             </div>
-            <div class="card-panel-num">50</div>
+            <div class="card-panel-num">{{ userData.newUser }}</div>
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
               访问人数<el-tooltip content="访问小程序内所有页面的总用户数，
 同一用户多次访问不重复计" placement="top" effect="light"><el-button type="text" icon="el-icon-question"></el-button></el-tooltip>
             </div>
-            <div class="card-panel-num">500</div>
+            <div class="card-panel-num">{{ userData.visitPeople }}</div>
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
@@ -30,7 +30,7 @@
 程序到主动关闭小程序或超时退出
 计为一次" placement="top" effect="light"><el-button type="text" icon="el-icon-question"></el-button></el-tooltip>
             </div>
-            <div class="card-panel-num">500</div>
+            <div class="card-panel-num">{{ userData.openCount }}</div>
           </div>
         </div>
       </el-col>
@@ -44,6 +44,14 @@ import CountTo from 'vue-count-to'
 export default {
   components: {
     CountTo
+  },
+  props: {
+    userData: {
+      type: Object,
+        default: function() {
+          return {}
+        }
+    }
   },
   methods: {
   }

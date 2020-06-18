@@ -17,7 +17,7 @@
             <div class="card-panel-text">
               商家总数
             </div>
-            <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="marketingData.merchantsTotal" :duration="2600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -30,7 +30,7 @@
             <div class="card-panel-text">
               活动总数
             </div>
-            <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="marketingData.activityTotal" :duration="3000" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -43,7 +43,7 @@
             <div class="card-panel-text">
               累计参与人数
             </div>
-            <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="marketingData.accumulationPeople" :duration="3200" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -56,7 +56,7 @@
             <div class="card-panel-text">
               总收入额
             </div>
-            <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num count-money" />
+            <count-to :start-val="0" :end-val="marketingData.incomeTotal" :duration="3600" class="card-panel-num count-money" />
           </div>
         </div>
       </el-col>
@@ -68,8 +68,17 @@
 import CountTo from 'vue-count-to'
 
 export default {
+  name: 'PanelGroup',
   components: {
     CountTo
+  },
+  props: {
+    marketingData: {
+      type: Object,
+        default: function() {
+          return {}
+        }
+    }
   },
   methods: {
   }
