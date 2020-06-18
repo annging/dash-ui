@@ -239,18 +239,17 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-          row.isRecommend = 1
           updateActivityScheme({id: row.id, isRecommend: status}).then(res => {
             if (res.code * 1 === 200 ) {
               this.$message({
                 type: 'success',
                 message: '操作成功!'
               });
-              this.list[index].isRecommend = 1;
+              this.list[index].isRecommend = status
             } else {
               this.$message({
                 type: 'error',
-                message: res.msg
+                message: res.msg || '网络错误'
               });
             }
           })
@@ -258,8 +257,8 @@ export default {
           this.$message({
             type: 'info',
             message: '取消操作'
-          });       
-        });
+          })    
+        })
     }
   }
 }
