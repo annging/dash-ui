@@ -86,8 +86,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="活动行业">
-          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable 
-            allow-create>
+          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable allow-create>
             <el-option v-for="(value, key, index) in industrys" :key="value" :label="value" :value="value" />
           </el-select>
         </el-form-item>
