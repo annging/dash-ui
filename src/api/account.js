@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getCheckPendingInfo(query, data) {
   return request({
-    url: '/getCheckPendingInfo?size=' + query.size + '&current=' + query.current,
+    url: '/system/account/getCheckPendingInfo?size=' + query.size + '&current=' + query.current,
     method: 'post',
     data,
     headers: {
@@ -23,7 +23,7 @@ export function getCheckPendingInfo(query, data) {
 
 export function CheckPending(query) {
   return request({
-    url: '/CheckPending',
+    url: '/system/account/CheckPending',
     method: 'post',
     params: query
   })
@@ -31,7 +31,7 @@ export function CheckPending(query) {
 
 export function getWalletLogs(query, data) {
   return request({
-    url: '/getWalletLogs',
+    url: '/system/account/getWalletLogs',
     method: 'post',
     params: query,
     data,
