@@ -320,6 +320,21 @@ export const constantRoutes = [
       }
     ]
   }, // 通知
+  {
+    path: '/logs',
+    component: Layout,
+    redirect: '/logs/index',
+    name: 'logs',
+    meta: { title: '系统日志', icon: 'message' },
+    children: [
+      {
+        path: 'index',
+        name: 'loglist',
+        component: () => import('@/views/logs/index'),
+        meta: { title: '系统日志' }
+      }
+    ]
+  }, // 系统日志
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
