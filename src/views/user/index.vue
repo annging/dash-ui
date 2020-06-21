@@ -63,7 +63,7 @@
 	          <el-table-column
 	            label="微信号">
 	            <template slot-scope="{row}">
-			          <span>{{  }}</span>
+			          <span>{{ row.wxOpenId }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column

@@ -49,7 +49,7 @@ export function saveOrUpdateUser(data) {
 
 export function login(query) {
   return request({
-    url: 'http://wv8ig4.natappfree.cc/system/login',
+    url: '/system/login',
     method: 'post',
     params: query
   })

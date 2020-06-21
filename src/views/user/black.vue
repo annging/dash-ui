@@ -63,7 +63,7 @@
 	          <el-table-column
 	            label="微信号">
 	            <template slot-scope="{row}">
-			          <span>{{  }}</span>
+			          <span>{{ row.wxOpenId }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
@@ -92,7 +92,7 @@
 	              <el-button
 	                size="mini"
 	                type="danger"
-	                @click="handleDelete(scope.$index, scope.row)">加入小黑屋</el-button>
+	                @click="handleDelete(scope.$index, scope.row)">移出小黑屋</el-button>
 	            </template>
 	          </el-table-column>
 	        </el-table>
@@ -119,18 +119,21 @@ export default {
 	      current: 1,
 	      size: 20
 	    },
+	    listFilter: {
+	    	deletedAt: true
+	    },
 	    levels: { 1: '普通会员' },
 	    userTypes: { 0: '客户', 1: '管理员', 2:'客服'},
 	    userSources: { 1: '商家版', 2: '用户版' }
-    };
+    }
   },
   created() {
-	  // this.getList()
+	  this.getList()
 	},
   methods: {
   	getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.listQuery, this.listFilter).then(response => {
       	if(response.data) {
 	        this.list = response.data.records
 	        this.total = response.data.total
