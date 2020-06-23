@@ -69,16 +69,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="方案介绍">
-           <editor-bar v-model="schemeForm.explain" :dataObj=dataObj></editor-bar>
+          <Tinymce ref="editor1" v-model="schemeForm.explain" :height="300" />
         </el-form-item>
 
         <el-form-item label="功能亮点">
-          <!--<el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="schemeForm.lightSpot"></el-input>-->
-           <editor-bar v-model="schemeForm.lightSpot" :dataObj=dataObj></editor-bar>
+          <Tinymce ref="editor2" v-model="schemeForm.lightSpot" :height="300" />
         </el-form-item>
         <el-form-item label="营销玩法">
-          <!--<el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" v-model="schemeForm.gameplay"></el-input>-->
-          <editor-bar v-model="schemeForm.gameplay" :dataObj=dataObj></editor-bar>
+          <Tinymce ref="editor3" v-model="schemeForm.gameplay" :height="300" />
         </el-form-item>
         <el-form-item label="活动类型">
           <el-select v-model="schemeForm.type" placeholder="请选择活动类型" >
@@ -123,7 +121,7 @@
 <script>
 import { addActivityScheme } from '@/api/activity'
 import { getToken } from '@/api/qiniu'
-import EditorBar from '@/components/EditorBar'
+import Tinymce from '@/components/Tinymce'
 
 const defaultForm = {
     title: '', //方案标题
@@ -144,7 +142,7 @@ const defaultForm = {
 
 export default {
   name: 'CreateScheme',
-  components: { EditorBar },
+  components: { Tinymce },
   data() {
     return {
       schemeForm: Object.assign({}, defaultForm),

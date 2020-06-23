@@ -8,6 +8,7 @@
       :modal-append-to-body="false"
       :append-to-body="true">
       <el-upload
+        :data="dataObj"
         :multiple="true"
         :file-list="fileList"
         :show-file-list="true"
@@ -15,7 +16,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        action="http://upload-z2.qiniup.com"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
@@ -33,9 +34,8 @@
 </template>
 
 <script>
-// import { getToken } from 'api/qiniu'
+import { getToken } from '@/api/qiniu'
 
-const qiniuUploader = require("../../../utils/qiniu");
 
 export default {
   name: 'EditorSlideUpload',
@@ -49,10 +49,27 @@ export default {
     return {
       dialogVisible: false,
       listObj: {},
-      fileList: []
+      fileList: [],
+      dataObj: { token: '' }
     }
   },
+  created() {
+    this.fetchToken()
+  },
   methods: {
+    fetchToken() {
+      const _self = this
+      return new Promise((resolve, reject) => {
+        getToken().then(response => {
+          const token = response.data
+          _self._data.dataObj.token = token
+          resolve(true)
+        }).catch(err => {
+          console.log(err)
+          reject(false)
+        })
+      })
+    },
     checkAllSuccess() {
       return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
     },
@@ -72,7 +89,8 @@ export default {
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
-          this.listObj[objKeyArr[i]].url = response.files.file
+          //this.listObj[objKeyArr[i]].url = response.files.file
+          this.listObj[objKeyArr[i]].url = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + response.key;
           this.listObj[objKeyArr[i]].hasSuccess = true
           return
         }
