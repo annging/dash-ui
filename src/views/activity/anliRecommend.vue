@@ -31,7 +31,7 @@
             <el-table-column
               label="封面图">
               <template slot-scope="{row}">
-                <img :src="row.cover" style="width: 100px;height: 60px;">
+                <img :src="row.cover[0]" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
@@ -71,7 +71,7 @@
                 <span>{{row.status}}</span>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" width="240">
+            <el-table-column label="操作" width="240">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -114,9 +114,9 @@ export default {
   },
   watch: {
       // 如果 `clientHeight` 发生改变，这个函数就会运行
-      clientHeight: function () {
-        this.changeFixed(this.clientHeight)
-      }
+      // clientHeight: function () {
+      // this.changeFixed(this.clientHeight)
+      // }
     },
   created() {
     this.getList()

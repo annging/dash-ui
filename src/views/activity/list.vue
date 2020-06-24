@@ -22,7 +22,6 @@
             fit
             highlight-current-row
             style="width: 100%"
-            :max-height="maxHeight"
             size="small"
             :header-cell-style="{
               'background-color': '#f7f9fa',
@@ -95,7 +94,7 @@
                 <span>{{row.isAnli}}</span>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" width="240">
+            <el-table-column label="操作" width="240">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -139,9 +138,9 @@ export default {
   },
   watch: {
       // 如果 `clientHeight` 发生改变，这个函数就会运行
-      clientHeight: function () {
-        this.changeFixed(this.clientHeight)
-      }
+      // clientHeight: function () {
+      // this.changeFixed(this.clientHeight)
+      // }
     },
   created() {
     this.listLoading = false
