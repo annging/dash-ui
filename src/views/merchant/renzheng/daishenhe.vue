@@ -57,7 +57,7 @@
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="handleShenhe(scope.$index, scope.row, 4)">不通过</el-button>
+                  @click="handleShenhe(scope.$index, scope.row, 3)">不通过</el-button>
               </template>
             </el-table-column>
           </el-table>
