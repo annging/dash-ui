@@ -64,7 +64,7 @@
           <el-button slot="reference" type="primary" size="medium" class="btn-create">创建方案 ▾</el-button>
         </el-popover>
         <ul class="action-menu">
-          <li class="menu-item"><el-link :underline="false"><svg-icon icon-class="user" /><span class="text">对账</span></el-link></li>
+          <!--<li class="menu-item"><el-link :underline="false"><svg-icon icon-class="user" /><span class="text">对账</span></el-link></li>-->
         </ul>
       </div>
     </div>

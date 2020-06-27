@@ -7,12 +7,12 @@
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 		    	<el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">新增商家</el-button>
-	        <el-input
+	        <!--<el-input
 	          v-model="listQuery.searchStr"
 	          placeholder="请输入内容"
 	          prefix-icon="el-icon-search"
 	          size="small"
-	          @keyup.enter.native="handleFilter" />
+	          @keyup.enter.native="handleFilter" />-->
 	      </el-row>
 	      <el-row class="list">
 	        <el-table

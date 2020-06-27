@@ -31,28 +31,27 @@
               fixed
               prop="id"
               label="ID"
-              sortable
-              width="60">
+              width="40">
               <template slot-scope="{row}">
                 <span>{{ row.id }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="封面"
-              width="120">
+              width="100">
               <template slot-scope="{row}">
-                <img :src="row.cover[0]" style="width: 100px;height: 60px;">
+                <img :src="row.cover[0]" style="width: 80px;height: 50px;">
               </template>
             </el-table-column>
             <el-table-column
-              label="活动标题"
-              width="300">
+              label="活动标题">
               <template slot-scope="{row}">
                 <span>{{ row.title }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="类型">
+              label="类型"
+              width="50">
               <template slot-scope="{row}">
                 <span>{{ activityTypes[row.type] }}</span>
               </template>
@@ -64,41 +63,45 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="活动时间"
-              width="150">
-              <template slot-scope="{row}">
-                <span>{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
-              </template>
-            </el-table-column>
-            <el-table-column
               label="商家">
               <template slot-scope="{row}">
                 <span>{{row.merchantId}}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="状态">
+              label="活动时间"
+              width="150">
               <template slot-scope="{row}">
-                <span>{{row.status}}</span>
+                <span style="text-align: center;">{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>至 <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
               </template>
             </el-table-column>
             <el-table-column
-              label="是否推荐到首页">
+              label="状态"
+              width="60">
               <template slot-scope="{row}">
-                <span>{{row.isRecommend}}</span>
+                <span>{{status[row.status]}}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="是否优秀案例">
+              label="推荐到首页?"
+              width="90">
               <template slot-scope="{row}">
-                <span>{{row.isAnli}}</span>
+                <span>{{ row.specialActivity ? (row.specialActivity.isRecommend > 0 ? '是' : '否') : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="240">
+            <el-table-column
+              label="优秀案例?"
+              width="80">
+              <template slot-scope="{row}">
+                <span>{{ row.specialActivity ? (row.specialActivity.isGood > 0 ? '是' : '否') : '否' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend')">推荐到首页</el-button>
+                  <br />
                   <el-button
                   size="mini"
                   @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood')">设为优秀案例</el-button>
@@ -133,7 +136,8 @@ export default {
       },
       clientHeight: '',
       maxHeight: 400,
-      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' }
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      status: { 1: '正常', 2: '已隐藏' }
     };
   },
   watch: {

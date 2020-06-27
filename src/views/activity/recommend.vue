@@ -68,10 +68,10 @@
             <el-table-column
               label="状态">
               <template slot-scope="{row}">
-                <span>{{row.status}}</span>
+                <span>{{ status[row.status]}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="240">
+            <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -109,7 +109,8 @@ export default {
       },
       clientHeight: '',
       maxHeight: 400,
-      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' }
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      status: { 1: '正常', 2: '已隐藏' }
     };
   },
   watch: {

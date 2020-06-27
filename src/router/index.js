@@ -249,7 +249,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/order/index',
     name: 'order',
-    meta: { title: '订单管理', icon: 'qianbao' },
+    meta: { title: '订单管理', icon: 'order' },
     children: [
       {
         path: 'index',
@@ -325,7 +325,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/logs/index',
     name: 'logs',
-    meta: { title: '系统日志', icon: 'message' },
+    meta: { title: '系统日志', icon: 'logs' },
     children: [
       {
         path: 'index',

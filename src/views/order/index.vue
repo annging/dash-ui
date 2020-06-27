@@ -76,10 +76,7 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleView(scope.$index, scope.row)">订单详情</el-button>
-                  <el-button
-                  size="mini"
-                  @click="handleUpdate(scope.$index, scope.row)">修改订单状态</el-button>
+                  @click="handleView(scope.$index, scope.row)">查看详情</el-button>
               </template>
             </el-table-column>
           </el-table>
