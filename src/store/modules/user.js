@@ -27,15 +27,18 @@ const mutations = {
   }
 }
 
+let user = {}
+
 const actions = {
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ name: username.trim(), pwd: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data)
-        setToken(data)
+        commit('SET_TOKEN', response.data.token)
+        setToken(response.data.token)
+        commit('SET_AVATAR', response.data.user.wxImg)
+        user = response.data.user
         resolve()
       }).catch(error => {
         reject(error)
@@ -61,19 +64,14 @@ const actions = {
       }).catch(error => {
         reject(error)
       })*/
-      const data = {
-        roles: ['admin'],
-        introduction: 'I am a super administrator',
-        avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-        name: 'Super Admin'
-      }
+      const data = user
       if (!data) {
         reject('Verification failed, please Login again.')
       }
-      const { name, avatar } = data
+      const { nickName, wxImg } = data
 
-      commit('SET_NAME', name)
-      commit('SET_AVATAR', avatar)
+      commit('SET_NAME', nickName)
+      commit('SET_AVATAR', wxImg)
       resolve(data)
     })
   },
