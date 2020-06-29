@@ -136,7 +136,7 @@ export default {
 	      current: 1,
 	      size: 20
 	    },
-	    levels: { 1: '普通会员' }
+	    levels: { 0: '普通会员', 1: '体验会员', 2: 'vip会员' } // '会员级别 0普通会员 1 体验会员 2会员'
     };
   },
   created() {

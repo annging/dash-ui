@@ -10,7 +10,7 @@
 		          <Tinymce ref="editor1" v-model="form.content" :height="200" />
 		        </el-form-item>
 		        <el-form-item>
-		          <el-button type="primary" @click="onSubmit">立即发布</el-button>
+		          <el-button type="primary" @click="onSubmit">发布到用户微信</el-button>
 		        </el-form-item>
 	      </el-form>
         </el-row>

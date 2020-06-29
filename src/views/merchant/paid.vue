@@ -13,8 +13,8 @@
             size="small"
             class="filter-item"
             @keyup.enter.native="handleFilter" />
-          <el-select size="small" v-model="listQuery.type" style="width: 200px" class="filter-item" @change="handleFilter">
-            <el-option  label="全部付费商家" value="" />
+          <el-select size="small" v-model="listFilter.vipLevel" style="width: 200px" class="filter-item" @change="handleFilter">
+            <!--<el-option  label="全部付费商家" value="" />-->
             <el-option v-for="item in typeOptions" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
           <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
@@ -98,13 +98,12 @@
               label="会员"
               width="">
               <template slot-scope="{row}">
-                <span>{{ row.level.name }}</span>
+                <span>{{ levels[row.vipLevel] }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="会员状态">
-              <template slot-scope="{row}">
-                <el-tag size="mini">{{ row.level.status }}</el-tag>
+              label="会员到期时间">
+              <template slot-scope="{row}">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}
               </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -119,7 +118,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+          <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>
       </div>
       <!--<div class="secondary-sidebar"></div>-->
@@ -139,21 +138,23 @@ export default {
       listLoading: false,
       listQuery: {
         searchStr: '',
-        page: 1,
-        limit: 20,
-        sort: '+id',
-        type: ''
+        current: 1,
+        size: 20
       },
-      typeOptions: [{ key: 1, label: 'vip商家' }, { key: 2, label: '旗舰版商家' }]
+      listFilter: {
+        vipLevel: 2
+      },
+      levels: { 0: '普通会员', 1: '体验会员', 2: 'vip会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
+      typeOptions: [{ key: 2, label: 'vip会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
     };
   },
   created() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.listQuery, this.listFilter).then(response => {
         this.list = response.data.items
         this.total = response.data.total
 

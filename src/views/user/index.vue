@@ -3,7 +3,7 @@
 	  	<div class="left-container">
 	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
-		      	<el-menu-item index="2" :route="{path:'/user/black'}">小黑屋</el-menu-item>
+		      	<el-menu-item index="2" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 	        <el-input
@@ -119,6 +119,9 @@ export default {
 	      current: 1,
 	      size: 20
 	    },
+	    listFilter: {
+	    	deletedAt: false
+      },
 	    levels: { 1: '普通会员' },
 	    userTypes: { 0: '客户', 1: '管理员', 2:'客服'},
 	    userSources: { 1: '商家版', 2: '用户版' }
@@ -130,7 +133,7 @@ export default {
   methods: {
   	getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.listQuery, this.listFilter).then(response => {
       	if(response.data) {
 	        this.list = response.data.records
 	        this.total = response.data.total

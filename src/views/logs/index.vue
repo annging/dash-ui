@@ -1,62 +1,62 @@
 <template>
 	<div class="main-content">
-	  	<div class="left-container">
-	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		      	<el-menu-item index="1" :route="{path:'/logs/index'}">系统日志</el-menu-item>
-	    	</el-menu>
-		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
-        </el-row>
-        <el-row class="list">
-          <el-table
-            v-loading="listLoading"
-            :data="list"
-            border
-            fit
-            highlight-current-row
-            style="width: 100%"
-            size="small"
-            :header-cell-style="{
-              'background-color': '#f7f9fa',
-              'color': '#637282;'
-            }">
-            <el-table-column
-              prop="id"
-              label="ID"
-              sortable
-              width="60">
-              <template slot-scope="{row}">
-                <span>{{ row.id }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="用户">
-              <template slot-scope="{row}">
-                <span>{{ row.user ? row.user.nickName : '未知' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="操作">
-              <template slot-scope="{row}">
-                <span>{{ row.function }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="是否成功">
-              <template slot-scope="{row}">
-                <span>{{ row.isSuccessful === 1 ? '成功': '失败' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="时间">
-              <template slot-scope="{row}">
-                <span>{{ row.createAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
-        </el-row>
-      </div>
-      <!--<div class="secondary-sidebar"></div>-->
+	  <div class="left-container">
+	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
+		    <el-menu-item index="1" :route="{path:'/logs/index'}">系统日志</el-menu-item>
+	    </el-menu>
+		  <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
+      </el-row>
+      <el-row class="list">
+        <el-table
+          v-loading="listLoading"
+          :data="list"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          size="small"
+          :header-cell-style="{
+            'background-color': '#f7f9fa',
+            'color': '#637282;'
+          }">
+          <el-table-column
+            prop="id"
+            label="ID"
+            sortable
+            width="60">
+            <template slot-scope="{row}">
+              <span>{{ row.id }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="用户">
+            <template slot-scope="{row}">
+              <span>{{ row.user ? row.user.nickName : '未知' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="操作">
+            <template slot-scope="{row}">
+              <span>{{ row.function }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="是否成功">
+            <template slot-scope="{row}">
+              <span>{{ row.isSuccessful === 1 ? '成功': '失败' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="时间">
+            <template slot-scope="{row}">
+              <span>{{ row.createAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+      </el-row>
+    </div>
+    <!--<div class="secondary-sidebar"></div>-->
   </div>
 </template>
 

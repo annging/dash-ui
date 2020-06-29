@@ -3,7 +3,7 @@
 	  	<div class="left-container">
 	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
-		      	<el-menu-item index="2" :route="{path:'/user/black'}">小黑屋</el-menu-item>
+		      	<el-menu-item index="2" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 	        <el-input
@@ -89,10 +89,10 @@
 	              <el-button
 	                size="mini"
 	                @click="handleView(scope.$index, scope.row)">查看</el-button>
-	              <el-button
+	              <!--<el-button
 	                size="mini"
 	                type="danger"
-	                @click="handleDelete(scope.$index, scope.row)">移出小黑屋</el-button>
+	                @click="handleDelete(scope.$index, scope.row)">移出小黑屋</el-button>-->
 	            </template>
 	          </el-table-column>
 	        </el-table>
@@ -149,13 +149,12 @@ export default {
     	console.log('查看')
     },
     handleDelete(index, row) {
-      this.$confirm('确认将改用户加入小黑屋?', '提示', {
+      this.$confirm('确认将该用户移除小黑屋?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-      	let d = new Date()
-        saveOrUpdateUser({id: row.id, deletedAt: d}).then(res => {
+        saveOrUpdateUser({id: row.id, deletedAt: ''}).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
