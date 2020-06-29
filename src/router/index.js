@@ -305,7 +305,7 @@ export const constantRoutes = [
     ]
   }, // 账户中心
 
-  {
+  /*{
     path: '/notice',
     component: Layout,
     redirect: '/notice/index',
@@ -319,7 +319,7 @@ export const constantRoutes = [
         meta: { title: '官方通知' }
       }
     ]
-  }, // 通知
+  },*/ // 通知
   {
     path: '/logs',
     component: Layout,

@@ -11,12 +11,13 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <span class="nickname">{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              首页
             </el-dropdown-item>
           </router-link>
           <!--<a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
@@ -46,7 +47,8 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'name'
     ])
   },
   methods: {
@@ -131,6 +133,12 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
+      .nickname {
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        vertical-align: top;
+      }
 
       .avatar-wrapper {
         margin-top: 5px;
