@@ -54,18 +54,19 @@
         <el-form-item label="标签">
            <el-select
             v-model="schemeForm.label"
+            popper-class="hiddenDown"
             multiple
             filterable
             allow-create
             default-first-option
-            placeholder="请选择方案标签"
+            placeholder="请输入方案标签"
             style="width: 600px">
             <el-option
               v-for="item in labelOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value">
-            </el-option>
+            </el-option><!-- 这里不需要常用标签，改为完全自定义。所以labelOptions是空的 -->
           </el-select>
         </el-form-item>
         <el-form-item label="方案介绍">
@@ -174,13 +175,7 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       dialogVisible1: false,
-      labelOptions: [{
-        value: '老带新',
-        label: '老带新'
-      }, {
-        value: '裂变',
-        label: '裂变'
-      }],
+      labelOptions: [],
       listLoading: false,
       dataObj: { token: '' }
     }
@@ -339,5 +334,8 @@ export default {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+  }
+  .hiddenDown {
+    display: none
   }
 </style>
