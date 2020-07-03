@@ -39,7 +39,7 @@
             <el-table-column
               label="操作用户">
               <template slot-scope="{row}">
-                <span>{{ row.actionType === 1 ? row.userId : row.fromUserId}}</span>
+                <span>{{ row.actionType === 1 ? row.user.nickName : row.formUser.nickName}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -49,15 +49,15 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="支付订单id">
+              label="支付订单">
               <template slot-scope="{row}">
-                <span>{{ row.orderId > -1 ? row.orderId : '-' }}</span>
+                <span>{{ row.orderId > -1 ? row.order.orderNum : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="相关活动id">
+              label="相关活动">
               <template slot-scope="{row}">
-                <span>{{ row.activityId > -1 ? row.orderId : '-' }}</span>
+                <span>{{ row.activityId > -1 ? row.activity.title : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column

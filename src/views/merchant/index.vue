@@ -39,7 +39,7 @@
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="头像"
+	            label="LOGO"
 	            width="60">
 	            <template slot-scope="{row}">
 	              <img :src="row.logo" style="width: 40px;height: 40px;">
@@ -95,6 +95,13 @@
 		          </template>
 		        </el-table-column>
 		        <el-table-column
+	            label="创建者"
+	            width="">
+	            <template slot-scope="{row}">
+	            	<span>{{ row.createUserId  }}</span>
+		          </template>
+		        </el-table-column>
+		        <el-table-column
 	            label="会员过期时间"
 	            width="140px">
 	            <template slot-scope="{row}">
@@ -136,7 +143,7 @@ export default {
 	      current: 1,
 	      size: 20
 	    },
-	    levels: { 0: '普通会员', 1: '体验会员', 2: 'vip会员' } // '会员级别 0普通会员 1 体验会员 2会员'
+	    levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' } // '会员级别 0普通会员 1 体验会员 2会员'
     };
   },
   created() {

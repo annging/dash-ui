@@ -2,12 +2,12 @@
 <div class="main-content">
   <div class="left-container">
     <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/merchant/create'}">添加商家</el-menu-item>
+      <el-menu-item index="1" :route="{path:'/user/virtualcreate'}">添加虚拟用户</el-menu-item>
     </el-menu>
     <el-row>
-      <el-form ref="form" :rules="rules" :model="merchantForm" label-width="100px" size="small">
+      <el-form ref="form" :rules="rules" :model="virtualUserForm" label-width="100px" size="small">
         <el-form-item label="昵称">
-          <el-input v-model="merchantForm.nickName"></el-input>
+          <el-input v-model="virtualUserForm.nickName"></el-input>
         </el-form-item>
         <el-form-item label="头像">
           <el-upload
@@ -20,14 +20,14 @@
             :on-preview="handlePicturePreview"
             :on-remove="handleRemove"
             :before-upload="beforeUpload">
-            <img v-if="merchantForm.wxImg" :src="merchantForm.wxImg" class="avatar">
+            <img v-if="virtualUserForm.wxImg" :src="virtualUserForm.wxImg" class="avatar">
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <el-dialog
             :visible.sync="dialogVisible"
             :modal-append-to-body="false"
             :append-to-body="true">
-            <img width="100%" :src="merchantForm.wxImg" alt="">
+            <img width="100%" :src="virtualUserForm.wxImg" alt="">
           </el-dialog>
         </el-form-item>
         <el-form-item>
@@ -45,16 +45,16 @@
 import { addActivityScheme } from '@/api/activity'
 import { getToken } from '@/api/qiniu'
 
-const defaultMerchantForm = {
+const defaultVirtualUserForm = {
     nickName: '', 
     wxImg: ''
 }
 
 export default {
-  name: 'MerchantCreate',
+  name: 'virtualUserCreate',
   data() {
     return {
-      merchantForm: Object.assign({}, defaultMerchantForm),
+      virtualUserForm: Object.assign({}, defaultVirtualUserForm),
       rules: {
         nickName: [
           { required: true, message: '请输入用户昵称', trigger: 'blur' },
@@ -75,7 +75,7 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!')
-      addActivityScheme(this.merchantForm).then(res => {
+      addActivityScheme(this.virtualUserForm).then(res => {
         if (res.code * 1 == 200) {
           this.$message({
             message: '创建虚拟用户成功',
@@ -117,7 +117,7 @@ export default {
       console.log(file, fileList)
     },
     handleSuccess(res, file) {
-      this.merchantForm.wxImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      this.virtualUserForm.wxImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview() {
       this.dialogVisible = true;

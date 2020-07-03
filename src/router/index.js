@@ -235,6 +235,26 @@ export const constantRoutes = [
         meta: { title: '用户列表' }
       },
       {
+        path: 'virtual',
+        name: 'virtual',
+        component: () => import('@/views/user/virtual'),
+        meta: { title: '虚拟用户' }
+      },
+      {
+        path: 'virtualimport',
+        name: 'virtualimport',
+        component: () => import('@/views/user/virtualImport'),
+        meta: { title: '导入虚拟用户', activeMenu: '/user/virtual' },
+        hidden: true
+      },
+      {
+        path: 'virtualcreate',
+        name: 'virtualcreate',
+        component: () => import('@/views/user/virtualCreate'),
+        meta: { title: '导入虚拟用户', activeMenu: '/user/virtual' },
+        hidden: true
+      },
+      {
         path: 'black',
         name: 'userBlack',
         component: () => import('@/views/user/black'),

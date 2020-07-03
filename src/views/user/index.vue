@@ -3,15 +3,17 @@
 	  	<div class="left-container">
 	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
-		      	<el-menu-item index="2" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
+		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
+		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-	        <el-input
-	          v-model="listQuery.searchStr"
-	          placeholder="请输入内容"
-	          prefix-icon="el-icon-search"
-	          size="small"
-	          @keyup.enter.native="handleFilter" />
+		    	<el-select size="small" v-model="listFilter.source" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="用户来源">
+            <el-option  label="商家版" :value="1" />
+            <el-option  label="用户版" :value="2" />
+          </el-select>
+          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+            搜索
+          </el-button>
 	      </el-row>
 	      <el-row class="list">
 	        <el-table
@@ -120,6 +122,7 @@ export default {
 	      size: 20
 	    },
 	    listFilter: {
+	    	source: 1,
 	    	deletedAt: false
       },
 	    levels: { 1: '普通会员' },

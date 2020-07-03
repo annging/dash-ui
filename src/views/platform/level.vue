@@ -81,7 +81,7 @@ export default {
   components: { Pagination },
   data() {
     return {
-      list: [{ id: 1, name: '标准会员', storeNo: '1', staffNo: '5', monthFee: '0', semiAnnual: '0', annual: '0' }, { id: 2, name: ' vip会员', storeNo: '5', staffNo: '25', monthFee: '299', semiAnnual: '999', annual: '1499' }],
+      list: [{ id: 1, name: '标准会员', storeNo: '1', staffNo: '5', monthFee: '0', semiAnnual: '0', annual: '0' }, { id: 2, name: ' VIP会员', storeNo: '5', staffNo: '25', monthFee: '299.00', semiAnnual: '999.00', annual: '1499.00' }],
       total: 0,
       listLoading: false,
       listQuery: {

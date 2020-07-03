@@ -1,13 +1,16 @@
 <template>
 	<div class="main-content">
 	  	<div class="left-container">
-	    	<el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
+	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
 		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 	    	</el-menu>
-		    <!--<el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-	      </el-row>-->
+		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+		    	<el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加虚拟用户</el-button>
+		    	<el-button type="default" size="small" style="min-width: 120px; margin-right: 20px;" @click="goImport">批量导入虚拟用户</el-button>
+
+	      </el-row>
 	      <el-row class="list">
 	        <el-table
 	        	v-loading="listLoading"
@@ -43,51 +46,12 @@
 			          <span>{{ row.nickName }}</span>
 			        </template>
 	          </el-table-column>
-	          <el-table-column
-	            label="手机号">
-	            <template slot-scope="{row}">
-			          <span>{{ row.mobile }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="手机号">
-	            <template slot-scope="{row}">
-			          <span>{{ row.mobile }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="微信号">
-	            <template slot-scope="{row}">
-			          <span>{{ row.wxOpenId }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="地址">
-	            <template slot-scope="{row}">
-			          <span>{{ row.address }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="用户类型">
-	            <template slot-scope="{row}">
-			          <span>{{ userTypes[row.type] }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="用户来源">
-	            <template slot-scope="{row}">
-			          <span>{{ userSources[row.source] }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column label="操作" width="200px">
+	          <el-table-column label="操作">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
-	                @click="handleView(scope.$index, scope.row)">查看</el-button>
-	              <!--<el-button
-	                size="mini"
 	                type="danger"
-	                @click="handleDelete(scope.$index, scope.row)">移出小黑屋</el-button>-->
+	                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 	            </template>
 	          </el-table-column>
 	        </el-table>
@@ -101,26 +65,28 @@
 <script>
 import { fetchList, saveOrUpdateUser } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 
 export default {
-	components: { Pagination },
+	components: { Pagination, UploadExcelComponent },
   data() {
     return {
       list: null,
       total: 0,
-      listLoading: false,
+      listLoading: true,
       listQuery: {
 	      searchStr: '',
 	      current: 1,
 	      size: 20
 	    },
 	    listFilter: {
-	    	deletedAt: true
-	    },
+	    	source: 1,
+	    	deletedAt: false
+      },
 	    levels: { 1: '普通会员' },
 	    userTypes: { 0: '客户', 1: '管理员', 2:'客服'},
 	    userSources: { 1: '商家版', 2: '用户版' }
-    }
+    };
   },
   created() {
 	  this.getList()
@@ -140,35 +106,27 @@ export default {
       this.listQuery.current = 1
       this.getList()
     },
-    handleView(index, row) {
-    	console.log('查看')
-    },
     handleDelete(index, row) {
-      this.$confirm('确认将该用户移除小黑屋?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        saveOrUpdateUser({id: row.id, deletedAt: ''}).then(res => {
-          if (res.code * 1 === 200 ) {
-            this.$message({
-              type: 'success',
-              message: '操作成功!'
-            })
-            this.list.splice(index, 1)
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.msg
-            })
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消操作'
-        })      
-      })
+      /*saveOrUpdateUser({id: row.id, deletedAt: d}).then(res => {
+        if (res.code * 1 === 200 ) {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.list.splice(index, 1)
+        } else {
+          this.$message({
+           	type: 'error',
+            message: res.msg
+          })
+        }
+      })*/
+    },
+    goImport() {
+    	this.$router.push({ path: '/user/virtualimport' });
+    },
+    goCreate() {
+    	this.$router.push({ path: '/user/virtualcreate' });
     }
   }
 }

@@ -31,7 +31,7 @@
               fixed
               prop="id"
               label="ID"
-              width="40">
+              width="60">
               <template slot-scope="{row}">
                 <span>{{ row.id }}</span>
               </template>
@@ -51,7 +51,7 @@
             </el-table-column>
             <el-table-column
               label="类型"
-              width="50">
+              width="60">
               <template slot-scope="{row}">
                 <span>{{ activityTypes[row.type] }}</span>
               </template>
