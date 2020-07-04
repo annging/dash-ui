@@ -21,6 +21,14 @@ export function fetchList(query, data) {
   })
 }
 
+export function getVirtualUsers(query) {
+  return request({
+    url: '/system/user/getVirtualUsers',
+    method: 'get',
+    params: query
+  })
+}
+
 export function saveOrUpdateUser(data) {
   return request({
     url: '/system/user/saveOrUpdate',
@@ -44,6 +52,18 @@ export function saveOrUpdateUser(data) {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
+  })
+}
+
+export function batchAddVirtualUser(data) {
+  return request({
+    url: '/system/user/batchAddVirtualUser',
+    method: 'post',
+    data,
+    transformRequest: [function (data) {
+      // Do whatever you want to transform the data
+      console.log(data);
+    }]
   })
 }
 

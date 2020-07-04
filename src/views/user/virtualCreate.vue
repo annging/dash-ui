@@ -5,33 +5,27 @@
       <el-menu-item index="1" :route="{path:'/user/virtualcreate'}">添加虚拟用户</el-menu-item>
     </el-menu>
     <el-row>
-      <el-form ref="form" :rules="rules" :model="virtualUserForm" label-width="100px" size="small">
+      <el-form ref="form" label-width="100px" size="small">
         <el-form-item label="昵称">
-          <el-input v-model="virtualUserForm.nickName"></el-input>
+          <el-input v-model="nickName" disabled></el-input>
         </el-form-item>
         <el-form-item label="头像">
           <el-upload
-            :data="dataObj"
-            :multiple="false"
-            class="avatar-uploader"
-            action="http://upload-z2.qiniup.com"
-            :show-file-list="false"
-            :on-success="handleSuccess"
-            :on-preview="handlePicturePreview"
-            :on-remove="handleRemove"
-            :before-upload="beforeUpload">
-            <img v-if="virtualUserForm.wxImg" :src="virtualUserForm.wxImg" class="avatar">
-            <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
+            class="upload-demo"
+            action="http://47.107.137.16:8090/system/user/batchAddVirtualUser"
+            multiple
+            :auto-upload="false"
+            :headers="dataObj"
+            :file-list="fileList"
+            list-type="picture-card"
+            :before-upload="beforeUpload"
+            ref="upload">
+            <i class="el-icon-plus"></i>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
-          <el-dialog
-            :visible.sync="dialogVisible"
-            :modal-append-to-body="false"
-            :append-to-body="true">
-            <img width="100%" :src="virtualUserForm.wxImg" alt="">
-          </el-dialog>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即添加</el-button>
+          <el-button type="primary" @click="subPicForm">立即上传</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -42,43 +36,25 @@
 </template>
 
 <script>
-import { addActivityScheme } from '@/api/activity'
-import { getToken } from '@/api/qiniu'
-
-const defaultVirtualUserForm = {
-    nickName: '', 
-    wxImg: ''
-}
+import { batchAddVirtualUser } from '@/api/user'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'virtualUserCreate',
   data() {
     return {
-      virtualUserForm: Object.assign({}, defaultVirtualUserForm),
-      rules: {
-        nickName: [
-          { required: true, message: '请输入用户昵称', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
-        ],
-        wxImg: [
-          { required: true, message: '请上传头像', trigger: 'change' }
-        ]
-      },
-      dialogVisible: false,
-      dialogVisible1: false,
-      dataObj: { token: '' }
+      nickName: '随机生成',
+      fileList: [],
+      dataObj: { token: getToken()}
     }
   },
-  created() {
-    this.fetchToken()
-  },
   methods: {
-    onSubmit() {
+    /*onSubmit() {
       console.log('submit!')
-      addActivityScheme(this.virtualUserForm).then(res => {
+      batchAddVirtualUser(this.file).then(res => {
         if (res.code * 1 == 200) {
           this.$message({
-            message: '创建虚拟用户成功',
+            message: '导入虚拟用户成功',
             type: 'success'
           })
           setTimeout(() => {
@@ -91,6 +67,36 @@ export default {
           })
         }
       })
+    },*/
+    uploadFile(file){
+    },
+    subPicForm() {
+      this.$refs.upload.submit()
+      /*let formData = new FormData();  //  用FormData存放上传文件
+      this.fileList.forEach(file => {
+          formData.append('file', file.raw)   
+      }) 
+      let config = {
+        headers: {
+        'Content-Type': 'multipart/form-data'
+        }
+      }*/
+      /*batchAddVirtualUser(formData).then( res => {
+        console.log(res)
+        if (res.code * 1 == 200) {
+          this.$message({
+            message: '导入虚拟用户成功',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          })
+        }
+      }).catch( res => {
+        console.log(res)
+      })*/
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'
@@ -112,15 +118,6 @@ export default {
           reject(false)
         })
       })
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
-    handleSuccess(res, file) {
-      this.virtualUserForm.wxImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
-    },
-    handlePicturePreview() {
-      this.dialogVisible = true;
     }
   }
 }
