@@ -45,7 +45,7 @@
 	            </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="昵称">
+	            label="微信昵称">
 	            <template slot-scope="{row}">
 			          <span>{{ row.nickName }}</span>
 			        </template>
@@ -62,18 +62,12 @@
 			          <span>{{ row.mobile }}</span>
 			        </template>
 	          </el-table-column>
-	          <el-table-column
+	          <!--<el-table-column
 	            label="微信号">
 	            <template slot-scope="{row}">
 			          <span>{{ row.wxOpenId }}</span>
 			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="地址">
-	            <template slot-scope="{row}">
-			          <span>{{ row.address }}</span>
-			        </template>
-	          </el-table-column>
+	          </el-table-column>-->
 	          <el-table-column
 	            label="用户类型">
 	            <template slot-scope="{row}">

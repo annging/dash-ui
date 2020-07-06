@@ -26,7 +26,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="subPicForm">立即上传</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="cancle">取消</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -118,6 +118,9 @@ export default {
           reject(false)
         })
       })
+    },
+    cancle() {
+      this.$router.push({ path: '/user/virtual' });
     }
   }
 }

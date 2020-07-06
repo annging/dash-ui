@@ -38,7 +38,7 @@
             <el-table-column
               label="活动">
               <template slot-scope="{row}">
-                <span>{{ row.activityId }}</span>
+                <span>{{ row.activity.title }}</span>
               </template>
             </el-table-column>
             <el-table-column

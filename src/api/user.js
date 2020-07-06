@@ -67,6 +67,21 @@ export function batchAddVirtualUser(data) {
   })
 }
 
+export function toLeadExcel(data) {
+  return request({
+    url: '/system/user/toLeadExcel',
+    method: 'post',
+    data,
+    transformRequest: [function (data) {
+      // Do whatever you want to transform the data
+      console.log(data)
+      return data
+    }],
+    processData: false,
+    contentType: false
+  })
+}
+
 export function login(query) {
   return request({
     url: '/system/login',

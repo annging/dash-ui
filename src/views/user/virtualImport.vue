@@ -9,7 +9,7 @@
       <div class="tips">
         <p><img src="@/assets/virtualexample.png"></p>
         <p>支持的文件格式 .xlsx, .xls, .csv</p>
-        <p><a href="https://ttz-user-file.qiniu.tuantuanzhan.cn/dash/virtualexample.xlsx" target="_blank">下载示例文件</a></p>
+        <p><a href="https://ttz-user-file.qiniu.tuantuanzhan.cn/dash/virtualexample20200706.xlsx" target="_blank">下载示例文件</a></p>
       </div>
     </el-row>
     <el-row>
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import UploadExcelComponent from './components/UploadExcel'
 
 export default {
   name: 'virtualUserImport',
@@ -50,7 +50,7 @@ export default {
       })
       return false
     },
-    handleSuccess({ results, header }) {
+    handleSuccess({results, header }) {
       this.tableData = results
       this.tableHeader = header
     }

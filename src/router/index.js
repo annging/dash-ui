@@ -196,6 +196,13 @@ export const constantRoutes = [
         hidden: true
       },
       {
+        path: 'detail/:id(\\d+)',
+        name: 'detail',
+        component: () => import('@/views/merchant/detail'),
+        meta: { title: '商家详细数据', activeMenu: '/merchant/index' },
+        hidden: true
+      },
+      {
         path: 'renzheng',
         name: 'merchantRZ',
         redirect: '/merchant/renzheng/daishenhe',

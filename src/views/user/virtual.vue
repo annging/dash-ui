@@ -8,7 +8,7 @@
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 		    	<el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">批量添加虚拟用户</el-button>
-		    	<!--<el-button type="default" size="small" style="min-width: 120px; margin-right: 20px;" @click="goImport">批量导入虚拟用户</el-button>-->
+		    	<el-button type="default" size="small" style="min-width: 120px; margin-right: 20px;" @click="goImport">excel导入虚拟用户</el-button>
 
 	      </el-row>
 	      <el-row class="list">
@@ -24,7 +24,7 @@
 	            'background-color': '#f7f9fa',
 	            'color': '#637282;'
 	          }">
-	          <el-table-column
+	          <!--<el-table-column
 	            prop="id"
 	            label="ID"
 	            sortable
@@ -32,7 +32,7 @@
 	            <template slot-scope="{row}">
 			          <span>{{ row.id }}</span>
 			        </template>
-	          </el-table-column>
+	          </el-table-column>-->
 	          <el-table-column
 	            label="头像"
 	            width="60">
@@ -45,14 +45,6 @@
 	            <template slot-scope="{row}">
 			          <span>{{ row.nickName }}</span>
 			        </template>
-	          </el-table-column>
-	          <el-table-column label="操作">
-	            <template slot-scope="scope">
-	              <el-button
-	                size="mini"
-	                type="danger"
-	                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-	            </template>
 	          </el-table-column>
 	        </el-table>
 	        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
@@ -121,10 +113,10 @@ export default {
       })*/
     },
     goImport() {
-    	this.$router.push({ path: '/user/virtualimport' });
+    	this.$router.push({ path: '/user/virtualimport' })
     },
     goCreate() {
-    	this.$router.push({ path: '/user/virtualcreate' });
+    	this.$router.push({ path: '/user/virtualcreate' })
     }
   }
 }
