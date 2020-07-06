@@ -6,6 +6,8 @@
     </el-menu>
     <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
       <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+    </el-row>
+    <el-row type="flex">
       <div class="tips">
         <p><img src="@/assets/virtualexample.png"></p>
         <p>支持的文件格式 .xlsx, .xls, .csv</p>
@@ -92,7 +94,6 @@ export default {
     color: #303133;
   }
   .tips {
-    margin-left: 20px;
     font-size: 11px;
     img {
       width: 400px;

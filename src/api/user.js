@@ -55,6 +55,14 @@ export function saveOrUpdateUser(data) {
   })
 }
 
+export function deleteVirtualUser(query) {
+  return request({
+    url: '/system/user/deleteVirtualUser',
+    method: 'post',
+    params: query
+  })
+}
+
 export function batchAddVirtualUser(data) {
   return request({
     url: '/system/user/batchAddVirtualUser',

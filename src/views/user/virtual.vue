@@ -24,7 +24,7 @@
 	            'background-color': '#f7f9fa',
 	            'color': '#637282;'
 	          }">
-	          <!--<el-table-column
+	          <el-table-column
 	            prop="id"
 	            label="ID"
 	            sortable
@@ -32,7 +32,7 @@
 	            <template slot-scope="{row}">
 			          <span>{{ row.id }}</span>
 			        </template>
-	          </el-table-column>-->
+	          </el-table-column>
 	          <el-table-column
 	            label="头像"
 	            width="60">
@@ -46,6 +46,14 @@
 			          <span>{{ row.nickName }}</span>
 			        </template>
 	          </el-table-column>
+            <el-table-column label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
 	        </el-table>
 	        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
 	      </el-row>
@@ -55,7 +63,7 @@
 </template>
 
 <script>
-import { getVirtualUsers} from '@/api/user'
+import { getVirtualUsers, deleteVirtualUser} from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 
@@ -97,8 +105,8 @@ export default {
       this.getList()
     },
     handleDelete(index, row) {
-      /*saveOrUpdateUser({id: row.id, deletedAt: d}).then(res => {
-        if (res.code * 1 === 200 ) {
+      deleteVirtualUser({id: row.id}).then(res => {
+        if (res.code === '200' ) {
           this.$message({
             type: 'success',
             message: '操作成功!'
@@ -110,7 +118,7 @@ export default {
             message: res.msg
           })
         }
-      })*/
+      })
     },
     goImport() {
     	this.$router.push({ path: '/user/virtualimport' })
