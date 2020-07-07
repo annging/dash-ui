@@ -70,8 +70,11 @@ export function batchAddVirtualUser(data) {
     data,
     transformRequest: [function (data) {
       // Do whatever you want to transform the data
-      console.log(data);
-    }]
+      console.log(data)
+      return data
+    }],
+    processData: false,
+    contentType: false
   })
 }
 

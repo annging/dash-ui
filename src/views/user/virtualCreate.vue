@@ -19,6 +19,7 @@
             :file-list="fileList"
             list-type="picture-card"
             :before-upload="beforeUpload"
+            :on-change="handleChange"
             ref="upload">
             <i class="el-icon-plus"></i>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -70,23 +71,26 @@ export default {
     },*/
     uploadFile(file){
     },
+    handleChange(file, fileList) {
+      this.fileList = fileList
+    },
     subPicForm() {
-      this.$refs.upload.submit()
-      /*let formData = new FormData();  //  用FormData存放上传文件
+      // this.$refs.upload.submit()
+      let formData = new FormData();  //  用FormData存放上传文件
       this.fileList.forEach(file => {
+        if(file.status === 'ready') {
           formData.append('file', file.raw)   
-      }) 
-      let config = {
-        headers: {
-        'Content-Type': 'multipart/form-data'
         }
-      }*/
-      /*batchAddVirtualUser(formData).then( res => {
+      })
+      batchAddVirtualUser(formData).then( res => {
         console.log(res)
-        if (res.code * 1 == 200) {
+        if (res.code == '200') {
           this.$message({
-            message: '导入虚拟用户成功',
+            message: res.data,
             type: 'success'
+          })
+          this.fileList.forEach(file => {
+            file.status = 'success'  
           })
         } else {
           this.$message({
@@ -96,7 +100,7 @@ export default {
         }
       }).catch( res => {
         console.log(res)
-      })*/
+      })
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'
