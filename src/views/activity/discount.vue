@@ -1,58 +1,53 @@
 <template>
   <div class="main-content">
     <div class="left-container">
-      <el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
+      <el-menu default-active="4" class="" mode="horizontal" router style="margin-bottom: 20px;">
         <el-menu-item index="1" :route="{path:'/activity/list'}">活动列表</el-menu-item>
         <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
-      <el-row class="list">
-        <el-table
-          v-loading="listLoading"
-          :data="list"
-          border
-          fit
-          highlight-current-row
-          style="width: 100%"
-          size="small"
-          :header-cell-style="{
-            'background-color': '#f7f9fa',
-            'color': '#637282;'
-          }">
+      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+          <el-input
+            v-model="listQuery.searchStr"
+            placeholder="请输入内容"
+            prefix-icon="el-icon-search"
+            size="small"
+            @keyup.enter.native="handleFilter" />
+        </el-row>
+        <el-row class="list">
+          <el-table
+            v-loading="listLoading"
+            :data="list"
+            border
+            fit
+            highlight-current-row
+            style="width: 100%"
+            size="small"
+            :header-cell-style="{
+              'background-color': '#f7f9fa',
+              'color': '#637282;'
+            }">
             <el-table-column
+              fixed
               prop="id"
               label="ID"
-              sortable
               width="60">
               <template slot-scope="{row}">
                 <span>{{ row.id }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="封面图">
-              <template slot-scope="{row}">
-                <img v-if="row.cover.length > 0" :src="row.cover[0]" style="width: 100px;height: 60px;">
-                <span v-else>没有封面图</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="title">
+              label="优惠券活动标题">
               <template slot-scope="{row}">
                 <span>{{ row.title || row.activitySetting.title }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="类型">
+              label="类型"
+              width="60">
               <template slot-scope="{row}">
                 <span>{{ activityTypes[row.type] }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="活动时间"
-              width="150">
-              <template slot-scope="{row}">
-                <span>{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -62,37 +57,61 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="商家ID">
+              label="商家">
               <template slot-scope="{row}">
-                <span>{{row.merchantId}}</span>
+                <span>{{ row.merchant.name }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="状态">
+              label="活动时间"
+              width="150">
               <template slot-scope="{row}">
-                <span>{{ status[row.status] }}</span>
+                <span style="text-align: center;">{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>至 <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="状态"
+              width="60">
+              <template slot-scope="{row}">
+                <span>{{status[row.status]}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="推荐到首页?"
+              width="90">
+              <template slot-scope="{row}">
+                <span>{{ row.specialActivity ? (row.specialActivity.isRecommend > 0 ? '是' : '否') : '否' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="优秀案例?"
+              width="80">
+              <template slot-scope="{row}">
+                <span>{{ row.specialActivity ? (row.specialActivity.isGood > 0 ? '是' : '否') : '否' }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood', 0)">取消优秀案例</el-button>
+                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend')">推荐到首页</el-button>
+                  <br />
+                  <el-button
+                  size="mini"
+                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood')">设为优秀案例</el-button>
               </template>
             </el-table-column>
-        </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
-      </el-row>
-    </div>
-    <!--<div class="secondary-sidebar"></div>-->
+          </el-table>
+          <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+        </el-row>
+      </div>
+      <!--<div class="secondary-sidebar"></div>-->
   </div>
 </template>
 
 <script>
-import qs from 'qs'
-import axios from 'axios'
-import { getSpecialActivity, setActivityWithGoodOrRecommend } from '@/api/activity'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
+import { getCouponActivityList, setActivityWithGoodOrRecommend } from '@/api/activity'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
   components: { Pagination },
@@ -100,14 +119,14 @@ export default {
     return {
       list: [],
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         searchStr: '',
         current: 1,
         size: 20
       },
       listFilter: {
-        isGood: 1
+        type: ''
       },
       clientHeight: '',
       maxHeight: 400,
@@ -122,23 +141,24 @@ export default {
       // }
     },
   created() {
+    this.listLoading = false
     this.getList()
   },
   mounted(){
       // 获取浏览器可视区域高度
-      this.clientHeight =  `${document.documentElement.clientHeight}`
-      let that = this
+      this.clientHeight =  `${document.documentElement.clientHeight}`;
+      let that = this;
       window.onresize = function temp() {
-        that.clientHeight = `${document.documentElement.clientHeight}`
-      }
+        that.clientHeight = `${document.documentElement.clientHeight}`;
+      };
     },
   methods: {
     changeFixed(clientHeight){
-      this.maxHeight = clientHeight - 85 - 110 - 100
+      this.maxHeight = clientHeight - 85 - 110 - 100;
     },
     getList() {
       this.listLoading = true
-      getSpecialActivity(this.listQuery, this.listFilter).then(response => {
+      getCouponActivityList(this.listQuery, this.listFilter).then(response => {
         if (response.data.records.length > 0) {
           response.data.records.forEach(item => {
           if (item.cover && item.cover != 'string') {
@@ -155,28 +175,25 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.page = 1
       this.getList()
     },
     // 推荐到首页
-    setActivityWithGoodOrRecommend(index, row, type, status) {
+    setActivityWithGoodOrRecommend(index, row, type) {
       let data = {}
       if(type === 'isRecommend') {
         data ={
           id: row.id,
-          isRecommend: status
+          isRecommend: 1
         }
       } else if(type === 'isGood') {
         data ={
           id: row.id,
-          isGood: status
+          isGood: 1
         }
       }
       setActivityWithGoodOrRecommend(data).then(response => {
         if(response.code === '200') {
-          if(status == 0) {
-            this.list.splice(index, 1)
-          }
           this.$message({
             type: 'success',
             message: '操作成功!'
@@ -225,8 +242,5 @@ export default {
   .el-menu--horizontal>.el-menu-item.is-active {
     border-bottom: 1px solid #000;
     color: #303133;
-  }
-  .filter-item {
-    margin-right: 10px;
   }
 </style>

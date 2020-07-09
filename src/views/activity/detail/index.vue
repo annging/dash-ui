@@ -1,40 +1,52 @@
 <template>
   <div class="main-content">
-    <div class="detail-container">
-      <el-row type="flex" align="middle" class="activity-container">
-        <el-col :span="16"><div class="grid-content bg-purple">
-          <el-row class="a-info" type="flex">
-            <div class="cover"><img :src="activity.cover" alt="" style="width: 100%; height: 100%"></div>
-            <div class="desc">
-              <h4>{{activity.title}}</h4>
-              <p>创建时间: 2020-03-11 11:11:11</p>
-            </div>
-          </el-row>
-          </div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple">
-          <el-row class="" style="text-align: right">
-            <el-image
-              style="width: 100px; height: 100px"
-              :src="url"
-              fit="fill"></el-image>
-          </el-row>
-          </div></el-col>
+    <div class="left-container">
+      <el-row type="flex" justify="space-between" :gutter="10" class="info-container activity-info" style="margin-bottom: 20px;">
+        <el-col class="left"><div class="a-logo"><img :src="activity.cover[0]"></div></el-col>
+        <el-col class="mid">
+          <div class="a-info">
+            <div class="a-title">{{ activity.title }}</div>
+            <div class="a-intro">{{ activity.desc }}</div>
+          </div>
+        </el-col>
       </el-row>
-      <el-menu :default-active="activeTabMenu" class="" mode="horizontal" router>
-        <el-menu-item :index="'/activity/detail/' + + activity.id + '/share'">活动详情</el-menu-item>
+      <el-menu :default-active="activeTabMenu"  mode="horizontal" router style="margin-bottom: 20px;">
+        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/overview'" >概览</el-menu-item>
+        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/statistics'" >统计数据</el-menu-item>
       </el-menu>
       <router-view />
     </div>
-    <!--<div class="secondary-sidebar"></div>-->
+    <div class="secondary-sidebar">
+      <div class="qrcodeImg"><img :src="qrcodeImgUrl"></div>
+    </div>
   </div>
 </template>
 
 <script>
+  import { getActivityInfo } from '@/api/activity'
+import { getImgUrl } from '@/api/wx'
+
+const defaultActivity = {
+  id: undefined,
+  cover: []
+}
+
 export default {
   data() {
     return {
-      activity: {id:1, title: '活动标题可能很长', cover: 'https://file2.rrxh5.cc/g2/c1/2020/01/27/1580096585877.png'},
+      id: '',
+      type: '',
+      activity: Object.assign({}, defaultActivity),
+      qrcodeImgUrl: '',
+      typePage: { 1: 'pages/activeDetail/activeDetail', 2: '', 3: '', 4: 'pages/bargain/bargainDetail', 5: '', 6: 'pages/group/groupDetail', 7: 'pages/vote/voteDetail', 8: '', 9: '' } // 活动类型 1 报名,2 抽奖,3 海报,4 砍价,5 秒杀,6 拼团,7 投票,8 预约,9 助力,10 优惠券(代金券),11 优惠券(折扣券),12 优惠券(兑换券),13 优惠券(体验券)
     }
+  },
+  created() {
+    this.id = this.$route.params && this.$route.params.id
+    this.type = this.$route.params && this.$route.params.type
+    this.fetchData(this.id)
+    // this.getParams()
+    this.getActivityImgUrl(this.id, this.type)
   },
   computed: {
     activeTabMenu() {
@@ -44,6 +56,39 @@ export default {
     }
   },
   methods: {
+    fetchData(id) {
+      getActivityInfo(id).then(response => {
+        if(response.code === '200') {
+          response.data.cover = JSON.parse(response.data.cover)
+          response.data.activitySetting = JSON.parse(response.data.activitySetting)
+          this.activity = response.data
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
+          })
+        }
+      })
+    },
+    getActivityImgUrl(id, type) {
+      let page = this.typePage[type]
+      if (!page) {
+        return
+      }
+      getImgUrl({
+        page: page,
+        scene: 'id' + id
+      }).then(response => {
+        if(response.code === '200') {
+          this.qrcodeImgUrl = response.data
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
+          })
+        }
+      })
+    },
   }
 }
 </script>
@@ -52,6 +97,7 @@ export default {
   .main-content {
     display: -webkit-box;
     display: flex;
+
     >div:last-child {
       margin-right: 40px;
     }
@@ -60,8 +106,9 @@ export default {
     outline: none;
     -webkit-box-flex: 0;
     flex: 0 0 240px;
+    padding-left: 40px;
   }
-  .detail-container {
+  .left-container {
     position: relative;
     z-index: 1;
     -webkit-box-flex: 1;
@@ -69,26 +116,6 @@ export default {
     min-width: 420px;
     margin-left: 30px;
     outline: none;
-  }
-  .activity-container {
-    position: relative;
-    background-color: #f4f4f5;
-    padding: 16px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    font-size: 13px;
-    line-height: 18px;
-    .cover {
-      width: 80px;
-      height: 80px;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-right: 20px;
-      border: 1px solid #cbd5e0;
-    }
-    h4 {
-      margin: 5px 0 8px 0;
-    }
   }
   .el-menu-item {
     height: 37px;
@@ -99,5 +126,49 @@ export default {
   .el-menu--horizontal>.el-menu-item.is-active {
       border-bottom: 1px solid #000;
       color: #303133;
+  }
+  .activity-info {
+    background-color: #f7f9fa;
+    padding: 16px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border-color: #dddfe1;
+    .a-logo {
+      width: 300px;
+      border-radius: 4px;
+      overflow: hidden;
+      img {
+        width: 100%;
+      }
+    }
+    .a-info {
+      font-size: 14px;
+      padding: 10px 16px 10px 10px;
+      color: #7b8994;
+      line-height: 1.25;
+      .a-title {
+        color: #47525d;
+        font-size: 28px;
+      }
+      .a-intro {
+        padding-top: 8px;
+        overflow : hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    }
+    .left {
+      flex:0 0 320px;
+    }
+  }
+  .qrcodeImg {
+    margin-top: 30px;
+    width: 200px;
+    img {
+      width: 100%;
+    }
   }
 </style>

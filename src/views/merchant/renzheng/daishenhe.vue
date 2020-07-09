@@ -155,7 +155,7 @@ export default {
     // 查看商家认证资料
     handleView(index, row) {
       this.renzheng.authType = row.authType
-      this.renzheng.authInfo = row.authInfo
+      this.renzheng.authInfo = JSON.parse(row.authInfo)
       this.renzheng.authStatus = row.authStatus
       this.dialogVisible = true
     },

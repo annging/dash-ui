@@ -4,6 +4,7 @@
 	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/merchant/index'}">商家列表</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/merchant/paid'}">付费商家列表</el-menu-item>
+            <el-menu-item index="3" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
           <el-input
@@ -144,8 +145,8 @@ export default {
       listFilter: {
         vipLevel: 2
       },
-      levels: { 0: '普通会员', 1: '体验会员', 2: 'vip会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
-      typeOptions: [{ key: 2, label: 'vip会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
+      levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
+      typeOptions: [{ key: 2, label: 'VIP会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
     };
   },
   created() {

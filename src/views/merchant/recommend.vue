@@ -1,7 +1,7 @@
 <template>
 	<div class="main-content">
 	  	<div class="left-container">
-	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
+	    	<el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/merchant/index'}">商家列表</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/merchant/paid'}">付费商家列表</el-menu-item>
 		      	<el-menu-item index="3" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
@@ -106,20 +106,11 @@
 	            	<span>{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
 		          </template>
 		        </el-table-column>
-	          <el-table-column label="操作" width="200">
+	          <el-table-column label="操作">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
-	                type="text"
 	                @click="handleView(scope.$index, scope.row)">查看</el-button>
-	              <el-button
-	                size="mini"
-	                type="text"
-	                @click="handleRecommend(scope.$index, scope.row)">推荐</el-button>
-	              <el-button
-	                size="mini"
-	                type="text"
-	                @click="handleCancelRecommend(scope.$index, scope.row)">取消推荐</el-button>
 	              <!--<el-button
 	                size="mini"
 	                type="danger"
@@ -135,7 +126,7 @@
 </template>
 
 <script>
-import { fetchList, recommendMerchant, CancelRecommended } from '@/api/merchant'
+import { fetchList } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -144,7 +135,7 @@ export default {
     return {
       list: null,
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
 	      searchStr: '',
 	      current: 1,
@@ -154,7 +145,7 @@ export default {
     };
   },
   created() {
-	  this.getList()
+	  // this.getList()
 	},
   methods: {
   	getList() {
@@ -190,39 +181,7 @@ export default {
     	this.$router.push({ path: '/merchant/create' });
     },
     handleView(index, row) {
-    	this.$router.push({
-    		path: '/merchant/detail/' + row.id
-    	})
-    },
-    handleRecommend(index, row) {
-    	recommendMerchant({merchantId: row.id}).then(response => {
-        if(response.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: response.msg
-          })
-        }
-      })
-    },
-    handleCancelRecommend(index, row) {
-    	CancelRecommended({merchantId: row.id}).then(response => {
-        if(response.code === '200') {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: response.msg
-          })
-        }
-      })
+    	this.$router.push({ path: '/merchant/detail/' + row.id });
     }
   }
 }

@@ -50,18 +50,6 @@
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="手机号">
-	            <template slot-scope="{row}">
-			          <span>{{ row.mobile }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="微信号">
-	            <template slot-scope="{row}">
-			          <span>{{ row.wxOpenId }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
 	            label="地址">
 	            <template slot-scope="{row}">
 			          <span>{{ row.address }}</span>

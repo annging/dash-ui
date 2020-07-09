@@ -3,6 +3,7 @@
     <div class="left-container">
       <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
         <el-menu-item index="1" :route="{path:'/activity/list'}">活动列表</el-menu-item>
+        <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
@@ -31,13 +32,14 @@
             <el-table-column
               label="封面图">
               <template slot-scope="{row}">
-                <img :src="row.cover[0]" style="width: 100px;height: 60px;">
+                <img v-if="row.cover.length > 0" :src="row.cover[0]" style="width: 100px;height: 60px;">
+                <span v-else>没有封面图</span>
               </template>
             </el-table-column>
             <el-table-column
               label="title">
               <template slot-scope="{row}">
-                <span>{{ row.title }}</span>
+                <span>{{ row.title || row.activitySetting.title }}</span>
               </template>
             </el-table-column>
             <el-table-column

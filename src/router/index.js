@@ -101,9 +101,17 @@ export const constantRoutes = [
         meta: { title: '活动列表' }
       },
       {
-        path: 'detail/:id(\\d+)',
+        path: 'discount',
+        name: 'discount',
+        component: () => import('@/views/activity/discount'),
+        meta: { title: '优惠券列表' },
+        hidden: true
+      },
+      {
+        path: 'detail/:id(\\d+)/:type(\\d+)',
         name: 'detail',
         component: () => import('@/views/activity/detail/index'),
+        redirect: '/activity/detail/:id(\\d+)/:type(\\d+)/overview',
         meta: { title: '活动详细数据', icon: 'activity', activeMenu: '/activity/list' },
         hidden: true,
         children: [
@@ -112,6 +120,12 @@ export const constantRoutes = [
             component: () => import('@/views/activity/detail/overview'),
             name: '活动详情',
             meta: { title: '活动详情', activeMenu: '/activity/index' }
+          },
+          {
+            path: 'statistics',
+            component: () => import('@/views/activity/detail/statistics'),
+            name: '活动详情数据',
+            meta: { title: '活动详情数据', activeMenu: '/activity/index' }
           }
         ]
       },
@@ -196,11 +210,33 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'detail/:id(\\d+)',
-        name: 'detail',
-        component: () => import('@/views/merchant/detail'),
-        meta: { title: '商家详细数据', activeMenu: '/merchant/index' },
+        path: 'recommend',
+        name: 'recommendMerchant',
+        component: () => import('@/views/merchant/recommend'),
+        meta: { title: '推荐商家', activeMenu: '/merchant/index'},
         hidden: true
+      },
+      {
+        path: 'detail/:id(\\d+)',
+        name: 'merchantDetail',
+        component: () => import('@/views/merchant/detail'),
+        redirect: '/merchant/detail/:id(\\d+)/overview',
+        meta: { title: '商家详细数据', activeMenu: '/merchant/index' },
+        hidden: true,
+        children: [
+          {
+            path: 'overview',
+            component: () => import('@/views/merchant/detail/overview'),
+            name: '商家详情',
+            meta: { title: '商家详情', activeMenu: '/merchant/index' }
+          },
+          {
+            path: 'statistics',
+            component: () => import('@/views/merchant/detail/statistics'),
+            name: '商家详情',
+            meta: { title: '商家详情', activeMenu: '/merchant/index' }
+          }
+        ]
       },
       {
         path: 'renzheng',

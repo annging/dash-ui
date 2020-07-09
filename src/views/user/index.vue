@@ -7,7 +7,8 @@
 		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-		    	<el-select size="small" v-model="listFilter.source" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="用户来源">
+		    	<el-select size="small" v-model="listFilter.source" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部用户">
+		    		<el-option  label="全部用户" value="" />
             <el-option  label="商家版" :value="1" />
             <el-option  label="用户版" :value="2" />
           </el-select>
@@ -48,12 +49,6 @@
 	            label="微信昵称">
 	            <template slot-scope="{row}">
 			          <span>{{ row.nickName }}</span>
-			        </template>
-	          </el-table-column>
-	          <el-table-column
-	            label="手机号">
-	            <template slot-scope="{row}">
-			          <span>{{ row.mobile }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
@@ -120,8 +115,8 @@ export default {
 	    	deletedAt: false
       },
 	    levels: { 1: '普通会员' },
-	    userTypes: { 0: '客户', 1: '管理员', 2:'客服'},
-	    userSources: { 1: '商家版', 2: '用户版' }
+	    userTypes: { 0: '客户', 1: '管理员', 2:'客服', 3: '员工'},
+	    userSources: { 1: '商家版', 2: '用户版', 3: '管理员', 4: '员工' }
     };
   },
   created() {

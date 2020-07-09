@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <!--<hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />-->
+    <hamburger v-if="!sidebar.opened" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <div class="logo-title">团团站管理中心</div>
     <!--<breadcrumb class="breadcrumb-container" />-->
 

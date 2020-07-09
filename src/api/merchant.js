@@ -34,7 +34,26 @@ export function isOrNoAuthentication(query) {
 export function fetchMerchant(id) {
   return request({
     url: '/system/merchant/getMerchantInfo',
-    method: 'get',
-    params: { schemeId: id }
+    method: 'post',
+    params: { merchantId: id }
   })
 }
+
+// /system/merchant/recommendMerchant 推荐商家
+export function recommendMerchant(query) {
+  return request({
+    url: '/system/merchant/recommendMerchant',
+    method: 'get',
+    params: query
+  })
+}
+
+// /system/merchant/CancelRecommended 取消推荐商家
+export function CancelRecommended(query) {
+  return request({
+    url: '/system/merchant/CancelRecommended',
+    method: 'get',
+    params: query
+  })
+}
+
