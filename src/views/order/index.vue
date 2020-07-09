@@ -72,7 +72,7 @@
                 <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" width="240">
+            <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"

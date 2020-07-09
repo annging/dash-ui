@@ -25,6 +25,7 @@
 <script>
 import { fetchMerchant } from '@/api/merchant'
 import { getImgUrl } from '@/api/wx'
+import { getUserInfo } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const defaultMerchant = {
@@ -72,9 +73,10 @@ export default {
       })
     },
     getMerchantHomeImgUrl(id) {
+      let shareUser = JSON.parse(getUserInfo())
       getImgUrl({
         page: 'pages/merchant/home',
-        scene: 'merchantId=' + id
+        scene: 'id' + id + '&shareUserId=' + shareUser.id
       }).then(response => {
         if(response.code === '200') {
           this.qrcodeImgUrl = response.data

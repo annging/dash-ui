@@ -23,8 +23,9 @@
 </template>
 
 <script>
-  import { getActivityInfo } from '@/api/activity'
+import { getActivityInfo } from '@/api/activity'
 import { getImgUrl } from '@/api/wx'
+import { getUserInfo } from '@/utils/auth'
 
 const defaultActivity = {
   id: undefined,
@@ -75,9 +76,11 @@ export default {
       if (!page) {
         return
       }
+      let shareUser = JSON.parse(getUserInfo())
+      // console.log(shareUser.id)
       getImgUrl({
         page: page,
-        scene: 'id' + id
+        scene: 'id' + id + '&shareUserId=' + shareUser.id
       }).then(response => {
         if(response.code === '200') {
           this.qrcodeImgUrl = response.data
