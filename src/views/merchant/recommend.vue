@@ -6,15 +6,6 @@
 		      	<el-menu-item index="2" :route="{path:'/merchant/paid'}">付费商家列表</el-menu-item>
 		      	<el-menu-item index="3" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
 	    	</el-menu>
-		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-		    	<el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px; display: none" icon="el-icon-circle-plus-outline" @click="goCreate">新增商家</el-button>
-	        <!--<el-input
-	          v-model="listQuery.searchStr"
-	          placeholder="请输入内容"
-	          prefix-icon="el-icon-search"
-	          size="small"
-	          @keyup.enter.native="handleFilter" />-->
-	      </el-row>
 	      <el-row class="list">
 	        <el-table
 	        	v-loading="listLoading"
@@ -31,7 +22,7 @@
 	          <el-table-column
 	            prop="id"
 	            label="ID"
-	            width="60">
+	            width="50">
 	            <template slot-scope="{row}">
 			          <span>{{ row.id }}</span>
 			        </template>
@@ -52,25 +43,25 @@
 	          <el-table-column
 	            label="活动总数">
 	            <template slot-scope="{row}">
-			          <span>{{ row.merchantAggregate.activityCount }}</span>
+			          <span>{{ row.merchantAggregate ? row.merchantAggregate.activityCount : '-' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="访问人数">
 	            <template slot-scope="{row}">
-			          <span>{{row.merchantAggregate.visitCount}}</span>
+			          <span>{{ row.merchantAggregate ? row.merchantAggregate.visitCount : '-' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="参与人数">
 	            <template slot-scope="{row}">
-			          <span>{{row.merchantAggregate.participationCount}}</span>
+			          <span>{{ row.merchantAggregate ? row.merchantAggregate.participationCount : '-' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
 	            label="累计收入(元)">
 	            <template slot-scope="{row}">
-			          <span>{{row.merchantAggregate.totalIncome}}</span>
+			          <span>{{ row.merchantAggregate ? row.merchantAggregate.totalIncome : '-' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
@@ -82,7 +73,7 @@
 	          <el-table-column
 	            label="员工数量">
 	            <template slot-scope="{row}">
-			          <span>{{ row.merchantAggregate.employeeCount }}</span>
+			          <span>{{ row.merchantAggregate ? row.merchantAggregate.employeeCount : '-' }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
@@ -106,11 +97,16 @@
 	            	<span>{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
 		          </template>
 		        </el-table-column>
-	          <el-table-column label="操作">
+	          <el-table-column label="操作" width="120px">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
+	                type="text"
 	                @click="handleView(scope.$index, scope.row)">查看</el-button>
+	                <el-button
+	                size="mini"
+	                type="text"
+	                @click="handleCancelRecommend(scope.$index, scope.row)">取消推荐</el-button>
 	              <!--<el-button
 	                size="mini"
 	                type="danger"
@@ -126,7 +122,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/merchant'
+import { getRecommendedMerchants, CancelRecommended } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -145,12 +141,12 @@ export default {
     };
   },
   created() {
-	  // this.getList()
+	  this.getList()
 	},
   methods: {
   	getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      getRecommendedMerchants(this.listQuery).then(response => {
       	if(response.data) {
 	        this.list = response.data.records
 	        this.total = response.data.total
@@ -182,6 +178,32 @@ export default {
     },
     handleView(index, row) {
     	this.$router.push({ path: '/merchant/detail/' + row.id });
+    },
+    handleCancelRecommend(index, row) {
+    	this.$confirm('确认取消推荐商家?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+	    	CancelRecommended({merchantId: row.id}).then(response => {
+	        if(response.code === '200') {
+	          this.$message({
+	            type: 'success',
+	            message: '操作成功!'
+	          })
+	        } else {
+	          this.$message({
+	            type: 'error',
+	            message: response.msg
+	          })
+	        }
+	      }) 
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })        
+      })
     }
   }
 }

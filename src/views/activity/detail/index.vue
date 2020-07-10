@@ -80,7 +80,7 @@ export default {
       // console.log(shareUser.id)
       getImgUrl({
         page: page,
-        scene: 'id' + id + '&shareUserId=' + shareUser.id
+        scene: 'id=' + id + '&shareUserId=' + shareUser.id
       }).then(response => {
         if(response.code === '200') {
           this.qrcodeImgUrl = response.data

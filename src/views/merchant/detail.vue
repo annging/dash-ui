@@ -76,7 +76,7 @@ export default {
       let shareUser = JSON.parse(getUserInfo())
       getImgUrl({
         page: 'pages/merchant/home',
-        scene: 'id' + id + '&shareUserId=' + shareUser.id
+        scene: 'merchantId=' + id + '&shareUserId=' + shareUser.id
       }).then(response => {
         if(response.code === '200') {
           this.qrcodeImgUrl = response.data

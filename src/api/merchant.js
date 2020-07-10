@@ -39,6 +39,27 @@ export function fetchMerchant(id) {
   })
 }
 
+// /system/merchant/getRecommendedMerchants 推荐商家列表
+export function getRecommendedMerchants(query, data) {
+  return request({
+    url: '/system/merchant/getRecommendedMerchants',
+    method: 'post',
+    params: query,
+    data,
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
+  })
+}
+
+
 // /system/merchant/recommendMerchant 推荐商家
 export function recommendMerchant(query) {
   return request({

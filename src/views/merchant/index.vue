@@ -106,7 +106,7 @@
 	            	<span>{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
 		          </template>
 		        </el-table-column>
-	          <el-table-column label="操作" width="200">
+	          <el-table-column label="操作" width="100">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
@@ -116,10 +116,10 @@
 	                size="mini"
 	                type="text"
 	                @click="handleRecommend(scope.$index, scope.row)">推荐</el-button>
-	              <el-button
+	              <!--<el-button
 	                size="mini"
 	                type="text"
-	                @click="handleCancelRecommend(scope.$index, scope.row)">取消推荐</el-button>
+	                @click="handleCancelRecommend(scope.$index, scope.row)">取消推荐</el-button>-->
 	              <!--<el-button
 	                size="mini"
 	                type="danger"
