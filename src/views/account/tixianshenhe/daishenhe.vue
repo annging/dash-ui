@@ -5,7 +5,7 @@
 		      	<el-menu-item index="1" :route="{path:'/account/tixianshenhe/daishenhe'}">待审核</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/account/tixianshenhe/yitongguo'}">审核记录</el-menu-item>
 	    	</el-menu>
-		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
+		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px; display: none">
         </el-row>
         <el-row class="list">
           <el-table

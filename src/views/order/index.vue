@@ -4,7 +4,7 @@
 	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/order/index'}">订单</el-menu-item>
 	    	</el-menu>
-		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
+		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px; display: none;">
         </el-row>
         <el-row class="list">
           <el-table
