@@ -6,7 +6,7 @@
 		      	<el-menu-item index="2" :route="{path:'/merchant/paid'}">付费商家列表</el-menu-item>
 		      	<el-menu-item index="3" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
 	    	</el-menu>
-		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px; display: none">
 		    	<el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px; display: none" icon="el-icon-circle-plus-outline" @click="goCreate">新增商家</el-button>
 	        <!--<el-input
 	          v-model="listQuery.searchStr"
@@ -50,37 +50,40 @@
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="活动总数">
+	            label="活动数"
+	            width="60">
 	            <template slot-scope="{row}">
 			          <span>{{ row.merchantAggregate.activityCount }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="访问人数">
+	            label="访问数">
 	            <template slot-scope="{row}">
 			          <span>{{row.merchantAggregate.visitCount}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="参与人数">
+	            label="参与数">
 	            <template slot-scope="{row}">
 			          <span>{{row.merchantAggregate.participationCount}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="累计收入(元)">
+	            label="收入(元)">
 	            <template slot-scope="{row}">
 			          <span>{{row.merchantAggregate.totalIncome}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="门店数量">
+	            label="门店数"
+	            width="60">
 	            <template slot-scope="{row}">
 			          <span>{{row.storeCount || row.stores.length}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="员工数量">
+	            label="员工数"
+	            width="60">
 	            <template slot-scope="{row}">
 			          <span>{{ row.merchantAggregate.employeeCount }}</span>
 			        </template>
@@ -111,7 +114,7 @@
 	              <el-button
 	                size="mini"
 	                type="text"
-	                @click="handleView(scope.$index, scope.row)">查看</el-button>
+	                @click="handleView(scope.$index, scope.row)">详情</el-button>
 	              <el-button
 	                size="mini"
 	                type="text"
@@ -136,6 +139,8 @@
 
 <script>
 import { fetchList, recommendMerchant, CancelRecommended } from '@/api/merchant'
+import { getImgUrl } from '@/api/wx'
+import { getUserInfo } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -150,8 +155,9 @@ export default {
 	      current: 1,
 	      size: 20
 	    },
+	    qrcodeImgUrl: '',
 	    levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' } // '会员级别 0普通会员 1 体验会员 2会员'
-    };
+    }
   },
   created() {
 	  this.getList()
@@ -216,6 +222,22 @@ export default {
             type: 'success',
             message: '操作成功!'
           })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
+          })
+        }
+      })
+    },
+    handleQrcode(index, row) {
+    	let shareUser = JSON.parse(getUserInfo())
+      getImgUrl({
+        page: 'pages/merchant/home',
+        scene: 'merchantId=' + id + '&shareUserId=' + shareUser.id
+      }).then(response => {
+        if(response.code === '200') {
+          this.qrcodeImgUrl = response.data
         } else {
           this.$message({
             type: 'error',

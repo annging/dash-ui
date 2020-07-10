@@ -1,6 +1,6 @@
 <template>
   <div class="navbar">
-    <hamburger v-if="!sidebar.opened" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <div class="logo-title">团团站管理中心</div>
     <!--<breadcrumb class="breadcrumb-container" />-->
 
@@ -84,6 +84,7 @@ export default {
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
+    border-left: 1px solid rgba(0, 0, 0, .025);
 
     &:hover {
       background: rgba(0, 0, 0, .025)

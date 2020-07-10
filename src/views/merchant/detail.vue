@@ -5,8 +5,18 @@
           <el-col class="left"><div class="m-logo"><img :src="merchant.logo"></div></el-col>
           <el-col class="mid">
             <div class="m-info">
-              <div class="m-title">{{ merchant.name }}</div>
+              <div class="m-title">{{ merchant.name }}
+                <el-tag type="info" size="mini" v-if="merchant.authStatus===0">未认证</el-tag>
+                <el-tag type="info"  size="mini" v-if="merchant.authStatus===2 && merchant.authType===1">个人认证</el-tag>
+                <el-tag type="info"  size="mini" v-if="merchant.authStatus===2 && merchant.authType===2">企业认证</el-tag>
+              </div>
               <div class="m-intro">{{ merchant.intro }}</div>
+              <div class="m-other">
+                <span class="label">手机号:</span><span>{{ merchant.mobile }}</span> <br />
+                <span class="label">微信号:</span><span>{{ merchant.wechat }}</span> <br />
+                <span class="label">地  址:</span><span>{{ merchant.address.tips }} <br />
+                {{ merchant.address.province + merchant.address.city + merchant.address.distinct + merchant.address.detail }}</span>
+              </div>
             </div>
           </el-col>
 	      </el-row>
@@ -29,7 +39,14 @@ import { getUserInfo } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const defaultMerchant = {
-	id: undefined
+	id: undefined,
+  name: '...',
+  authStatus: 0,
+  intro: '...',
+  mobile: '-',
+  phone: [],
+  wechat: '-',
+  address: {province: '', city: '', distinct: '', detail: '', tips: ''}
 }
 
 export default {
@@ -62,6 +79,8 @@ export default {
       fetchMerchant(id).then(response => {
       	if(response.code === '200') {
 	      	if(response.data) {
+            response.data.phone = JSON.parse(response.data.phone)
+            response.data.address = JSON.parse(response.data.address);
 	      		this.merchant = response.data
 		      }
 	      } else {
@@ -182,6 +201,16 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+      }
+      .m-other {
+        margin-top: 10px;
+        span {
+          display: inline-block;
+          vertical-align: top;
+          &.label {
+            width: 50px;
+          }
+        }
       }
     }
     .left {
