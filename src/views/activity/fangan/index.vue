@@ -13,11 +13,11 @@
           prefix-icon="el-icon-search"
           size="small"
           @keyup.enter.native="handleFilter" />
-        <el-select size="small" v-model="listFilter.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
+        <el-select size="small" v-model="listFilter.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部类型">
           <el-option  label="全部类型" value="" />
           <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
         </el-select>
-        <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="行业">
+        <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部行业">
           <el-option  label="全部行业" value="" />
           <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="value" />
         </el-select>

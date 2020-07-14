@@ -4,6 +4,15 @@
       <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
         <el-menu-item index="1" :route="{path:'/activity/activityOptions'}">活动反馈/举报</el-menu-item>
       </el-menu>
+      <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
+        <el-select size="small" v-model="listFilter.optionType" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部类型">
+          <el-option label="全部类型" value="" />
+          <el-option v-for="(value, key, index) in optionTypes" :key="key" :label="value" :value="key" />
+        </el-select>
+        <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          搜索
+        </el-button>
+      </el-row>
       <el-row class="list">
         <el-table
           v-loading="listLoading"
