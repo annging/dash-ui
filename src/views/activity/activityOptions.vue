@@ -43,12 +43,19 @@
               <span>{{ row.context }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            label="相关活动"
-            width="150">
-            <template slot-scope="{row}">
-              <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activity.id + '/' + row.activity.type + '/overview'">{{ row.activity.title }}</router-link>
-            </template>
+          <el-table-column label="相关活动">
+            <el-table-column
+              label="标题">
+              <template slot-scope="{row}">
+                <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activity.id + '/' + row.activity.type + '/overview'">{{ row.activity.title }}</router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="类型">
+              <template slot-scope="{row}">
+                <span>{{ activityTypes[row.activity.type] }}</span>
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column
             label="操作时间">
@@ -84,7 +91,9 @@ export default {
       },
       clientHeight: '',
       maxHeight: 400,
-      optionTypes: { 1: '不感兴趣', 2: '举报' }
+      optionTypes: { 1: '不感兴趣', 2: '举报' },
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      status: { 1: '正常', 2: '已隐藏' }
     }
   },
   watch: {
