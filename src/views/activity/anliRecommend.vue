@@ -23,7 +23,6 @@
             <el-table-column
               prop="id"
               label="ID"
-              sortable
               width="60">
               <template slot-scope="{row}">
                 <span>{{ row.id }}</span>
@@ -73,11 +72,23 @@
                 <span>{{ status[row.status] }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+            label="权重">
+              <template slot-scope="{row}">
+                <span>{{ row.weight ? row.weight : 0 }}</span>
+              </template>
+            </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood', 0)">取消优秀案例</el-button>
+                  type="text"
+                  @click="setWeight(scope.$index, scope.row, 1)">修改</el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  style="color: #F56C6C"
+                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood', 0)">删除</el-button>
               </template>
             </el-table-column>
         </el-table>
@@ -91,7 +102,7 @@
 <script>
 import qs from 'qs'
 import axios from 'axios'
-import { getSpecialActivity, setActivityWithGoodOrRecommend } from '@/api/activity'
+import { getSpecialActivity, setActivityWithGoodOrRecommend, setWeight } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
@@ -160,33 +171,70 @@ export default {
     },
     // 推荐到首页
     setActivityWithGoodOrRecommend(index, row, type, status) {
-      let data = {}
-      if(type === 'isRecommend') {
-        data ={
-          id: row.id,
-          isRecommend: status
-        }
-      } else if(type === 'isGood') {
-        data ={
-          id: row.id,
-          isGood: status
-        }
-      }
-      setActivityWithGoodOrRecommend(data).then(response => {
-        if(response.code === '200') {
-          if(status == 0) {
-            this.list.splice(index, 1)
+      this.$confirm('确认取消设为优秀案例?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let data = {}
+        if (type === 'isRecommend') {
+          data ={
+            id: row.id,
+            isRecommend: status
           }
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: response.msg
-          })
+        } else if (type === 'isGood') {
+          data ={
+            id: row.id,
+            isGood: status
+          }
         }
+        setActivityWithGoodOrRecommend(data).then(response => {
+          if (response.code === '200') {
+            if (status == 0) {
+              this.list.splice(index, 1)
+            }
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.msg
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })       
+      })
+    },
+    // 设置权重
+    setWeight(index, row, type) {
+      this.$prompt('请输入权重', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        setWeight({activityId: row.id, type: type, weight: value}).then(response => {
+          if (response.code === '200') {
+            let that = this
+            this.$message({
+              type: 'success',
+              message: '操作成功!',
+              onClose: function() {
+                that.listQuery.current = 1
+                that.getList()
+              }
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })         
       })
     }
   }

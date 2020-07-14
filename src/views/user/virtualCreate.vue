@@ -1,39 +1,39 @@
 <template>
-<div class="main-content">
-  <div class="left-container">
-    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/user/virtualcreate'}">添加虚拟用户</el-menu-item>
-    </el-menu>
-    <el-row>
-      <el-form ref="form" label-width="100px" size="small">
-        <el-form-item label="昵称">
-          <el-input v-model="nickName" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="头像">
-          <el-upload
-            class="upload-demo"
-            action="http://47.107.137.16:8090/system/user/batchAddVirtualUser"
-            multiple
-            :auto-upload="false"
-            :headers="dataObj"
-            :file-list="fileList"
-            list-type="picture-card"
-            :before-upload="beforeUpload"
-            :on-change="handleChange"
-            ref="upload">
-            <i class="el-icon-plus"></i>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-          </el-upload>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="subPicForm">立即上传</el-button>
-          <el-button @click="cancle">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
+  <div class="main-content">
+    <div class="left-container">
+      <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
+        <el-menu-item index="1" :route="{path:'/user/virtualcreate'}">添加虚拟用户</el-menu-item>
+      </el-menu>
+      <el-row>
+        <el-form ref="form" label-width="100px" size="small">
+          <el-form-item label="昵称">
+            <el-input v-model="nickName" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="头像">
+            <el-upload
+              ref="upload"
+              class="upload-demo"
+              action="http://47.107.137.16:8090/system/user/batchAddVirtualUser"
+              multiple
+              :auto-upload="false"
+              :headers="dataObj"
+              :file-list="fileList"
+              list-type="picture-card"
+              :before-upload="beforeUpload"
+              :on-change="handleChange">
+              <i class="el-icon-plus"></i>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="subPicForm">立即上传</el-button>
+            <el-button @click="cancle">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-row>
+    </div>
+    <!--<div class="secondary-sidebar"></div>-->
   </div>
-  <!--<div class="secondary-sidebar"></div>-->
-</div>
 </template>
 
 <script>
@@ -41,16 +41,16 @@ import { batchAddVirtualUser } from '@/api/user'
 import { getToken } from '@/utils/auth'
 
 export default {
-  name: 'virtualUserCreate',
+  name: 'VirtualUserCreate',
   data() {
     return {
       nickName: '随机生成',
       fileList: [],
-      dataObj: { token: getToken()}
+      dataObj: { token: getToken() }
     }
   },
   methods: {
-    /*onSubmit() {
+    /* onSubmit() {
       console.log('submit!')
       batchAddVirtualUser(this.file).then(res => {
         if (res.code * 1 == 200) {
@@ -68,29 +68,29 @@ export default {
           })
         }
       })
-    },*/
-    uploadFile(file){
+    }, */
+    uploadFile(file) {
     },
     handleChange(file, fileList) {
       this.fileList = fileList
     },
     subPicForm() {
       // this.$refs.upload.submit()
-      let formData = new FormData();  //  用FormData存放上传文件
+      let formData = new FormData() // 用FormData存放上传文件
       this.fileList.forEach(file => {
-        if(file.status === 'ready') {
-          formData.append('file', file.raw)   
+        if (file.status === 'ready') {
+          formData.append('file', file.raw)
         }
       })
-      batchAddVirtualUser(formData).then( res => {
+      batchAddVirtualUser(formData).then(res => {
         console.log(res)
-        if (res.code == '200') {
+        if (res.code === '200') {
           this.$message({
             message: res.data,
             type: 'success'
           })
           this.fileList.forEach(file => {
-            file.status = 'success'  
+            file.status = 'success'
           })
         } else {
           this.$message({
@@ -98,12 +98,12 @@ export default {
             type: 'error'
           })
         }
-      }).catch( res => {
+      }).catch(res => {
         console.log(res)
       })
     },
     beforeUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
+      // const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
@@ -124,7 +124,7 @@ export default {
       })
     },
     cancle() {
-      this.$router.push({ path: '/user/virtual' });
+      this.$router.push({ path: '/user/virtual' })
     }
   }
 }

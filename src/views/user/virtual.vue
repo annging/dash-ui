@@ -93,7 +93,7 @@ export default {
   	getList() {
       this.listLoading = true
       getVirtualUsers(this.listQuery).then(response => {
-      	if(response.data) {
+      	if (response.data) {
 	        this.list = response.data.records
 	        this.total = response.data.total
 	      }

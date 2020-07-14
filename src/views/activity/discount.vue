@@ -8,104 +8,108 @@
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-          <el-input
-            v-model="listQuery.searchStr"
-            placeholder="请输入内容"
-            prefix-icon="el-icon-search"
-            size="small"
-            @keyup.enter.native="handleFilter" />
-        </el-row>
-        <el-row class="list">
-          <el-table
-            v-loading="listLoading"
-            :data="list"
-            border
-            fit
-            highlight-current-row
-            style="width: 100%"
-            size="small"
-            :header-cell-style="{
-              'background-color': '#f7f9fa',
-              'color': '#637282;'
-            }">
-            <el-table-column
-              fixed
-              prop="id"
-              label="ID"
-              width="60">
-              <template slot-scope="{row}">
-                <span>{{ row.id }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="优惠券活动标题">
-              <template slot-scope="{row}">
-                <span>{{ row.title || row.activitySetting.title }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="类型"
-              width="60">
-              <template slot-scope="{row}">
-                <span>{{ activityTypes[row.type] }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="价格">
-              <template slot-scope="{row}">
-                <span>{{ row.basePrice === 0 ? '免费' : row.basePrice.toFixed(2) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="商家">
-              <template slot-scope="{row}">
-                <span>{{ row.merchant.name }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="活动时间"
-              width="150">
-              <template slot-scope="{row}">
-                <span style="text-align: center;">{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>至 <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="状态"
-              width="60">
-              <template slot-scope="{row}">
-                <span>{{status[row.status]}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="推荐到首页?"
-              width="90">
-              <template slot-scope="{row}">
-                <span>{{ row.specialActivity ? (row.specialActivity.isRecommend > 0 ? '是' : '否') : '否' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="优秀案例?"
-              width="80">
-              <template slot-scope="{row}">
-                <span>{{ row.specialActivity ? (row.specialActivity.isGood > 0 ? '是' : '否') : '否' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
+        <el-input
+          v-model="listQuery.searchStr"
+          placeholder="请输入内容"
+          prefix-icon="el-icon-search"
+          size="small"
+          @keyup.enter.native="handleFilter" />
+      </el-row>
+      <el-row class="list">
+        <el-table
+          v-loading="listLoading"
+          :data="list"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%"
+          size="small"
+          :header-cell-style="{
+            'background-color': '#f7f9fa',
+            'color': '#637282;'
+          }">
+          <el-table-column
+            fixed
+            prop="id"
+            label="ID"
+            width="60">
+            <template slot-scope="{row}">
+              <span>{{ row.id }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="优惠券活动标题">
+            <template slot-scope="{row}">
+              <span>{{ row.title || row.activitySetting.title }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="类型"
+            width="60">
+            <template slot-scope="{row}">
+              <span>{{ activityTypes[row.type] }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="价格">
+            <template slot-scope="{row}">
+              <span>{{ row.basePrice === 0 ? '免费' : row.basePrice.toFixed(2) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="商家">
+            <template slot-scope="{row}">
+              <span>{{ row.merchant.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="活动时间"
+            width="150">
+            <template slot-scope="{row}">
+              <span style="text-align: center;">{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>至 <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="状态"
+            width="60">
+            <template slot-scope="{row}">
+              <span>{{status[row.status]}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="推荐到首页?"
+            width="90">
+            <template slot-scope="{row}">
+              <span>{{ row.specialActivity ? (row.specialActivity.isRecommend > 0 ? '是' : '否') : '否' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="优秀案例?"
+            width="80">
+            <template slot-scope="{row}">
+              <span>{{ row.specialActivity ? (row.specialActivity.isGood > 0 ? '是' : '否') : '否' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleView(scope.$index, scope.row)">查看</el-button>
+              <!--<el-button
+                size="mini"
+                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend')">推荐到首页</el-button>
+                <br />
                 <el-button
-                  size="mini"
-                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend')">推荐到首页</el-button>
-                  <br />
-                  <el-button
-                  size="mini"
-                  @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood')">设为优秀案例</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-          <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
-        </el-row>
-      </div>
-      <!--<div class="secondary-sidebar"></div>-->
+                size="mini"
+                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood')">设为优秀案例</el-button>-->
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+      </el-row>
+    </div>
+    <!--<div class="secondary-sidebar"></div>-->
   </div>
 </template>
 
@@ -132,42 +136,42 @@ export default {
       maxHeight: 400,
       activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
       status: { 1: '正常', 2: '已隐藏' }
-    };
+    }
   },
   watch: {
-      // 如果 `clientHeight` 发生改变，这个函数就会运行
-      // clientHeight: function () {
-      // this.changeFixed(this.clientHeight)
-      // }
-    },
+    // 如果 `clientHeight` 发生改变，这个函数就会运行
+    // clientHeight: function () {
+    // this.changeFixed(this.clientHeight)
+    // }
+  },
   created() {
     this.listLoading = false
     this.getList()
   },
-  mounted(){
-      // 获取浏览器可视区域高度
-      this.clientHeight =  `${document.documentElement.clientHeight}`;
-      let that = this;
-      window.onresize = function temp() {
-        that.clientHeight = `${document.documentElement.clientHeight}`;
-      };
-    },
+  mounted() {
+    // 获取浏览器可视区域高度
+    this.clientHeight =  `${document.documentElement.clientHeight}`
+    const that = this
+    window.onresize = function temp() {
+      that.clientHeight = `${document.documentElement.clientHeight}`
+    }
+  },
   methods: {
     changeFixed(clientHeight){
-      this.maxHeight = clientHeight - 85 - 110 - 100;
+      this.maxHeight = clientHeight - 85 - 110 - 100
     },
     getList() {
       this.listLoading = true
       getCouponActivityList(this.listQuery, this.listFilter).then(response => {
         if (response.data.records.length > 0) {
           response.data.records.forEach(item => {
-          if (item.cover && item.cover != 'string') {
+            if (item.cover && item.cover != 'string') {
               item.cover = JSON.parse(item.cover);
             }
             if (item.activitySetting) {
               item.activitySetting = JSON.parse(item.activitySetting);
             }
-          });
+          })
         }
         this.list = response.data.records
         this.total = response.data.total
@@ -178,22 +182,27 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
+    handleView(index, row) {
+      /* this.$router.push({
+        path: '/activity/detail/' + row.id + '/' + row.type
+      }) */
+    },
     // 推荐到首页
     setActivityWithGoodOrRecommend(index, row, type) {
       let data = {}
-      if(type === 'isRecommend') {
-        data ={
+      if (type === 'isRecommend') {
+        data = {
           id: row.id,
           isRecommend: 1
         }
-      } else if(type === 'isGood') {
-        data ={
+      } else if (type === 'isGood') {
+        data = {
           id: row.id,
           isGood: 1
         }
       }
       setActivityWithGoodOrRecommend(data).then(response => {
-        if(response.code === '200') {
+        if (response.code === '200') {
           this.$message({
             type: 'success',
             message: '操作成功!'

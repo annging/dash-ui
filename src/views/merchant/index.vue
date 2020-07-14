@@ -109,20 +109,31 @@
 	            	<span>{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
 		          </template>
 		        </el-table-column>
-	          <el-table-column label="操作" width="100">
+		        <el-table-column
+	            label="推荐"
+	            width="50">
+	            <template slot-scope="{row}">
+	            	<el-tag size="mini" v-if="row.recommend">是</el-tag>
+	            	<el-tag type="info" size="mini" v-else>否</el-tag>
+		          </template>
+		        </el-table-column>
+	          <el-table-column label="操作" width="120">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
 	                type="text"
 	                @click="handleView(scope.$index, scope.row)">详情</el-button>
+	               <el-button
+	                size="mini"
+	                type="text"
+	                v-if="scope.row.recommend"
+	                @click="handleCancelRecommend(scope.$index, scope.row)">取消推荐</el-button>
 	              <el-button
 	                size="mini"
 	                type="text"
+	                v-else
 	                @click="handleRecommend(scope.$index, scope.row)">推荐</el-button>
-	              <!--<el-button
-	                size="mini"
-	                type="text"
-	                @click="handleCancelRecommend(scope.$index, scope.row)">取消推荐</el-button>-->
+	              
 	              <!--<el-button
 	                size="mini"
 	                type="danger"
@@ -166,7 +177,7 @@ export default {
   	getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-      	if(response.data) {
+      	if (response.data) {
 	        this.list = response.data.records
 	        this.total = response.data.total
 	      }
@@ -193,16 +204,16 @@ export default {
     },
     // 添加商家
     goCreate() {
-    	this.$router.push({ path: '/merchant/create' });
+      this.$router.push({ path: '/merchant/create' });
     },
     handleView(index, row) {
-    	this.$router.push({
-    		path: '/merchant/detail/' + row.id
+      this.$router.push({
+        path: '/merchant/detail/' + row.id
     	})
     },
     handleRecommend(index, row) {
-    	recommendMerchant({merchantId: row.id}).then(response => {
-        if(response.code === '200') {
+      recommendMerchant({ merchantId: row.id }).then(response => {
+        if (response.code === '200') {
           this.$message({
             type: 'success',
             message: '操作成功!'
@@ -216,8 +227,8 @@ export default {
       })
     },
     handleCancelRecommend(index, row) {
-    	CancelRecommended({merchantId: row.id}).then(response => {
-        if(response.code === '200') {
+      CancelRecommended({ merchantId: row.id }).then(response => {
+        if (response.code === '200') {
           this.$message({
             type: 'success',
             message: '操作成功!'
@@ -231,12 +242,12 @@ export default {
       })
     },
     handleQrcode(index, row) {
-    	let shareUser = JSON.parse(getUserInfo())
+      const shareUser = JSON.parse(getUserInfo())
       getImgUrl({
         page: 'pages/merchant/home',
-        scene: 'merchantId=' + id + '&shareUserId=' + shareUser.id
+        scene: 'merchantId=' + row.id + '&shareUserId=' + shareUser.id
       }).then(response => {
-        if(response.code === '200') {
+        if (response.code === '200') {
           this.qrcodeImgUrl = response.data
         } else {
           this.$message({

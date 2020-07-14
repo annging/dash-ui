@@ -175,3 +175,35 @@ export function setActivityWithGoodOrRecommend(query) {
     params: query
   })
 }
+
+// /system/management/setWeight 设置权重 如果 是优秀案例 type =1 否则 推荐0
+export function setWeight(query) {
+  return request({
+    url: '/system/management/setWeight',
+    method: 'get',
+    params: query
+  })
+}
+
+// /system/activity/getActivityOptions 查询 用户不感兴趣 和 举报的活动
+export function getActivityOptions(query, data) {
+  return request({
+    url: '/system/activity/getActivityOptions',
+    method: 'post',
+    params: query,
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
+  })
+}

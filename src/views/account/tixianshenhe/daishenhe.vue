@@ -116,7 +116,7 @@ export default {
         cancelButtonText: '取消'
       }).then(({ value }) => {
         CheckPending({id: row.id, checkState: status, desc: value}).then(response => {
-          if(response.code === '200') {
+          if (response.code === '200') {
             this.$message({
               type: 'success',
               message: '操作成功!'

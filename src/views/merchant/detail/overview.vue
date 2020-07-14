@@ -103,8 +103,8 @@ export default {
   methods: {
   	fetchData(id) {
       fetchMerchant(id).then(response => {
-      	if(response.code === '200') {
-	      	if(response.data) {
+      	if (response.code === '200') {
+	      	if (response.data) {
 	      		response.data.introImgs = JSON.parse(response.data.introImgs)
 	      		response.data.phone = JSON.parse(response.data.phone)
 	      		response.data.teamIntros = JSON.parse(response.data.teamIntros)

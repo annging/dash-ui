@@ -1,122 +1,122 @@
 <template>
-<div class="main-content">
-  <div class="left-container">
-    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/activity/fangan/edit/' + id }">编辑方案</el-menu-item>
-    </el-menu>
-    <el-row>
-      <el-form ref="form" :rules="rules" :model="schemeForm" label-width="100px" size="small">
-        <el-form-item label="方案标题">
-          <el-input v-model="schemeForm.title"></el-input>
-        </el-form-item>
-        <el-form-item label="封面图">
-          <el-upload
-            :data="dataObj"
-            :multiple="false"
-            class="avatar-uploader"
-            action="http://upload-z2.qiniup.com"
-            :show-file-list="false"
-            :on-success="handleSuccess"
-            :on-preview="handlePicturePreview"
-            :on-remove="handleRemove"
-            :before-upload="beforeUpload">
-            <img v-if="schemeForm.imgUrl" :src="schemeForm.imgUrl" class="avatar">
-            <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-          <el-dialog
-            :visible.sync="dialogVisible"
-            :modal-append-to-body="false"
-            :append-to-body="true">
-            <img width="100%" :src="schemeForm.imgUrl" alt="">
-          </el-dialog>
-        </el-form-item>
-        <el-form-item label="banner图片">
-          <el-upload
-            :data="dataObj"
-            :multiple="false"
-            class="avatar-uploader"
-            action="http://upload-z2.qiniup.com"
-            :show-file-list="false"
-            :on-success="handleSuccess1"
-            :on-preview="handlePicturePreview1"
-            :on-remove="handleRemove1"
-            :before-upload="beforeUpload">
-            <img v-if="schemeForm.bannerImg" :src="schemeForm.bannerImg" class="avatar1">
-            <i  v-else class="el-icon-plus avatar-uploader-icon1"></i>
-          </el-upload>
-          <el-dialog
-            :visible.sync="dialogVisible1"
-            :modal-append-to-body="false"
-            :append-to-body="true">
-            <img width="100%" :src="schemeForm.bannerImg" alt="">
-          </el-dialog>
-        </el-form-item>
-        <el-form-item label="标签">
-           <el-select
-            v-model="schemeForm.label"
-            popper-class="hiddenDown"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            placeholder="请输入方案标签"
-            style="width: 600px">
-            <el-option
-              v-for="item in labelOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option><!-- 这里不需要常用标签，改为完全自定义。所以labelOptions是空的 -->
-          </el-select>
-        </el-form-item>
-        <el-form-item label="方案介绍">
-           <Tinymce ref="editor1" v-model="schemeForm.explain" :height="300" />
-        </el-form-item>
-        <el-form-item label="功能亮点">
-          <Tinymce ref="editor2" v-model="schemeForm.lightSpot" :height="300" />
-        </el-form-item>
-        <el-form-item label="营销玩法">
-          <Tinymce ref="editor3" v-model="schemeForm.gameplay" :height="300" />
-        </el-form-item>
-        <el-form-item label="活动类型">
-          <el-select v-model="schemeForm.type" placeholder="请选择活动类型">
-            <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="活动行业">
-          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable
-           allow-create>
-            <el-option v-for="(value, key, index) in industrys" :key="value" :label="value" :value="value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="会员门槛">
-          <el-select v-model="schemeForm.vipLevel" placeholder="请选择会员等级">
-            <el-option v-for="item in vipLevels" :key="item.key" :label="item.label" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="虚拟浏览量">
-          <el-input v-model="schemeForm.browse"></el-input>
-        </el-form-item>
-        <el-form-item label="虚拟参与量">
-          <el-input v-model="schemeForm.receive"></el-input>
-        </el-form-item>
-        <el-form-item label="是否推荐">
-          <el-switch
-            v-model="schemeForm.isRecommend"
-            active-color="#13ce66"
-            :active-value="1"
-            inactive-value="0">
-          </el-switch>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">修改</el-button>
-          <el-button @click="cancel">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-row>
+  <div class="main-content">
+    <div class="left-container">
+      <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
+        <el-menu-item index="1" :route="{path:'/activity/fangan/edit/' + id }">编辑方案</el-menu-item>
+      </el-menu>
+      <el-row>
+        <el-form ref="form" :rules="rules" :model="schemeForm" label-width="100px" size="small">
+          <el-form-item label="方案标题">
+            <el-input v-model="schemeForm.title"></el-input>
+          </el-form-item>
+          <el-form-item label="封面图">
+            <el-upload
+              :data="dataObj"
+              :multiple="false"
+              class="avatar-uploader"
+              action="http://upload-z2.qiniup.com"
+              :show-file-list="false"
+              :on-success="handleSuccess"
+              :on-preview="handlePicturePreview"
+              :on-remove="handleRemove"
+              :before-upload="beforeUpload">
+              <img v-if="schemeForm.imgUrl" :src="schemeForm.imgUrl" class="avatar">
+              <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+            <el-dialog
+              :visible.sync="dialogVisible"
+              :modal-append-to-body="false"
+              :append-to-body="true">
+              <img width="100%" :src="schemeForm.imgUrl" alt="">
+            </el-dialog>
+          </el-form-item>
+          <el-form-item label="banner图片">
+            <el-upload
+              :data="dataObj"
+              :multiple="false"
+              class="avatar-uploader"
+              action="http://upload-z2.qiniup.com"
+              :show-file-list="false"
+              :on-success="handleSuccess1"
+              :on-preview="handlePicturePreview1"
+              :on-remove="handleRemove1"
+              :before-upload="beforeUpload">
+              <img v-if="schemeForm.bannerImg" :src="schemeForm.bannerImg" class="avatar1">
+              <i  v-else class="el-icon-plus avatar-uploader-icon1"></i>
+            </el-upload>
+            <el-dialog
+              :visible.sync="dialogVisible1"
+              :modal-append-to-body="false"
+              :append-to-body="true">
+              <img width="100%" :src="schemeForm.bannerImg" alt="">
+            </el-dialog>
+          </el-form-item>
+          <el-form-item label="标签">
+             <el-select
+              v-model="schemeForm.label"
+              popper-class="hiddenDown"
+              multiple
+              filterable
+              allow-create
+              default-first-option
+              placeholder="请输入方案标签"
+              style="width: 600px">
+              <el-option
+                v-for="item in labelOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option><!-- 这里不需要常用标签，改为完全自定义。所以labelOptions是空的 -->
+            </el-select>
+          </el-form-item>
+          <el-form-item label="方案介绍">
+             <Tinymce ref="editor1" v-model="schemeForm.explain" :height="300" />
+          </el-form-item>
+          <el-form-item label="功能亮点">
+            <Tinymce ref="editor2" v-model="schemeForm.lightSpot" :height="300" />
+          </el-form-item>
+          <el-form-item label="营销玩法">
+            <Tinymce ref="editor3" v-model="schemeForm.gameplay" :height="300" />
+          </el-form-item>
+          <el-form-item label="活动类型">
+            <el-select v-model="schemeForm.type" placeholder="请选择活动类型">
+              <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="活动行业">
+            <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable
+             allow-create>
+              <el-option v-for="(value, key, index) in industrys" :key="value" :label="value" :value="value" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="会员门槛">
+            <el-select v-model="schemeForm.vipLevel" placeholder="请选择会员等级">
+              <el-option v-for="item in vipLevels" :key="item.key" :label="item.label" :value="item.key" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="虚拟浏览量">
+            <el-input v-model="schemeForm.browse"></el-input>
+          </el-form-item>
+          <el-form-item label="虚拟参与量">
+            <el-input v-model="schemeForm.receive"></el-input>
+          </el-form-item>
+          <el-form-item label="是否推荐">
+            <el-switch
+              v-model="schemeForm.isRecommend"
+              active-color="#13ce66"
+              :active-value="1"
+              inactive-value="0">
+            </el-switch>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">修改</el-button>
+            <el-button @click="cancel">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-row>
+    </div>
+    <!--<div class="secondary-sidebar"></div>-->
   </div>
-  <!--<div class="secondary-sidebar"></div>-->
-</div>
 </template>
 
 <script>
@@ -125,20 +125,20 @@ import { getToken } from '@/api/qiniu'
 import Tinymce from '@/components/Tinymce'
 
 const defaultForm = {
-    title: '', //方案标题
-    imgUrl: '',
-    bannerImg: '',
-    type: '',
-    industry: '',
-    explain: '',
-    lightSpot: '',
-    gameplay: '',
-    browse: 0,
-    receive: 0,
-    vipLevel: '',
-    isRecommend: 0,
-    label: '',
-    id: ''
+  title: '', // 方案标题
+  imgUrl: '',
+  bannerImg: '',
+  type: '',
+  industry: '',
+  explain: '',
+  lightSpot: '',
+  gameplay: '',
+  browse: 0,
+  receive: 0,
+  vipLevel: '',
+  isRecommend: 0,
+  label: '',
+  id: ''
 }
 
 export default {
@@ -149,7 +149,7 @@ export default {
       id: '',
       schemeForm: Object.assign({}, defaultForm),
       activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
-      industrys: { 1: '教育/培训' ,  2: '丽人/美发' ,  3: '亲子/乐园', 4: '运动健身', 5: '休闲/玩乐', 6: '美容/SPA', 7: '嬌纱/摄影', 8: '家居/装修', 9: '生活服务', 10: '餐饮美食', 11: '母婴', 12: '洗车', 13: '服装' },
+      industrys: { 1: '教育/培训', 2: '丽人/美发', 3: '亲子/乐园', 4: '运动健身', 5: '休闲/玩乐', 6: '美容/SPA', 7: '嬌纱/摄影', 8: '家居/装修', 9: '生活服务', 10: '餐饮美食', 11: '母婴', 12: '洗车', 13: '服装' },
       vipLevels: [{ key: 0, label: '标准会员' }, { key: 1, label: '体验会员' }, { key: 2, label: 'VIP会员' }],
       rules: {
         title: [
@@ -190,39 +190,39 @@ export default {
       this.listLoading = true
       fetchScheme(this.id).then(response => {
         this.schemeForm = response.data
-        if(this.schemeForm.label !== '') {
+        if (this.schemeForm.label !== '') {
           this.schemeForm.label = this.schemeForm.label.split(',')
         }
         this.listLoading = false
       })
     },
     onSubmit() {
-      console.log('submit!');
+      console.log('submit!')
       updateActivityScheme(this.schemeForm).then(res => {
-        if (res.code * 1 == 200) {
+        if (res.code * 1 === 200) {
           this.$message({
             message: '编辑方案成功',
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push({ path: '/activity/fangan/index' });
+            this.$router.push({ path: '/activity/fangan/index' })
           }, 1.5 * 1000)
         } else {
           this.$message({
             message: res.msg,
             type: 'error'
-          });
+          })
         }
       })
     },
     beforeUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!');
+        this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      return isLt2M;
+      return isLt2M
     },
     fetchToken() {
       const _self = this
@@ -238,25 +238,25 @@ export default {
       })
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log(file, fileList)
     },
     handleRemove1(file, fileList) {
-      console.log(file, fileList);
+      console.log(file, fileList)
     },
     handleSuccess(res, file) {
-      this.schemeForm.imgUrl = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key;
+      this.schemeForm.imgUrl = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handleSuccess1(res, file) {
-      this.schemeForm.bannerImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key;
+      this.schemeForm.bannerImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview() {
-      this.dialogVisible = true;
+      this.dialogVisible = true
     },
     handlePicturePreview1() {
-      this.dialogVisible1 = true;
+      this.dialogVisible1 = true
     },
     cancel() {
-      this.$router.push({ path: '/activity/fangan/index' });
+      this.$router.push({ path: '/activity/fangan/index' })
     }
   }
 }

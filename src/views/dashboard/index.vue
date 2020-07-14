@@ -156,13 +156,13 @@ export default {
   methods: {
     fetchData() {
       marketingData().then(response => {
-        if(response.data) {
+        if (response.data) {
           this.marketingData = response.data
         }
       })
       this.userDataQuery.time = new Date()
       userData(this.userDataQuery).then(response => {
-        if(response.data) {
+        if (response.data) {
           this.userData = response.data
         }
       })

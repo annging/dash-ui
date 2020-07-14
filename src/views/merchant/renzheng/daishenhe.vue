@@ -141,7 +141,7 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery, this.listFilter).then(response => {
-        if(response.data) {
+        if (response.data) {
           this.list = response.data.records
           this.total = response.data.total
         }
@@ -171,7 +171,7 @@ export default {
         type: 'warning'
       }).then(() => {
         isOrNoAuthentication({id: row.id, authStatus: status}).then(response => {
-          if(response.code === '200') {
+          if (response.code === '200') {
             this.$message({
               type: 'success',
               message: '操作成功!'

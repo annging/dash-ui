@@ -2,10 +2,7 @@
   <div class="main-content">
     <div class="left-container">
       <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item index="1" :route="{path:'/activity/list'}">活动列表</el-menu-item>
-        <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
-        <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
-        <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
+        <el-menu-item index="1" :route="{path:'/activity/activityOptions'}">活动反馈/举报</el-menu-item>
       </el-menu>
       <el-row class="list">
         <el-table
@@ -29,66 +26,34 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="封面图">
+            label="用户">
             <template slot-scope="{row}">
-              <img v-if="row.cover.length > 0" :src="row.cover[0]" style="width: 100px;height: 60px;">
-              <span v-else>没有封面图</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="title">
-            <template slot-scope="{row}">
-              <span>{{ row.title || row.activitySetting.title }}</span>
+              <span>{{ row.user.nickName }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="类型">
             <template slot-scope="{row}">
-              <span>{{ activityTypes[row.type] }}</span>
+              <span>{{ optionTypes[row.optionType] }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="活动时间"
+            label="内容">
+            <template slot-scope="{row}">
+              <span>{{ row.context }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="相关活动"
             width="150">
             <template slot-scope="{row}">
-              <span>{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
+              <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activity.id + '/' + row.activity.type + '/overview'">{{ row.activity.title }}</router-link>
             </template>
           </el-table-column>
           <el-table-column
-            label="价格">
+            label="操作时间">
             <template slot-scope="{row}">
-              <span>{{ row.basePrice === 0 ? '免费' : row.basePrice.toFixed(2) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="商家ID">
-            <template slot-scope="{row}">
-              <span>{{ row.merchantId }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="状态">
-            <template slot-scope="{row}">
-              <span>{{ status[row.status]}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="权重">
-            <template slot-scope="{row}">
-              <span>{{ row.weight ? row.weight : 0 }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                @click="setWeight(scope.$index, scope.row, 0)">修改</el-button>
-              <el-button
-                size="mini"
-                type="text"
-                style="color: #F56C6C"
-                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend', 0)">删除</el-button>
+              <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -100,7 +65,7 @@
 </template>
 
 <script>
-import { getSpecialActivity, setActivityWithGoodOrRecommend, setWeight } from '@/api/activity'
+import { getActivityOptions } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination、
 
 export default {
@@ -116,12 +81,10 @@ export default {
         size: 20
       },
       listFilter: {
-        isRecommend: 1
       },
       clientHeight: '',
       maxHeight: 400,
-      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
-      status: { 1: '正常', 2: '已隐藏' }
+      optionTypes: { 1: '不感兴趣', 2: '举报' }
     }
   },
   watch: {
@@ -147,20 +110,18 @@ export default {
     },
     getList() {
       this.listLoading = true
-      getSpecialActivity(this.listQuery, this.listFilter).then(response => {
-        if (response.data.records.length > 0) {
-          response.data.records.forEach(item => {
-            if (item.cover && item.cover !== 'string') {
-              item.cover = JSON.parse(item.cover)
-            }
-            if (item.activitySetting) {
-              item.activitySetting = JSON.parse(item.activitySetting)
-            }
+      getActivityOptions(this.listQuery, this.listFilter).then(response => {
+        if (response.code === '200') {
+          this.list = response.data.records
+          this.total = response.data.total
+          this.listLoading = false
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
           })
+          this.listLoading = false
         }
-        this.list = response.data.records
-        this.total = response.data.total
-        this.listLoading = false
       })
     },
     handleFilter() {

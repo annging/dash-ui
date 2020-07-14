@@ -14,8 +14,8 @@
               <div class="m-other">
                 <span class="label">手机号:</span><span>{{ merchant.mobile }}</span> <br />
                 <span class="label">微信号:</span><span>{{ merchant.wechat }}</span> <br />
-                <span class="label">地  址:</span><span>{{ merchant.address.tips }} <br />
-                {{ merchant.address.province + merchant.address.city + merchant.address.distinct + merchant.address.detail }}</span>
+                <span class="label">地  址:</span><span>{{ merchant.address.province + merchant.address.city + merchant.address.distinct + merchant.address.detail }} | {{ merchant.address.tips }}
+                </span>
               </div>
             </div>
           </el-col>
@@ -77,8 +77,8 @@ export default {
     },
   	fetchData(id) {
       fetchMerchant(id).then(response => {
-      	if(response.code === '200') {
-	      	if(response.data) {
+      	if (response.code === '200') {
+	      	if (response.data) {
             response.data.phone = JSON.parse(response.data.phone)
             response.data.address = JSON.parse(response.data.address);
 	      		this.merchant = response.data
@@ -97,7 +97,7 @@ export default {
         page: 'pages/merchant/home',
         scene: 'merchantId=' + id + '&shareUserId=' + shareUser.id
       }).then(response => {
-        if(response.code === '200') {
+        if (response.code === '200') {
           this.qrcodeImgUrl = response.data
         } else {
           this.$message({

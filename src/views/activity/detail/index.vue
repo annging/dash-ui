@@ -10,9 +10,9 @@
           </div>
         </el-col>
       </el-row>
-      <el-menu :default-active="activeTabMenu"  mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/overview'" >概览</el-menu-item>
-        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/statistics'" >统计数据</el-menu-item>
+      <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px;">
+        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/overview'">概览</el-menu-item>
+        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/statistics'">统计数据</el-menu-item>
       </el-menu>
       <router-view />
     </div>
@@ -42,13 +42,6 @@ export default {
       typePage: { 1: 'pages/activeDetail/activeDetail', 2: '', 3: '', 4: 'pages/bargain/bargainDetail', 5: '', 6: 'pages/group/groupDetail', 7: 'pages/vote/voteDetail', 8: '', 9: '' } // 活动类型 1 报名,2 抽奖,3 海报,4 砍价,5 秒杀,6 拼团,7 投票,8 预约,9 助力,10 优惠券(代金券),11 优惠券(折扣券),12 优惠券(兑换券),13 优惠券(体验券)
     }
   },
-  created() {
-    this.id = this.$route.params && this.$route.params.id
-    this.type = this.$route.params && this.$route.params.type
-    this.fetchData(this.id)
-    // this.getParams()
-    this.getActivityImgUrl(this.id, this.type)
-  },
   computed: {
     activeTabMenu() {
       const route = this.$route
@@ -56,10 +49,17 @@ export default {
       return path
     }
   },
+  created() {
+    this.id = this.$route.params && this.$route.params.id
+    this.type = this.$route.params && this.$route.params.type
+    this.fetchData(this.id)
+    // this.getParams()
+    this.getActivityImgUrl(this.id, this.type)
+  },
   methods: {
     fetchData(id) {
       getActivityInfo(id).then(response => {
-        if(response.code === '200') {
+        if (response.code === '200') {
           response.data.cover = JSON.parse(response.data.cover)
           response.data.activitySetting = JSON.parse(response.data.activitySetting)
           this.activity = response.data
@@ -72,17 +72,17 @@ export default {
       })
     },
     getActivityImgUrl(id, type) {
-      let page = this.typePage[type]
+      const page = this.typePage[type]
       if (!page) {
         return
       }
-      let shareUser = JSON.parse(getUserInfo())
+      const shareUser = JSON.parse(getUserInfo())
       // console.log(shareUser.id)
       getImgUrl({
         page: page,
         scene: 'id=' + id + '&shareUserId=' + shareUser.id
       }).then(response => {
-        if(response.code === '200') {
+        if (response.code === '200') {
           this.qrcodeImgUrl = response.data
         } else {
           this.$message({
@@ -91,7 +91,7 @@ export default {
           })
         }
       })
-    },
+    }
   }
 }
 </script>

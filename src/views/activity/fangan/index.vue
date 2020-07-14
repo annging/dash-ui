@@ -225,13 +225,12 @@ export default {
             });
           }
         })
-        
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消操作'
-        });          
-      });
+        })       
+      })
     },
     handleRecommend(index, row, status) {
       this.$confirm((status ? '' : '取消') + '推荐方案?', '提示', {
@@ -244,13 +243,13 @@ export default {
               this.$message({
                 type: 'success',
                 message: '操作成功!'
-              });
+              })
               this.list[index].isRecommend = status
             } else {
               this.$message({
                 type: 'error',
                 message: res.msg || '网络错误'
-              });
+              })
             }
           })
         }).catch(() => {
