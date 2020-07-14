@@ -227,6 +227,14 @@ export default {
       }
       setActivityWithGoodOrRecommend(data).then(response => {
         if (response.code === '200') {
+          if (!this.list[index].specialActivity) {
+            this.$set(this.list[index], 'specialActivity', {id: row.id, isRecommend: 0, isGood: 0})
+          }
+          if (type === 0) { // 推荐到首页
+            this.list[index].specialActivity.isRecommend = status
+          } else { // 优秀案例
+            this.list[index].specialActivity.isGood = status
+          }
           this.$message({
             type: 'success',
             message: '操作成功!'
