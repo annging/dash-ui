@@ -1,21 +1,21 @@
 
 const tokens = {
   admin: {
-    token: 'admin_token'
+    token: 'admin-token'
   },
   editor: {
-    token: 'editor_token'
+    token: 'editor-token'
   }
 }
 
 const users = {
-  'admin_token': {
+  'admin-token': {
     roles: ['admin'],
     introduction: 'I am a super administrator',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
     name: 'Super Admin'
   },
-  'editor_token': {
+  'editor-token': {
     roles: ['editor'],
     introduction: 'I am an editor',
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
@@ -23,7 +23,29 @@ const users = {
   }
 }
 
-export default [
+module.exports = [
+  // user login
+  {
+    url: '/vue-admin-template/user/login',
+    type: 'post',
+    response: config => {
+      const { username } = config.body
+      const token = tokens[username]
+
+      // mock error
+      if (!token) {
+        return {
+          code: 60204,
+          message: 'Account and password are incorrect.'
+        }
+      }
+
+      return {
+        code: 20000,
+        data: token
+      }
+    }
+  },
 
   // get user info
   {
@@ -31,23 +53,18 @@ export default [
     type: 'get',
     response: config => {
       const { token } = config.query
-      // const info = users[token]
-      const info = {
-        roles: ['admin'],
-        introduction: 'I am a super administrator',
-        avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-        name: 'Super Admin'
-      }
+      const info = users[token]
+
       // mock error
       if (!info) {
         return {
           code: 50008,
-          msg: 'Login failed, unable to get user details.'
+          message: 'Login failed, unable to get user details.'
         }
       }
 
       return {
-        code: 200,
+        code: 20000,
         data: info
       }
     }
@@ -59,7 +76,7 @@ export default [
     type: 'post',
     response: _ => {
       return {
-        code: 200,
+        code: 20000,
         data: 'success'
       }
     }

@@ -1,16 +1,16 @@
 module.exports = {
 
-  title: '',
+  title: '团团站后台管理中心',
 
   /**
    * @type {boolean} true | false
    * @description Whether fix the header
    */
-  fixedHeader: true,
+  fixedHeader: false,
 
   /**
    * @type {boolean} true | false
    * @description Whether show the logo in sidebar
    */
-  sidebarLogo: true
+  sidebarLogo: false
 }
