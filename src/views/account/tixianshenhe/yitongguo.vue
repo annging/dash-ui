@@ -39,7 +39,7 @@
             <el-table-column
               label="申请用户">
               <template slot-scope="{row}">
-                <span>{{ row.user.nickName }}</span>
+                <span>{{ row.user ? row.user.nickName : '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column

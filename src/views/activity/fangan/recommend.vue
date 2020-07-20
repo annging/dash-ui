@@ -79,16 +79,18 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="是否推荐"
+              label="权重"
               width="100">
               <template slot-scope="{row}">
-                <span>{{ row.isRecommend ? '是' : '否' }}</span>
+                <span>{{ row.weight ? row.weight : 0 }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
+                  type="text"
+                  style="color: #F56C6C"
                   @click="handleDetele(scope.$index, scope.row)">取消推荐</el-button>
               </template>
             </el-table-column>

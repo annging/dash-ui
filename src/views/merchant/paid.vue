@@ -35,22 +35,20 @@
               'background-color': '#f7f9fa',
               'color': '#637282;'
             }"
-            @sort-change="sortChange"
             >
             <el-table-column
               prop="id"
               label="ID"
-              sortable
               width="60">
               <template slot-scope="{row}">
                 <span>{{ row.id }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="头像"
+              label="LOGO"
               width="60">
-              <template slot-scope="row">
-                <img :src="row.avatar" style="width: 40px;height: 40px;">
+              <template slot-scope="{row}">
+                <img :src="row.logo" style="width: 40px;height: 40px;">
               </template>
             </el-table-column>
             <el-table-column
@@ -59,10 +57,10 @@
                 <span>{{ row.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column
+            <!--<el-table-column
               label="活动总数">
               <template slot-scope="{row}">
-                <span>{{ row.activity.total }}</span>
+                <span>{{ row.activities.length }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -86,13 +84,20 @@
             <el-table-column
               label="门店数量">
               <template slot-scope="{row}">
-                <span>{{row.stores}}</span>
+                <span>{{ row.storeCount || row.stores.length }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="员工数量">
               <template slot-scope="{row}">
                 <span>{{row.staffs}}</span>
+              </template>
+            </el-table-column>-->
+            <el-table-column
+              label="创建者"
+              width="">
+              <template slot-scope="{row}">
+                <span>{{ row.user ? row.user.nickName : ''  }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -156,17 +161,13 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery, this.listFilter).then(response => {
-        this.list = response.data.items
+        this.list = response.data.records
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
     sortChange(data) {
@@ -186,6 +187,11 @@ export default {
     // 添加商家
     goCreate() {
       this.$router.push({ path: '/merchant/create' });
+    },
+    handleView(index, row) {
+      this.$router.push({
+        path: '/merchant/detail/' + row.id
+      })
     }
   }
 }

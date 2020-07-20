@@ -100,6 +100,10 @@
         <el-form-item label="虚拟参与量">
           <el-input v-model="schemeForm.receive"></el-input>
         </el-form-item>
+        <el-form-item label="权重">
+          <el-input v-model="schemeForm.weight"></el-input>
+          <div class="tips" style="font-size: 13px; color: #999">数值越大，排序越靠前</div>
+        </el-form-item>
         <el-form-item label="是否推荐">
           <el-switch
             v-model="schemeForm.isRecommend"
@@ -138,6 +142,7 @@ const defaultForm = {
     vipLevel: '',
     isRecommend: 0,
     label: '',
+    weight: 0,
     id: ''
 }
 

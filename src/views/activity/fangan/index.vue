@@ -92,27 +92,40 @@
               </template>
             </el-table-column>
             <el-table-column
+              label="权重"
+              width="100">
+              <template slot-scope="{row}">
+                <span>{{ row.weight ? row.weight : 0 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="是否推荐"
               width="100">
               <template slot-scope="{row}">
                 <span>{{ row.isRecommend ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="240">
+            <el-table-column label="操作" width="200">
               <template slot-scope="scope">
                 <el-button
                   v-if="!scope.row.isRecommend"
                   size="mini"
+                  type="text"
                   @click="handleRecommend(scope.$index, scope.row, 1)">推荐</el-button>
                 <el-button
                   v-else
                   size="mini"
+                  type="text"
+                  style="color: #F56C6C"
                   @click="handleRecommend(scope.$index, scope.row, 0)">取消推荐</el-button>
                 <el-button
                   size="mini"
+                  type="text"
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 <el-button
                   size="mini"
+                  type="text"
+                  style="color: #F56C6C"
                   @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>

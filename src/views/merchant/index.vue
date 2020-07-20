@@ -78,7 +78,7 @@
 	            label="门店数"
 	            width="60">
 	            <template slot-scope="{row}">
-			          <span>{{row.storeCount || row.stores.length}}</span>
+			          <span>{{ row.storeCount || row.stores.length }}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
