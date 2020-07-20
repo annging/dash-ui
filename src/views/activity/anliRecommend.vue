@@ -21,7 +21,6 @@
             'color': '#637282;'
           }">
             <el-table-column
-              prop="id"
               label="ID"
               width="60">
               <template slot-scope="{row}">
@@ -29,47 +28,53 @@
               </template>
             </el-table-column>
             <el-table-column
+            label="活动ID">
+            <template slot-scope="{row}">
+              {{ row.activityId }}
+            </template>
+          </el-table-column>
+            <el-table-column
               label="封面图">
               <template slot-scope="{row}">
-                <img v-if="row.cover.length > 0" :src="row.cover[0]" style="width: 100px;height: 60px;">
+                <img v-if="row.activity.cover.length > 0" :src="row.activity.cover[0]" style="width: 100px;height: 60px;">
                 <span v-else>没有封面图</span>
               </template>
             </el-table-column>
             <el-table-column
               label="title">
               <template slot-scope="{row}">
-                <span>{{ row.title || row.activitySetting.title }}</span>
+                <span>{{ row.activity.title || row.activity.activitySetting.title }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="类型">
               <template slot-scope="{row}">
-                <span>{{ activityTypes[row.type] }}</span>
+                <span>{{ activityTypes[row.activity.type] }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="活动时间"
               width="150">
               <template slot-scope="{row}">
-                <span>{{ row.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
+                <span>{{ row.activity.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.activity.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
               </template>
             </el-table-column>
             <el-table-column
               label="价格">
               <template slot-scope="{row}">
-                <span>{{ row.basePrice === 0 ? '免费' : row.basePrice.toFixed(2) }}</span>
+                <span>{{ row.activity.basePrice === 0 ? '免费' : row.activity.basePrice.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="商家ID">
               <template slot-scope="{row}">
-                <span>{{row.merchantId}}</span>
+                <span>{{row.activity.merchantId}}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="状态">
               <template slot-scope="{row}">
-                <span>{{ status[row.status] }}</span>
+                <span>{{ status[row.activity.status] }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -152,11 +157,11 @@ export default {
       getSpecialActivity(this.listQuery, this.listFilter).then(response => {
         if (response.data.records.length > 0) {
           response.data.records.forEach(item => {
-          if (item.cover && item.cover != 'string') {
-              item.cover = JSON.parse(item.cover);
+          if (item.activity.cover && item.activity.cover != 'string') {
+              item.activity.cover = JSON.parse(item.activity.cover);
             }
             if (item.activitySetting) {
-              item.activitySetting = JSON.parse(item.activitySetting);
+              item.activity.activitySetting = JSON.parse(item.activity.activitySetting);
             }
           });
         }
