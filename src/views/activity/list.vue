@@ -230,7 +230,7 @@ export default {
           if (!this.list[index].specialActivity) {
             this.$set(this.list[index], 'specialActivity', {id: row.id, isRecommend: 0, isGood: 0})
           }
-          if (type === 0) { // 推荐到首页
+          if (type === 'isRecommend') { // 推荐到首页
             this.list[index].specialActivity.isRecommend = status
           } else { // 优秀案例
             this.list[index].specialActivity.isGood = status
