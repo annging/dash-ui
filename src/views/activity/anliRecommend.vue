@@ -176,7 +176,7 @@ export default {
     },
     // 推荐到首页
     setActivityWithGoodOrRecommend(index, row, type, status) {
-      this.$confirm('确认取消设为优秀案例?', '提示', {
+      this.$confirm('确认'+ (status ? '' : '取消') + (type === 'isRecommend' ? '推荐到首页' : '设为优秀案例') + '?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -222,7 +222,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(({ value }) => {
-        setWeight({activityId: row.id, type: type, weight: value}).then(response => {
+        setWeight({activityId: row.activityId, type: type, weight: value}).then(response => {
           if (response.code === '200') {
             let that = this
             this.$message({
