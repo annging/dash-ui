@@ -178,7 +178,7 @@ export default {
       this.getList()
     },
     goCreate() {
-      this.$router.push({ path: '/activity/recommendActivityAdd' });
+      this.$router.push({ path: '/activity/recommendActivityAdd' })
     },
     // 推荐到首页
     setActivityWithGoodOrRecommend(index, row, type, status) {
@@ -228,7 +228,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(({ value }) => {
-        setWeight({activityId: row.id, type: type, weight: value}).then(response => {
+        setWeight({activityId: row.activityId, type: type, weight: value}).then(response => {
           if (response.code === '200') {
             let that = this
             this.$message({

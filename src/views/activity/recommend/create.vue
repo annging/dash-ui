@@ -13,10 +13,11 @@
       <el-form ref="form" :rules="rules" :model="recommendForm" label-width="100px" size="small">
         <el-form-item label="活动">
           <el-select v-model="recommendForm.activityId" placeholder="请选择活动" style="width: 100%" popper-class="paginationSelect">
-            <el-option v-for="item in activityList" :key="item.id" :label="item.id + '-' + activityTypes[item.type].label + '-' + item.title" :value="item.id">
+            <el-option v-loading="listLoading" v-for="item in activityList" :key="item.id" :label="item.id + '-' + activityTypes[item.type].label + '-' + item.title" :value="item.id">
               <span class="label-id">{{ item.id }}</span>
               <span class="label-type">{{ activityTypes[item.type].label }}</span>
               <span class="label-title">{{ item.title }}</span>
+              <el-tag type="success" size="mini" v-if="item.specialActivity && item.specialActivity.isRecommend > 0" style="float: right; margin-top: 6px;">已推荐</el-tag>
             </el-option>
             <pagination v-show="activityTotal>0" :total="activityTotal" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
           </el-select>
@@ -37,7 +38,7 @@
 </template>
 
 <script>
-import { getActivitys, addActivityScheme } from '@/api/activity'
+import { getActivitys, setActivityWithGoodOrRecommend, setWeight } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const defaultForm = {
@@ -53,6 +54,7 @@ export default {
       recommendForm: Object.assign({}, defaultForm),
       activityList: [],
       activityTotal: 0,
+      listLoading: false,
       listQuery: {
         searchStr: '',
         current: 1,
@@ -86,24 +88,35 @@ export default {
         }
         this.activityList = response.data.records
         this.activityTotal = response.data.total
-        // this.listLoading = false
+        this.listLoading = false
       })
     },
     onSubmit() {
       console.log('submit!')
-      addActivityScheme(this.schemeForm).then(res => {
-        if (res.code * 1 == 200) {
-          this.$message({
-            message: '创建方案成功',
-            type: 'success'
+      let that = this
+      let data = {}
+      data ={
+        id: this.recommendForm.activityId,
+        isRecommend: 1
+      }
+      setActivityWithGoodOrRecommend(data).then(response => {
+        if (response.code === '200') {
+          setWeight({activityId: this.recommendForm.activityId, type: 0, weight: this.recommendForm.weight}).then(response => {
+            if (response.code === '200') {
+              let that = this
+              this.$message({
+                type: 'success',
+                message: '操作成功,返回列表页...',
+                onClose: function() {
+                  that.$router.push({ path: '/activity/recommendActivity' })
+                }
+              })
+            }
           })
-          setTimeout(() => {
-            this.$router.push({ path: '/activity/fangan/index' });
-          }, 1.5 * 1000)
         } else {
           this.$message({
-            message: res.msg,
-            type: 'error'
+            type: 'error',
+            message: response.msg
           })
         }
       })
@@ -160,6 +173,12 @@ export default {
     .el-select-dropdown__wrap {
       max-height: 500px;
       height: 500px;
+    }
+    .el-select-dropdown__list {
+      padding-top: 30px;
+    }
+    .el-select-dropdown__item {
+      border-bottom: 1px solid #f5f5f5;
     }
   }
 </style>
