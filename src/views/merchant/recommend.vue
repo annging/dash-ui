@@ -35,12 +35,12 @@
 	            </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="商家名称">
+	            label="品牌名称">
 	            <template slot-scope="{row}">
 			          <span>{{ row.name }}</span>
 			        </template>
 	          </el-table-column>
-	          <el-table-column
+	          <!--<el-table-column
 	            label="活动总数">
 	            <template slot-scope="{row}">
 			          <span>{{ row.merchantAggregate ? row.merchantAggregate.activityCount : '-' }}</span>
@@ -75,7 +75,7 @@
 	            <template slot-scope="{row}">
 			          <span>{{ row.merchantAggregate ? row.merchantAggregate.employeeCount : '-' }}</span>
 			        </template>
-	          </el-table-column>
+	          </el-table-column>-->
 	          <el-table-column
 	            label="会员"
 	            width="">
