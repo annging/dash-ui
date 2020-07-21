@@ -9,7 +9,6 @@
       <el-menu-item index="5" :route="{path:'/activity/recommendActivityAdd'}">添加首页推荐</el-menu-item>
     </el-menu>
     <el-row>
-      <div style="padding: 20px 100px; background-color: #f5f5f5; margin-bottom: 20px">开发中...</div>
       <el-form ref="form" :rules="rules" :model="recommendForm" label-width="100px" size="small">
         <el-form-item label="活动">
           <el-select v-model="recommendForm.activityId" placeholder="请选择活动" style="width: 100%" popper-class="paginationSelect">
