@@ -98,7 +98,7 @@ export const constantRoutes = [
         path: 'list',
         name: 'Activity',
         component: () => import('@/views/activity/list'),
-        meta: { title: '活动列表' }
+        meta: { title: '活动管理' }
       },
       {
         path: 'discount',
@@ -119,13 +119,13 @@ export const constantRoutes = [
             path: 'overview',
             component: () => import('@/views/activity/detail/overview'),
             name: '活动详情',
-            meta: { title: '活动详情', activeMenu: '/activity/index' }
+            meta: { title: '活动详情', activeMenu: '/activity/list' }
           },
           {
             path: 'statistics',
             component: () => import('@/views/activity/detail/statistics'),
             name: '活动详情数据',
-            meta: { title: '活动详情数据', activeMenu: '/activity/index' }
+            meta: { title: '活动详情数据', activeMenu: '/activity/list' }
           }
         ]
       },
@@ -133,14 +133,21 @@ export const constantRoutes = [
         path: 'recommendAnli',
         component: () => import('@/views/activity/anliRecommend'),
         name: '优秀案例',
-        meta: { title: '优秀案例' },
+        meta: { title: '优秀案例', activeMenu: '/activity/list' },
         hidden: true
       },
       {
         path: 'recommendActivity',
         name: ' recommendActivity',
-        component: () => import('@/views/activity/recommend'),
-        meta: { title: '首页推荐' },
+        component: () => import('@/views/activity/recommend/index'),
+        meta: { title: '首页推荐', activeMenu: '/activity/list' },
+        hidden: true
+      },
+      {
+        path: 'recommendActivityAdd',
+        name: ' recommendActivityAdd',
+        component: () => import('@/views/activity/recommend/create'),
+        meta: { title: '添加首页推荐', activeMenu: '/activity/list' },
         hidden: true
       },
       {
@@ -148,13 +155,13 @@ export const constantRoutes = [
         name: 'fangan',
         redirect: '/fangan/index',
         component: () => import('@/views/activity/fangan'),
-        meta: { title: '活动方案'},
+        meta: { title: '方案'},
         children: [
           {
             path: 'index',
             component: () => import('@/views/activity/fangan/index'),
-            name: '活动方案',
-            meta: { title: '活动方案' }
+            name: '方案',
+            meta: { title: '方案管理' }
           },
           {
             path: 'create',

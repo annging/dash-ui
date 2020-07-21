@@ -7,6 +7,9 @@
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
+      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+        <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加首页推荐</el-button>
+      </el-row>
       <el-row class="list">
         <el-table
           v-loading="listLoading"
@@ -27,55 +30,57 @@
               <span>{{ row.id }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            label="活动ID">
-            <template slot-scope="{row}">
-              {{ row.activityId }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="活动封面图">
-            <template slot-scope="{row}">
-              <img v-if="row.activity && row.activity.cover.length > 0" :src="row.activity.cover[0]" style="width: 100px;height: 60px;">
-              <span v-else>没有封面图</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="活动标题">
-            <template slot-scope="{row}">
-              <span>{{ row.activity.title || row.activity.activitySetting.title }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="类型">
-            <template slot-scope="{row}">
-              <span>{{ activityTypes[row.activity.type] }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="活动时间"
-            width="150">
-            <template slot-scope="{row}">
-              <span>{{ row.activity.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.activity.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="价格">
-            <template slot-scope="{row}">
-              <span>{{ row.activity.basePrice === 0 ? '免费' : row.activity.basePrice.toFixed(2) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="商家ID">
-            <template slot-scope="{row}">
-              <span>{{ row.activity.merchantId }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="状态">
-            <template slot-scope="{row}">
-              <span>{{ status[row.activity.status]}}</span>
-            </template>
+          <el-table-column label="相关活动">
+            <el-table-column
+              label="活动ID">
+              <template slot-scope="{row}">
+                {{ row.activityId }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="活动封面图">
+              <template slot-scope="{row}">
+                <img v-if="row.activity && row.activity.cover.length > 0" :src="row.activity.cover[0]" style="width: 100px;height: 60px;">
+                <span v-else>没有封面图</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="活动标题">
+              <template slot-scope="{row}">
+                <span>{{ row.activity.title || row.activity.activitySetting.title }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="类型">
+              <template slot-scope="{row}">
+                <span>{{ activityTypes[row.activity.type] }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="活动时间"
+              width="150">
+              <template slot-scope="{row}">
+                <span>{{ row.activity.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.activity.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="价格">
+              <template slot-scope="{row}">
+                <span>{{ row.activity.basePrice === 0 ? '免费' : row.activity.basePrice.toFixed(2) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="商家ID">
+              <template slot-scope="{row}">
+                <span>{{ row.activity.merchantId }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="状态">
+              <template slot-scope="{row}">
+                <span>{{ status[row.activity.status]}}</span>
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column
             label="权重">
@@ -172,9 +177,12 @@ export default {
       this.listQuery.current = 1
       this.getList()
     },
+    goCreate() {
+      this.$router.push({ path: '/activity/recommendActivityAdd' });
+    },
     // 推荐到首页
     setActivityWithGoodOrRecommend(index, row, type, status) {
-      this.$confirm('确认取消推荐到首页?', '提示', {
+      this.$confirm('确认'+ (status ? '' : '取消') + (type === 'isRecommend' ? '推荐到首页' : '设为优秀案例') + '?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -182,12 +190,12 @@ export default {
         let data = {}
         if (type === 'isRecommend') {
           data ={
-            id: row.id,
+            id: row.activityId,
             isRecommend: status
           }
         } else if (type === 'isGood') {
           data ={
-            id: row.id,
+            id: row.activityId,
             isGood: status
           }
         }
