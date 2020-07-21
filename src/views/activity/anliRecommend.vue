@@ -27,55 +27,57 @@
                 <span>{{ row.id }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-            label="活动ID">
-            <template slot-scope="{row}">
-              {{ row.activityId }}
-            </template>
-          </el-table-column>
-            <el-table-column
-              label="封面图">
-              <template slot-scope="{row}">
-                <img v-if="row.activity.cover.length > 0" :src="row.activity.cover[0]" style="width: 100px;height: 60px;">
-                <span v-else>没有封面图</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="title">
-              <template slot-scope="{row}">
-                <span>{{ row.activity.title || row.activity.activitySetting.title }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="类型">
-              <template slot-scope="{row}">
-                <span>{{ activityTypes[row.activity.type] }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="活动时间"
-              width="150">
-              <template slot-scope="{row}">
-                <span>{{ row.activity.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.activity.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="价格">
-              <template slot-scope="{row}">
-                <span>{{ row.activity.basePrice === 0 ? '免费' : row.activity.basePrice.toFixed(2) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="商家ID">
-              <template slot-scope="{row}">
-                <span>{{row.activity.merchantId}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="状态">
-              <template slot-scope="{row}">
-                <span>{{ status[row.activity.status] }}</span>
-              </template>
+            <el-table-column label="相关活动">
+              <el-table-column
+              label="活动ID">
+                <template slot-scope="{row}">
+                  {{ row.activityId }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="封面图">
+                <template slot-scope="{row}">
+                  <img v-if="row.activity.cover.length > 0" :src="row.activity.cover[0]" style="width: 100px;height: 60px;">
+                  <span v-else>没有封面图</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="title">
+                <template slot-scope="{row}">
+                  <span>{{ row.activity.title || row.activity.activitySetting.title }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="类型">
+                <template slot-scope="{row}">
+                  <span>{{ activityTypes[row.activity.type] }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="活动时间"
+                width="150">
+                <template slot-scope="{row}">
+                  <span>{{ row.activity.startTime | moment("YYYY-MM-DD HH:mm:ss") }} <br/>- <br/>{{ row.activity.endTime | moment("YYYY-MM-DD HH:mm:ss") }} </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="价格">
+                <template slot-scope="{row}">
+                  <span>{{ row.activity.basePrice === 0 ? '免费' : row.activity.basePrice.toFixed(2) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="商家ID">
+                <template slot-scope="{row}">
+                  <span>{{row.activity.merchantId}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="状态">
+                <template slot-scope="{row}">
+                  <span>{{ status[row.activity.status] }}</span>
+                </template>
+              </el-table-column>
             </el-table-column>
             <el-table-column
             label="权重">
