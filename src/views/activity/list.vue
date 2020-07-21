@@ -87,14 +87,16 @@
             label="推荐到首页?"
             width="90">
             <template slot-scope="{row}">
-              <span>{{ row.specialActivity ? (row.specialActivity.isRecommend > 0 ? '是' : '否') : '否' }}</span>
+              <el-tag type="success" size="mini" v-if="row.specialActivity && row.specialActivity.isRecommend > 0">推荐</el-tag>
+              <el-tag type="info" size="mini" v-else>否</el-tag>
             </template>
           </el-table-column>
           <el-table-column
             label="优秀案例?"
             width="80">
             <template slot-scope="{row}">
-              <span>{{ row.specialActivity ? (row.specialActivity.isGood > 0 ? '是' : '否') : '否' }}</span>
+              <el-tag type="success" size="mini" v-if="row.specialActivity && row.specialActivity.isGood > 0">优秀</el-tag>
+              <el-tag type="info" size="mini" v-else>否</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作">

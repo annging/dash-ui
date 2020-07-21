@@ -102,7 +102,8 @@
               label="是否推荐"
               width="100">
               <template slot-scope="{row}">
-                <span>{{ row.isRecommend ? '是' : '否' }}</span>
+                <el-tag type="success" size="mini" v-if="row.isRecommend">推荐</el-tag>
+                <el-tag type="info" size="mini" v-else>否</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="200">
