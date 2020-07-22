@@ -35,13 +35,15 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="用户">
+            label="用户"
+            width="100px">
             <template slot-scope="{row}">
               <span>{{ row.user.nickName }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="类型">
+            label="类型"
+            width="80px">
             <template slot-scope="{row}">
               <span>{{ optionTypes[row.optionType] }}</span>
             </template>
@@ -60,14 +62,22 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="类型">
+              label="类型"
+              width="60px">
               <template slot-scope="{row}">
                 <span>{{ activityTypes[row.activity.type] }}</span>
               </template>
             </el-table-column>
+            <el-table-column
+              label="商家">
+              <template slot-scope="{row}">
+                <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + row.activity.merchantId + '/overview'">{{ row.activity.merchant.name }}</router-link>
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column
-            label="操作时间">
+            label="操作时间"
+            width="150px">
             <template slot-scope="{row}">
               <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
