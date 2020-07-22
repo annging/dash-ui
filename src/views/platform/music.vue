@@ -83,7 +83,8 @@
               <el-cascader
                 v-model="valueClass"
                 :options="optionsClass"
-                @change="handleClassChange"></el-cascader>
+                @change="handleClassChange"
+                placeholder="请选择"></el-cascader>
             </el-form-item>
             <el-form-item label="url" prop="url">
               <el-input v-model="temp.url" />
@@ -137,7 +138,7 @@ export default {
       clientHeight: '',
       maxHeight: 400,
       temp: {
-        id: undefined,
+        id: '',
         merchantId: 0,
         name: '',
         firstClass: '',
@@ -241,7 +242,7 @@ export default {
     },
     resetTemp() {
       this.temp = {
-        id: undefined,
+        id: '',
         merchantId: 0,
         name: '',
         firstClass: '',
@@ -251,6 +252,7 @@ export default {
     },
     goCreate() {
       this.resetTemp()
+      this.valueClass = []
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -260,7 +262,8 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          saveOrUpdate(this.temp).then(() => {
+          const tempData = Object.assign({}, this.temp)
+          saveOrUpdate(tempData).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$message({
@@ -274,9 +277,9 @@ export default {
     },
     handleEdit(index, row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.value = [];
-      this.value.push(this.temp.firstClass)
-      this.value.push(this.temp.secondClass)
+      this.valueClass = []
+      this.valueClass.push(this.temp.firstClass)
+      this.valueClass.push(this.temp.secondClass)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
