@@ -103,6 +103,13 @@
 		          </template>
 		        </el-table-column>
 		        <el-table-column
+	            label="邀请者"
+	            width="">
+	            <template slot-scope="{row}">
+	            	<span>{{ row.formUser ? row.formUser.nickName : '-'  }}</span>
+		          </template>
+		        </el-table-column>
+		        <el-table-column
 	            label="会员过期时间"
 	            width="140px">
 	            <template slot-scope="{row}">
