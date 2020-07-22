@@ -66,7 +66,7 @@ export default {
 <style lang="scss" scoped>
 .navbar {
   height: 70px;
-  padding: 20px 30px 0 30px;
+  padding: 20px 30px 0 15px;
   overflow: hidden;
   position: relative;
   background: #fff;
@@ -84,10 +84,8 @@ export default {
     cursor: pointer;
     transition: background .3s;
     -webkit-tap-highlight-color:transparent;
-    border-left: 1px solid rgba(0, 0, 0, .025);
-
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, .015)
     }
   }
 
