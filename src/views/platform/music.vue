@@ -223,7 +223,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
     sortChange(data) {
@@ -260,16 +260,20 @@ export default {
       })
     },
     createData() {
+      let that = this
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           saveOrUpdate(tempData).then(() => {
-            this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$message({
               message: '成功',
               type: 'success',
-              duration: 2000
+              duration: 2000,
+              onClose: function() {
+                that.listQuery.current = 1
+                that.getList()
+              }
             })
           })
         }
@@ -309,7 +313,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteMusic(row.id).then(res => {
+        deleteMusic({ musicId: row.id}).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',

@@ -48,11 +48,11 @@ export function saveOrUpdate(data) {
   })
 }
 
-export function deleteMusic(id) {
+export function deleteMusic(query) {
   return request({
     url: '/system/management/music/deleteMusic',
-    method: 'delect',
-    params: { musicId: id }
+    method: 'get',
+    params: query
   })
 }
 
