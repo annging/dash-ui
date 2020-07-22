@@ -61,6 +61,24 @@
 				</div>
 			</div>
 		</div>
+		<div class="module">
+			<div class="key-value-block__key">品牌优势</div>
+			<div class="key-value-block__value">
+				<div v-for="(item, index) in merchant.advantage" :key="index">
+					<div style="">{{ index + 1 }}.{{ item.title }}</div>
+					<div style="color: #808080">{{ item.content }}</div>
+				</div>
+			</div>
+		</div>
+		<div class="module">
+			<div class="key-value-block__key">申请体验</div>
+			<div class="key-value-block__value">
+				<div>商家主页<span v-if="merchant.showApplyTry">显示</span><span v-else>不显示</span>申请体验</div>
+				<div v-for="(item, index) in merchant.applyTry" :key="index">
+					<div style="">{{ item }}</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -109,6 +127,8 @@ export default {
 	      		response.data.phone = JSON.parse(response.data.phone)
 	      		response.data.teamIntros = JSON.parse(response.data.teamIntros)
 	      		response.data.productIntros = JSON.parse(response.data.productIntros)
+	      		response.data.advantage = JSON.parse(response.data.advantage)
+	      		response.data.applyTry = JSON.parse(response.data.applyTry)
 	      		this.merchant = response.data
 		      }
 	      } else {
