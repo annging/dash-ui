@@ -6,7 +6,7 @@
 
     <div class="right-menu">
       <!--<el-button type="primary" size="medium" class="btn-create" icon="el-icon-plus">创建活动</el-button>-->
-      <notice class="notice-container" />
+      <notice :list="notices" class="notice-container" />
 
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -51,7 +51,49 @@ export default {
       'name'
     ])
   },
+  data() {
+    return {
+      notices: {},
+      websock: null,
+    }
+  },
+  created() {
+    this.initWebSocket()
+  },
   methods: {
+    initWebSocket(){ //初始化weosocket
+      const wsuri = "ws://47.107.137.16:8090/socket"
+      if('WebSocket' in window){
+        this.websock = new WebSocket(wsuri)
+      }else{
+        this.$message({
+          type: 'error',
+          message: '浏览器不支持websocket，请换个浏览器'
+        })
+      }
+      this.websock.onmessage = this.websocketonmessage
+      this.websock.onopen = this.websocketonopen
+      this.websock.onerror = this.websocketonerror
+      this.websock.onclose = this.websocketclose
+    },
+    websocketonopen(){ //连接建立之后执行...
+      // let actions = {"test":"12345"}
+      // this.websocketsend(JSON.stringify(actions))
+    },
+    websocketonerror(){//连接建立失败重连
+      this.initWebSocket()
+    },
+    websocketonmessage(e){ //数据接收
+      this.notices = JSON.parse(e.data)
+      console.log(this.notices)
+      console.log(typeof(this.notices))
+    },
+    websocketsend(Data){//数据发送
+      this.websock.send(Data)
+    },
+    websocketclose(e){  //关闭
+      console.log('断开连接',e)
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

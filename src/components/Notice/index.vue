@@ -7,14 +7,17 @@
     popper-class="notice-popover">
     <div class="notice-list">
       <div class="notice-title">通知</div>
-      <ul>
-      <li class="text item">
-          有商家认证待审核
-      </li>
+      <ul v-if="badgeNumber">
+        <li class="text item" v-for="(value, key, index) in list" :key="index" v-if="value">
+          <router-link style="color: #409EFF" :to="type[key].path">您有{{value}}个{{ type[key].name }}待审核</router-link>
+        </li>
+      </ul>
+      <ul v-else>
+        <li class="text item" style="font-size: 12px; color: #808080">无</li>
       </ul>
     </div>
     
-    <el-badge :value="12" class="item" slot="reference">
+    <el-badge :value="badgeNumber" class="item" slot="reference" :hidden="badgeNumber < 1">
       <el-button type="text"><i class="el-icon-bell"></i></el-button>
     </el-badge>
   </el-popover>
@@ -31,6 +34,26 @@ export default {
     isActive: {
       type: Boolean,
       default: false
+    },
+    list: {
+      type: Object,
+      default: {1: 0, 2: 0}
+    }
+  },
+  data() {
+    return {
+      type: {1: {name: '商家认证', path: '/merchant/renzheng/daishenhe'}, 2: {name: '提现', path: '/account/tixianshenhe/daishenhe'}}
+    }
+  },
+  computed: {
+    badgeNumber() {
+      let badgeNumber = 0
+      for (let [key, value] of Object.entries(this.list)) {
+        if (+value > 0) {
+          badgeNumber++
+        }
+      }
+      return badgeNumber
     }
   },
   methods: {
