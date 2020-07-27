@@ -10,10 +10,10 @@
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="merchantForm" label-width="100px" size="small">
-        <el-form-item label="品牌名称">
+        <el-form-item label="品牌名称" prop="name">
           <el-input v-model="merchantForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="品牌Logo">
+        <el-form-item label="品牌Logo" prop="logo">
           <el-upload
             :data="dataObj"
             :multiple="false"
@@ -34,7 +34,7 @@
             <img width="100%" :src="merchantForm.wxImg" alt="">
           </el-dialog>-->
         </el-form-item>
-        <el-form-item label="品牌简介">
+        <el-form-item label="品牌简介" >
           <el-input
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 6}"
@@ -42,7 +42,7 @@
             v-model="merchantForm.intro">
           </el-input>
         </el-form-item>
-        <el-form-item label="品牌相册">
+        <el-form-item label="品牌相册" prop="introImgs">
           <div>{{ merchantForm.introImgs.length }}/9</div>
           <el-upload
             ref="upload"
@@ -62,7 +62,7 @@
           </el-upload>
           <!--<el-button size="mini" type="primary" @click="subPics">立即上传</el-button>-->
         </el-form-item>
-        <el-form-item label="联系电话">
+        <el-form-item label="联系电话" prop="phone">
           <div style="display: flex; margin-bottom: 8px;" v-for="(item, index) in merchantForm.phone" :key="index">
             <el-input v-model="item.content" ></el-input><el-button size="mini" @click.prevent="removePhone(item, index)">删除</el-button>
           </div>
@@ -232,12 +232,15 @@ export default {
       merchantForm: Object.assign({}, defaultMerchantForm),
       fileList: [],
       rules: {
-        nickName: [
-          { required: true, message: '请输入用户昵称', trigger: 'blur' },
+        name: [
+          { required: true, message: '品牌名称', trigger: 'blur' },
           { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
         ],
-        wxImg: [
-          { required: true, message: '请上传头像', trigger: 'change' }
+        logo: [
+          { required: true, message: '请上传品牌Logo', trigger: 'change' }
+        ],
+        phone: [
+          { type: 'array', required: true, message: '请至少输入一个联系电话', trigger: 'change' }
         ]
       },
       dialogVisible: false,
@@ -252,21 +255,12 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log('submit!')
-      addActivityScheme(this.merchantForm).then(res => {
-        if (res.code * 1 == 200) {
-          this.$message({
-            message: '创建虚拟用户成功',
-            type: 'success'
-          })
-          setTimeout(() => {
-            this.$router.push({ path: '/user/virtual' });
-          }, 1.5 * 1000)
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
         } else {
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
+          console.log('error submit!!')
+          return false
         }
       })
     },
