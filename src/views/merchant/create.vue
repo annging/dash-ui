@@ -9,7 +9,7 @@
       <el-menu-item index="5" :route="{path:'/merchant/create'}">添加商家</el-menu-item>
     </el-menu>
     <el-row>
-      <el-form ref="form" :rules="rules" :model="merchantForm" label-width="100px" size="small">
+      <el-form ref="merchantForm" :rules="rules" :model="merchantForm" label-width="100px" size="small">
         <el-form-item label="品牌名称" prop="name">
           <el-input v-model="merchantForm.name"></el-input>
         </el-form-item>
@@ -72,7 +72,7 @@
           <el-input v-model="merchantForm.wechat"></el-input>
         </el-form-item>
         <el-form-item label="所在地址">
-          <el-input v-model="merchantForm.address.tips">
+          <el-input :value="(merchantForm.address.province === merchantForm.address.city ? '' : merchantForm.address.province) + merchantForm.address.city + merchantForm.address.distinct + merchantForm.address.detail">
             <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
           </el-input>
         </el-form-item>
@@ -193,7 +193,13 @@
       :visible.sync="mapDialogTableVisible"
       :modal-append-to-body="false"
       :append-to-body="true">
+      <input id="address" type="textbox" v-model="markerDetail.address">
+      <button @click.prevent="codeAddress(markerDetail.address)">搜索</button>
       <div id="mapContainer" style="min-height: 400px">
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="mapDialogTableVisible = false">取 消</el-button>
+        <el-button type="primary" @click="mapDialogTableVisible = false; merchantForm.address = Object.assign({}, markersResult)">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -247,7 +253,14 @@ export default {
       dialogVisible1: false,
       dataObj: { token: '' },
       map: null,
-      mapDialogTableVisible: false
+      geocoder: null,
+      mapDialogTableVisible: false,
+      markersArray: [],
+      markerDetail: {
+        address: '北京,海淀区,海淀大街58号',
+        latLng: {}
+      },
+      markersResult: { province: '', city: '', distinct: '', detail: '', tips: '' }
     }
   },
   created() {
@@ -255,7 +268,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[merchantForm].validate((valid) => {
         if (valid) {
           alert('submit!')
         } else {
@@ -354,6 +367,7 @@ export default {
       this.merchantForm.applyTry.push({ content: '' });
     },
     initMap() {
+      let that = this
       maps.init(key, () => {
         var myLatlng = new qq.maps.LatLng(39.916527,116.397128)
         var  myOptions = {
@@ -365,7 +379,67 @@ export default {
           document.getElementById("mapContainer"),
           myOptions
         )
+        qq.maps.event.addDomListener(this.map, 'click', function(event) {
+          that.deleteOverlays()
+          that.addMarker(event.latLng)
+          that.codeLatLng(event.latLng)
+        })
+        var info = new qq.maps.InfoWindow({
+          map: this.map
+        })
+        this.geocoder = new qq.maps.Geocoder()
+        this.geocoder.setComplete(function(result) {
+          console.log(result)
+          that.deleteOverlays()
+          that.map.setCenter(result.detail.location)
+          var marker = that.addMarker(result.detail.location)
+          that.markersResult.province = result.detail.addressComponents.province || ''
+          that.markersResult.city = result.detail.addressComponents.city || ''
+          that.markersResult.distinct = result.detail.addressComponents.distinct || ''
+          that.markersResult.detail = (result.detail.addressComponents.town || '') + (result.detail.addressComponents.village || '') + (result.detail.addressComponents.street || '') + (result.detail.addressComponents.streetNumber || '')
+          that.markerDetail.address = result.detail.address
+          that.markerDetail.latLng = result.detail.location
+          qq.maps.event.addListener(marker, 'click', function() {
+            info.open()
+            info.setContent('<div style="width:280px;height:100px;">' + result.detail.address + '<br />' + '(' + result.detail.location + ')' + '</div>')
+            info.setPosition(result.detail.location)
+          })
+        })
+
+        this.geocoder.setError(function() {
+          alert("出错了，请输入正确的地址！！！");
+        })
       })
+    },
+    clearOverlays() {
+      if (this.markersArray) {
+        for (i in this.markersArray) {
+          this.markersArray[i].setMap(null)
+        }
+      }
+    },
+    deleteOverlays() {
+      console.log('deleteOverlays')
+      if (this.markersArray) {
+        for (let i in this.markersArray) {
+          this.markersArray[i].setMap(null)
+        }
+        this.markersArray = []
+      }
+    },
+    addMarker(location) {
+      var marker = new qq.maps.Marker({
+        position: location,
+        map: this.map
+      })
+      this.markersArray.push(marker)
+      return marker
+    },
+    codeAddress(address) {
+      this.geocoder.getLocation(address)
+    },
+    codeLatLng(latLng) {
+      this.geocoder.getAddress(latLng)
     },
     getLocation() {
       this.mapDialogTableVisible = true
