@@ -1,6 +1,6 @@
 {
   "name": "tuantuanstation-dash",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "description": "团团站后台管理中心",
   "author": "团团站",
   "scripts": {
@@ -22,6 +22,7 @@
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
+    "qqmap": "^1.0.1",
     "vue": "2.6.10",
     "vue-count-to": "^1.0.13",
     "vue-moment": "^4.1.0",
