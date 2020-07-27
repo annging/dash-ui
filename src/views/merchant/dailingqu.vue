@@ -1,27 +1,14 @@
 <template>
 	<div class="main-content">
 	  	<div class="left-container">
-	    	<el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
+	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/merchant/index'}">商家列表</el-menu-item>
             <el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
             <el-menu-item index="3" :route="{path:'/merchant/paid'}">付费商家</el-menu-item>
             <el-menu-item index="4" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
 	    	</el-menu>
-		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
-          <el-input
-            v-model="listQuery.searchStr"
-            placeholder="请输入内容"
-            prefix-icon="el-icon-search"
-            size="small"
-            class="filter-item"
-            @keyup.enter.native="handleFilter" />
-          <el-select size="small" v-model="listFilter.vipLevel" style="width: 200px" class="filter-item" @change="handleFilter">
-            <!--<el-option  label="全部付费商家" value="" />-->
-            <el-option v-for="item in typeOptions" :key="item.key" :label="item.label" :value="item.key" />
-          </el-select>
-          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-            搜索
-          </el-button>
+        <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+          <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加商家</el-button>
         </el-row>
         <el-row class="list">
           <el-table
@@ -58,47 +45,40 @@
                 <span>{{ row.name }}</span>
               </template>
             </el-table-column>
-            <!--<el-table-column
+            <el-table-column
               label="活动总数">
               <template slot-scope="{row}">
-                <span>{{ row.activities.length }}</span>
+                <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
               label="访问人数">
               <template slot-scope="{row}">
-                <span>{{row.activity.fangwen}}</span>
+                <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
               label="参与人数">
               <template slot-scope="{row}">
-                <span>{{row.activity.canyu}}</span>
+                <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
               label="累计收入">
               <template slot-scope="{row}">
-                <span>{{row.account.incharge}}</span>
+                <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
               label="门店数量">
               <template slot-scope="{row}">
-                <span>{{ row.storeCount || row.stores.length }}</span>
+                <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
               label="员工数量">
               <template slot-scope="{row}">
-                <span>{{row.staffs}}</span>
-              </template>
-            </el-table-column>-->
-            <el-table-column
-              label="创建者"
-              width="">
-              <template slot-scope="{row}">
-                <span>{{ row.user ? row.user.nickName : ''  }}</span>
+                <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -117,11 +97,13 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
+                  type="text"
                   @click="handleView(scope.$index, scope.row)">查看</el-button>
-                <!--<el-button
+                <el-button
                   size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+                  type="text"
+                  style="color: #F56C6C"
+                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -156,7 +138,7 @@ export default {
     };
   },
   created() {
-    this.getList()
+    // this.getList()
   },
   methods: {
     getList() {
@@ -193,6 +175,9 @@ export default {
       this.$router.push({
         path: '/merchant/detail/' + row.id
       })
+    },
+    handleDelete(index, row) {
+      console.log('删除')
     }
   }
 }

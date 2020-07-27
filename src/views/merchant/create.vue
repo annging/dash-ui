@@ -1,34 +1,185 @@
 <template>
 <div class="main-content">
   <div class="left-container">
-    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/merchant/create'}">添加商家</el-menu-item>
+    <el-menu default-active="5" class="" mode="horizontal" router style="margin-bottom: 20px;">
+      <el-menu-item index="1" :route="{path:'/merchant/index'}">商家列表</el-menu-item>
+      <el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
+      <el-menu-item index="3" :route="{path:'/merchant/paid'}">付费商家</el-menu-item>
+      <el-menu-item index="4" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
+      <el-menu-item index="5" :route="{path:'/merchant/create'}">添加商家</el-menu-item>
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="merchantForm" label-width="100px" size="small">
-        <el-form-item label="昵称">
-          <el-input v-model="merchantForm.nickName"></el-input>
+        <el-form-item label="品牌名称">
+          <el-input v-model="merchantForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="头像">
+        <el-form-item label="品牌Logo">
           <el-upload
             :data="dataObj"
             :multiple="false"
             class="avatar-uploader"
             action="http://upload-z2.qiniup.com"
             :show-file-list="false"
-            :on-success="handleSuccess"
-            :on-preview="handlePicturePreview"
+            :on-success="(res,file)=>{return handleDataSuccess(res,file,'logo')}"
             :on-remove="handleRemove"
             :before-upload="beforeUpload">
-            <img v-if="merchantForm.wxImg" :src="merchantForm.wxImg" class="avatar">
+            <img v-if="merchantForm.logo" :src="merchantForm.logo" class="avatar">
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <div slot="tip" class="el-upload__tip">（尺寸为110*100最佳）</div>
           </el-upload>
-          <el-dialog
+          <!--<el-dialog
             :visible.sync="dialogVisible"
             :modal-append-to-body="false"
             :append-to-body="true">
             <img width="100%" :src="merchantForm.wxImg" alt="">
-          </el-dialog>
+          </el-dialog>-->
+        </el-form-item>
+        <el-form-item label="品牌简介">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 6}"
+            placeholder="品牌简介"
+            v-model="merchantForm.intro">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="品牌相册">
+          <div>{{ merchantForm.introImgs.length }}/9</div>
+          <el-upload
+            ref="upload"
+            :data="dataObj"
+            multiple
+            :limit="9"
+            list-type="picture-card"
+            :file-list="fileList"
+            action="http://upload-z2.qiniup.com"
+            :on-success="handleSuccess_IntroImgs"
+            :on-remove="handleRemove_IntroImgs"
+            :before-upload="beforeUpload"
+            :on-change="handleChange"
+            :on-exceed="handleExceed">
+            <i class="el-icon-plus"></i>
+            <div slot="tip" class="el-upload__tip">（尺寸为254*144最佳,最多9张）</div>
+          </el-upload>
+          <!--<el-button size="mini" type="primary" @click="subPics">立即上传</el-button>-->
+        </el-form-item>
+        <el-form-item label="联系电话">
+          <div style="display: flex; margin-bottom: 8px;" v-for="(item, index) in merchantForm.phone" :key="index">
+            <el-input v-model="item.content" ></el-input><el-button size="mini" @click.prevent="removePhone(item, index)">删除</el-button>
+          </div>
+          <el-button size="mini" @click.prevent="addPhone()">+添加</el-button>
+        </el-form-item>
+        <el-form-item label="微信">
+          <el-input v-model="merchantForm.wechat"></el-input>
+        </el-form-item>
+        <el-form-item label="所在地址">
+          <el-input v-model="merchantForm.address.tips">
+            <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="详细地址">
+          <el-input v-model="merchantForm.address.tips"></el-input>
+        </el-form-item>
+        <el-form-item label="宣传片">
+          <el-upload
+            :data="dataObj"
+            :multiple="false"
+            class="avatar-uploader"
+            action="http://upload-z2.qiniup.com"
+            :on-success="handleSuccess_introVideo"
+            :on-remove="handleRemove_introVideo"
+            :before-upload="beforeUpload_introVideo">
+            <video v-if="merchantForm.introVideo" controls width="500" class="avatar2">
+              <source :src="merchantForm.introVideo">
+              Sorry, your browser doesn't support embedded videos.
+            </video>
+            <i  v-else class="el-icon-plus avatar-uploader-icon2"></i>
+            <div slot="tip" class="el-upload__tip">（尺寸为720*416最佳）</div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="团队展示">
+          <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.teamIntros" :key="index">
+            <el-upload
+              :data="dataObj"
+              :multiple="false"
+              class="avatar-uploader"
+              action="http://upload-z2.qiniup.com"
+              :show-file-list="false"
+              :on-success="(res,file)=>{return handleDataSuccess(res,file,'teamIntros', index, 'img')}"
+              :before-upload="beforeUpload">
+              <img v-if="item.img" :src="item.img" class="avatar" style="width: 90px; height: 90px;">
+              <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 90px; height: 90px; line-height: 90px;"></i>
+            </el-upload>
+            <div style="margin: 0 10px; width: 500px;">
+              <el-input v-model="item.name" style="margin-bottom: 5px;"></el-input>
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4}"
+                placeholder="简介"
+                v-model="item.intro">
+              </el-input>
+            </div>
+            <el-button size="mini" @click.prevent="removeTeam(item, index)">删除</el-button>
+          </div>
+          <el-button size="mini" @click.prevent="addTeam()">+添加</el-button>
+        </el-form-item>
+        <el-form-item label="作品简介">
+          <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.productIntros" :key="index">
+            <el-upload
+              :data="dataObj"
+              :multiple="false"
+              class="avatar-uploader"
+              action="http://upload-z2.qiniup.com"
+              :show-file-list="false"
+              :on-success="(res,file)=>{return handleDataSuccess(res,file,'productIntros', index, 'img')}"
+              :before-upload="beforeUpload">
+              <img v-if="item.img" :src="item.img" class="avatar" style="width: 90px; height: 90px;">
+              <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 90px; height: 90px; line-height: 90px;"></i>
+            </el-upload>
+            <div style="margin: 0 10px; width: 500px;">
+              <el-input
+                type="textarea"
+                :rows="4"
+                placeholder="作品简介"
+                v-model="item.intro">
+              </el-input>
+            </div>
+            <el-button size="mini" @click.prevent="removeProduct(item, index)">删除</el-button>
+          </div>
+          <el-button size="mini" @click.prevent="addProduct()">+添加</el-button>
+        </el-form-item>
+        <el-form-item label="品牌优势">
+          <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.advantage" :key="index">
+            <div style="margin: 0 10px 0 0; width: 610px;">
+              <el-input v-model="item.title" style="margin-bottom: 5px;"></el-input>
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 4}"
+                placeholder="简介"
+                v-model="item.content">
+              </el-input>
+            </div>
+            <el-button size="mini" @click.prevent="removeAdvantage(item, index)">删除</el-button>
+          </div>
+          <el-button size="mini" @click.prevent="addAdvantage()">+添加</el-button>
+        </el-form-item>
+        <el-form-item label="申请体验">
+          <el-switch
+            v-model="merchantForm.showApplyTry"
+            active-color="#13ce66"
+            inactive-color="#808080">
+          </el-switch>
+          <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.applyTry" :key="index">
+            <div style="margin: 0 10px 0 0; width: 610px;">
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 6}"
+                placeholder="给用户免费体验的内容或赠送礼品（例：免费提供20分钟任意试听课程）"
+                v-model="item.content">
+              </el-input>
+            </div>
+            <el-button size="mini" @click.prevent="removeApplyTry(item, index)">删除</el-button>
+          </div>
+          <el-button size="mini" @click.prevent="addApplyTry()">+添加</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即添加</el-button>
@@ -36,6 +187,15 @@
         </el-form-item>
       </el-form>
     </el-row>
+    <el-dialog 
+      title="地图"
+      width="800px"
+      :visible.sync="mapDialogTableVisible"
+      :modal-append-to-body="false"
+      :append-to-body="true">
+      <div id="mapContainer" style="min-height: 400px">
+      </div>
+    </el-dialog>
   </div>
   <!--<div class="secondary-sidebar"></div>-->
 </div>
@@ -43,18 +203,34 @@
 
 <script>
 import { addActivityScheme } from '@/api/activity'
-import { getToken } from '@/api/qiniu'
+import { getToken, uploadQiniu } from '@/api/qiniu'
+import maps from 'qqmap'
 
 const defaultMerchantForm = {
-    nickName: '', 
-    wxImg: ''
+    name: '', 
+    logo: '',
+    intro: '',
+    introImgs: [],
+    phone: [{ content: '15200000000' }],
+    wechat: '',
+    address: { province: '', city: '', distinct: '', detail: '', tips: '' },
+    introVideo: '',
+    teamIntros: [{ img: '', name: '', intro: '' }],
+    productIntros: [{ img: '', intro: '' }],
+    advantage: [{ title: '', content: '' }],
+    showApplyTry: false,
+    applyTry: [{ content: '' }]
 }
+
+const key = 'UUSBZ-O7S3K-US5JP-AY4LI-KQA7K-O2B6S'
 
 export default {
   name: 'MerchantCreate',
+  components: { },
   data() {
     return {
       merchantForm: Object.assign({}, defaultMerchantForm),
+      fileList: [],
       rules: {
         nickName: [
           { required: true, message: '请输入用户昵称', trigger: 'blur' },
@@ -66,7 +242,9 @@ export default {
       },
       dialogVisible: false,
       dialogVisible1: false,
-      dataObj: { token: '' }
+      dataObj: { token: '' },
+      map: null,
+      mapDialogTableVisible: false
     }
   },
   created() {
@@ -93,12 +271,15 @@ export default {
       })
     },
     beforeUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
+      // const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传图片大小不能超过 2MB!')
       }
       return isLt2M
+    },
+    beforeUpload_introVideo(file) {
+      console.log('')
     },
     fetchToken() {
       const _self = this
@@ -116,11 +297,85 @@ export default {
     handleRemove(file, fileList) {
       console.log(file, fileList)
     },
-    handleSuccess(res, file) {
-      this.merchantForm.wxImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    handleRemove_IntroImgs(file, fileList) {
+      let url = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + file.response.key
+      let index = this.merchantForm.introImgs.indexOf(url)
+      if (index > -1) {
+        this.merchantForm.introImgs.splice(index, 1)
+      }
     },
-    handlePicturePreview() {
-      this.dialogVisible = true;
+    handleRemove_introVideo(file, fileList) {
+      this.merchantForm.introVideo = ''
+    },
+    handleSuccess_IntroImgs(res, file) {
+      this.merchantForm.introImgs.push('http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key)
+    },
+    handleSuccess_introVideo(res, file) {
+      this.merchantForm.introVideo = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    },
+    handleDataSuccess(res, file, type, index, field) {
+      if (index > -1) {
+        this.merchantForm[type][index][field] = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      } else {
+        this.merchantForm[type] = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      }
+    },
+    handleChange(file, fileList) {
+      this.fileList = fileList
+    },
+    subPics() {
+      this.$refs.upload.submit()
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`最多传9张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
+    },
+    removePhone(item, index) {
+      this.merchantForm.phone.splice(index,1)
+    },
+    addPhone(){
+      this.merchantForm.phone.push({content:''});
+    },
+    removeTeam(item, index) {
+      this.merchantForm.teamIntros.splice(index,1)
+    },
+    addTeam(){
+      this.merchantForm.teamIntros.push({ img: '', name: '', intro: '' });
+    },
+    removeProduct(item, index) {
+      this.merchantForm.productIntros.splice(index,1)
+    },
+    addProduct(){
+      this.merchantForm.productIntros.push({ img: '', intro: '' });
+    },
+    removeAdvantage(item, index) {
+      this.merchantForm.advantage.splice(index,1)
+    },
+    addAdvantage(){
+      this.merchantForm.advantage.push({ title: '', content: '' });
+    },
+    removeApplyTry(item, index) {
+      this.merchantForm.applyTry.splice(index,1)
+    },
+    addApplyTry(){
+      this.merchantForm.applyTry.push({ content: '' });
+    },
+    initMap() {
+      maps.init(key, () => {
+        var myLatlng = new qq.maps.LatLng(39.916527,116.397128)
+        var  myOptions = {
+          zoom: 8,
+          center: myLatlng,
+          mapTypeId: qq.maps.MapTypeId.ROADMAP
+        }
+        this.map = new qq.maps.Map(
+          document.getElementById("mapContainer"),
+          myOptions
+        )
+      })
+    },
+    getLocation() {
+      this.mapDialogTableVisible = true
+      this.initMap()
     }
   }
 }
@@ -172,8 +427,8 @@ export default {
     text-align: center;
   }
   .avatar {
-    width: 178px;
-    height: 178px;
+    max-width: 300px;
+    // height: 178px;
     display: block;
   }
   .avatar-uploader-icon1 {
@@ -187,6 +442,19 @@ export default {
   .avatar1 {
     width: 350px;
     height: 200px;
+    display: block;
+  }
+  .avatar-uploader-icon2 {
+    font-size: 28px;
+    color: #8c939d;
+    width: 360px;
+    height: 208px;
+    line-height: 200px;
+    text-align: center;
+  }
+  .avatar2 {
+    width: 360px;
+    height: 208px;
     display: block;
   }
 </style>

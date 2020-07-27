@@ -223,6 +223,13 @@ export const constantRoutes = [
         hidden: true
       },
       {
+        path: 'dailingqu',
+        name: 'dailingqudMerchantManagement',
+        component: () => import('@/views/merchant/dailingqu'),
+        meta: { title: '待领取商家', activeMenu: '/merchant/index'},
+        hidden: true
+      },
+      {
         path: 'recommend',
         name: 'recommendMerchant',
         component: () => import('@/views/merchant/recommend'),
