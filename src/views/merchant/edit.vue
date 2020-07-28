@@ -239,6 +239,14 @@ export default {
   name: 'MerchantCreate',
   components: { },
   data() {
+    var checkPhone = (rule, value, callback) => {
+      let valueTemp = JSON.parse(JSON.stringify(value))
+      if (this.adJustObjectArray(valueTemp).length < 1) {
+        return callback(new Error('请至少输入一个联系电话'));
+      } else {
+        callback()
+      }
+    }
     return {
       id: '',
       merchantForm: Object.assign({}, defaultMerchantForm),
@@ -249,6 +257,9 @@ export default {
         ],
         logo: [
           { required: true, message: '请上传品牌Logo', trigger: 'change' }
+        ],
+        phone: [
+          { validator: checkPhone, required: true, trigger: 'blur' }
         ]
       },
       dialogVisible: false,
