@@ -150,11 +150,11 @@
         <el-form-item label="品牌优势">
           <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.advantage" :key="index">
             <div style="margin: 0 10px 0 0; width: 610px;">
-              <el-input v-model="item.title" style="margin-bottom: 5px;"></el-input>
+              <el-input v-model="item.title" style="margin-bottom: 5px;" placeholder="标题"></el-input>
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 4}"
-                placeholder="简介"
+                placeholder="内容"
                 v-model="item.content">
               </el-input>
             </div>
@@ -182,8 +182,8 @@
           <el-button size="mini" @click.prevent="addApplyTry()">+添加</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即添加</el-button>
-          <el-button>取消</el-button>
+          <el-button type="primary" @click="onSubmit">立即提交</el-button>
+          <el-button  @click="resetForm('merchantForm')">取消</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -208,11 +208,12 @@
 </template>
 
 <script>
-import { addActivityScheme } from '@/api/activity'
+import { updateMerchant, fetchMerchant } from '@/api/merchant'
 import { getToken, uploadQiniu } from '@/api/qiniu'
 import maps from 'qqmap'
 
 const defaultMerchantForm = {
+    id: 0,
     name: '', 
     logo: '',
     intro: '',
@@ -235,6 +236,7 @@ export default {
   components: { },
   data() {
     return {
+      id: '',
       merchantForm: Object.assign({}, defaultMerchantForm),
       fileList: [],
       rules: {
@@ -264,29 +266,69 @@ export default {
     }
   },
   created() {
+    this.id = this.$route.params && this.$route.params.id
+    if (this.id > 0) {
+      this.fetchData()
+    }
     this.fetchToken()
   },
   methods: {
     onSubmit() {
-      this.$refs[merchantForm].validate((valid) => {
+      let that = this
+      this.$refs.merchantForm.validate((valid) => {
         if (valid) {
-          alert('submit!')
+          updateMerchant(this.merchantForm).then(res => {
+            if (res.code * 1 == 200) {
+              this.$message({
+                message: this.id > 0 ? '修改成功' : '添加成功',
+                type: 'success',
+                onClose: function() {
+                  that.$router.push({ path: '/merchant/dailingqu' })
+                }
+              })
+            } else {
+              this.$message({
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          })
         } else {
           console.log('error submit!!')
           return false
         }
       })
     },
-    beforeUpload(file) {
-      // const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
-      }
-      return isLt2M
+    resetForm(formName) {
+      console.log('reset')
+      this.$refs[formName].resetFields()
     },
-    beforeUpload_introVideo(file) {
-      console.log('')
+    fetchData() {
+      fetchMerchant(this.id).then(response => {
+        if (response.code === '200') {
+          if (response.data) {
+            response.data.introImgs = JSON.parse(response.data.introImgs)
+            response.data.phone = JSON.parse(response.data.phone)
+            response.data.address = JSON.parse(response.data.address)
+            response.data.teamIntros = JSON.parse(response.data.teamIntros)
+            response.data.productIntros = JSON.parse(response.data.productIntros)
+            response.data.advantage = JSON.parse(response.data.advantage)
+            response.data.applyTry = JSON.parse(response.data.applyTry)
+            for( var key in this.merchantForm ){
+                this.merchantForm[key] = response.data[key]
+            }
+            this.merchantForm.introImgs.forEach((item, index) => {
+              let m = {name: '', uid: index, url: item, status: 'success'}
+              this.fileList.push(m)
+            })
+          }
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg
+          })
+        }
+      })
     },
     fetchToken() {
       const _self = this
@@ -301,11 +343,27 @@ export default {
         })
       })
     },
+    beforeUpload(file) {
+      // const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!')
+      }
+      return isLt2M
+    },
+    beforeUpload_introVideo(file) {
+      console.log('')
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList)
     },
     handleRemove_IntroImgs(file, fileList) {
-      let url = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + file.response.key
+      let url = ''
+      if(file.response) {
+        url = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + file.response.key
+      } else {
+        url = file.url
+      }
       let index = this.merchantForm.introImgs.indexOf(url)
       if (index > -1) {
         this.merchantForm.introImgs.splice(index, 1)

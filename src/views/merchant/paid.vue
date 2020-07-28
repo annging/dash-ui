@@ -187,7 +187,7 @@ export default {
     },
     // 添加商家
     goCreate() {
-      this.$router.push({ path: '/merchant/create' });
+      this.$router.push({ path: '/merchant/edit/0' });
     },
     handleView(index, row) {
       this.$router.push({

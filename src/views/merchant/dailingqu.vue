@@ -93,12 +93,16 @@
               <template slot-scope="{row}">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}
               </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="120px">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   type="text"
                   @click="handleView(scope.$index, scope.row)">查看</el-button>
+                  <el-button
+                  size="mini"
+                  type="text"
+                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 <el-button
                   size="mini"
                   type="text"
@@ -131,14 +135,14 @@ export default {
         size: 20
       },
       listFilter: {
-        vipLevel: 2
+        createUserId: 0
       },
       levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
       typeOptions: [{ key: 2, label: 'VIP会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
     };
   },
   created() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     getList() {
@@ -169,7 +173,11 @@ export default {
     },
     // 添加商家
     goCreate() {
-      this.$router.push({ path: '/merchant/create' });
+      this.$router.push({ path: '/merchant/edit/0' })
+    },
+    // 编辑商家
+    handleEdit(index, row) {
+      this.$router.push({ path: '/merchant/edit/' + row.id })
     },
     handleView(index, row) {
       this.$router.push({

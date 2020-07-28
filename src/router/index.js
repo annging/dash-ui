@@ -209,10 +209,10 @@ export const constantRoutes = [
         meta: { title: '商家管理' }
       },
       {
-        path: 'create',
+        path: 'edit/:id(\\d+)',
         name: 'merchantCreate',
-        component: () => import('@/views/merchant/create'),
-        meta: { title: '新增商家', activeMenu: '/merchant/index' },
+        component: () => import('@/views/merchant/edit'),
+        meta: { title: '编辑商家', activeMenu: '/merchant/index' },
         hidden: true
       },
       {

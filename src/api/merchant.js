@@ -86,3 +86,15 @@ export function dataAnalysis(query) {
     params: query
   })
 }
+
+// /api/v1/merchant/update 创建/更新商户,id大于0就是更新,等于0是新增
+export function updateMerchant(data) {
+  return request({
+    url: 'http://test.tuantuanzhan.cn/api/v1/merchant/update',
+    method: 'post',
+    data: data,
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
+  })
+}
