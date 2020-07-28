@@ -185,7 +185,7 @@ export default {
       })
     },
     handleDelete(index, row) {
-      console.log('删除')
+      alert('删除还没实现')
     }
   }
 }
