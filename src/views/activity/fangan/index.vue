@@ -230,8 +230,8 @@ export default {
             this.$message({
               type: 'success',
               message: '操作成功!'
-            });
-            this.list.splice(index, 1);
+            })
+            this.list.splice(index, 1)
           } else {
             this.$message({
               type: 'error',
