@@ -110,7 +110,7 @@
               <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 90px; height: 90px; line-height: 90px;"></i>
             </el-upload>
             <div style="margin: 0 10px; width: 500px;">
-              <el-input v-model="item.name" style="margin-bottom: 5px;"></el-input>
+              <el-input v-model="item.name" placeholder="姓名" style="margin-bottom: 5px;"></el-input>
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 2, maxRows: 4}"
@@ -163,11 +163,15 @@
           <el-button size="mini" @click.prevent="addAdvantage()">+添加</el-button>
         </el-form-item>
         <el-form-item label="申请体验">
-          <el-switch
-            v-model="merchantForm.showApplyTry"
-            active-color="#13ce66"
-            inactive-color="#808080">
-          </el-switch>
+          <div>
+            <el-switch
+              v-model="merchantForm.showApplyTry"
+              :active-value="1"
+              :inactive-value="0"
+              active-color="#13ce66"
+              inactive-color="#808080">
+            </el-switch>
+          </div>
           <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.applyTry" :key="index">
             <div style="margin: 0 10px 0 0; width: 610px;">
               <el-input
@@ -218,14 +222,14 @@ const defaultMerchantForm = {
     logo: '',
     intro: '',
     introImgs: [],
-    phone: [{ content: '15200000000' }],
+    phone: [{ content: '' }],
     wechat: '',
     address: { province: '', city: '', distinct: '', detail: '', tips: '' },
     introVideo: '',
     teamIntros: [{ img: '', name: '', intro: '' }],
     productIntros: [{ img: '', intro: '' }],
     advantage: [{ title: '', content: '' }],
-    showApplyTry: false,
+    showApplyTry: 0,
     applyTry: [{ content: '' }]
 }
 
@@ -241,14 +245,10 @@ export default {
       fileList: [],
       rules: {
         name: [
-          { required: true, message: '品牌名称', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+          { required: true, message: '品牌名称', trigger: 'blur' }
         ],
         logo: [
           { required: true, message: '请上传品牌Logo', trigger: 'change' }
-        ],
-        phone: [
-          { type: 'array', required: true, message: '请至少输入一个联系电话', trigger: 'change' }
         ]
       },
       dialogVisible: false,
@@ -277,7 +277,30 @@ export default {
       let that = this
       this.$refs.merchantForm.validate((valid) => {
         if (valid) {
-          updateMerchant(this.merchantForm).then(res => {
+          let merchant = JSON.parse(JSON.stringify(this.merchantForm))
+          merchant.phone = this.adJustObjectArray(merchant.phone)
+          merchant.teamIntros = this.adJustObjectArray(merchant.teamIntros)
+          merchant.productIntros = this.adJustObjectArray(merchant.productIntros)
+          merchant.advantage = this.adJustObjectArray(merchant.advantage)
+          merchant.applyTry = this.adJustObjectArray(merchant.applyTry)
+          let _applyTry = []
+          merchant.applyTry.forEach(item=>{
+            _applyTry.push(item.content)
+          })
+          merchant.applyTry = _applyTry
+          let _phone = []
+          merchant.phone.forEach(item=>{
+            _phone.push(item.content)
+          })
+          merchant.phone = _phone
+          merchant.phone = JSON.stringify(merchant.phone)
+          merchant.introImgs = JSON.stringify(merchant.introImgs)
+          merchant.teamIntros = JSON.stringify(merchant.teamIntros)
+          merchant.productIntros = JSON.stringify(merchant.productIntros)
+          merchant.advantage = JSON.stringify(merchant.advantage)
+          merchant.applyTry = JSON.stringify(merchant.applyTry)
+          merchant.address = JSON.stringify(merchant.address)
+          updateMerchant(merchant).then(res => {
             if (res.code * 1 == 200) {
               this.$message({
                 message: this.id > 0 ? '修改成功' : '添加成功',
@@ -303,6 +326,42 @@ export default {
       console.log('reset')
       this.$refs[formName].resetFields()
     },
+    adJustObjectArray(array) {
+      let arrayBoo = []
+      array.forEach((item, index) => {
+        arrayBoo[index] = 0
+        for( let key in item ){
+          if(item[key].trim()) {
+            arrayBoo[index] = arrayBoo[index] + 1
+          } else {
+            arrayBoo[index] = arrayBoo[index] + 0
+          }
+        }
+      })
+      arrayBoo.forEach((item, index) => {
+        if(item < 1) {
+          array.splice(index, 1)
+        }
+      })
+      return array
+    },
+    adJustArray(array) {
+      let arrayBoo = []
+      array.forEach((item, index) => {
+        arrayBoo[index] = 0
+        if(item.trim()) {
+          arrayBoo[index] = arrayBoo[index] + 1
+        } else {
+          arrayBoo[index] = arrayBoo[index] + 0
+        }
+      })
+      arrayBoo.forEach((item, index) => {
+        if(item < 1) {
+          array.splice(index, 1)
+        }
+      })
+      return array
+    },
     fetchData() {
       fetchMerchant(this.id).then(response => {
         if (response.code === '200') {
@@ -314,8 +373,36 @@ export default {
             response.data.productIntros = JSON.parse(response.data.productIntros)
             response.data.advantage = JSON.parse(response.data.advantage)
             response.data.applyTry = JSON.parse(response.data.applyTry)
+            
             for( var key in this.merchantForm ){
+              if (key === 'applyTry') {
+                this.merchantForm[key] = []
+                response.data[key].forEach(item=>{
+                  this.merchantForm[key].push({content:item});
+                })
+              } else if (key === 'phone') {
+                this.merchantForm[key] = []
+                response.data[key].forEach(item=>{
+                  this.merchantForm[key].push({content:item});
+                })
+              } else {
                 this.merchantForm[key] = response.data[key]
+              }
+            }
+            if (this.merchantForm.phone.length < 1) {
+              this.addPhone()
+            }
+            if (this.merchantForm.teamIntros.length < 1) {
+              this.addTeam()
+            }
+            if (this.merchantForm.productIntros.length < 1) {
+              this.addProduct()
+            }
+            if (this.merchantForm.advantage.length < 1) {
+              this.addAdvantage()
+            }
+            if (this.merchantForm.applyTry.length < 1) {
+              this.addApplyTry()
             }
             this.merchantForm.introImgs.forEach((item, index) => {
               let m = {name: '', uid: index, url: item, status: 'success'}

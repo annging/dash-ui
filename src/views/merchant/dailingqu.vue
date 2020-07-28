@@ -135,7 +135,7 @@ export default {
         size: 20
       },
       listFilter: {
-        createUserId: 0
+        authStatus: 5
       },
       levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
       typeOptions: [{ key: 2, label: 'VIP会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
