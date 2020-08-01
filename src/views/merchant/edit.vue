@@ -6,7 +6,7 @@
       <el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
       <el-menu-item index="3" :route="{path:'/merchant/paid'}">付费商家</el-menu-item>
       <el-menu-item index="4" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
-      <el-menu-item index="5" :route="{path:'/merchant/create'}">添加商家</el-menu-item>
+      <el-menu-item index="5" :route="{path:'/merchant/edit/' + id}">编辑商家</el-menu-item>
     </el-menu>
     <el-row>
       <el-form ref="merchantForm" :rules="rules" :model="merchantForm" label-width="100px" size="small">
@@ -236,7 +236,7 @@ const defaultMerchantForm = {
 const key = 'UUSBZ-O7S3K-US5JP-AY4LI-KQA7K-O2B6S'
 
 export default {
-  name: 'MerchantCreate',
+  name: 'MerchantEdit',
   components: { },
   data() {
     var checkPhone = (rule, value, callback) => {
@@ -249,7 +249,22 @@ export default {
     }
     return {
       id: '',
-      merchantForm: Object.assign({}, defaultMerchantForm),
+      merchantForm: {
+        id: 0,
+        name: '', 
+        logo: '',
+        intro: '',
+        introImgs: [],
+        phone: [{ content: '' }],
+        wechat: '',
+        address: { province: '', city: '', distinct: '', detail: '', tips: '' },
+        introVideo: '',
+        teamIntros: [{ img: '', name: '', intro: '' }],
+        productIntros: [{ img: '', intro: '' }],
+        advantage: [{ title: '', content: '' }],
+        showApplyTry: 0,
+        applyTry: [{ content: '' }]
+      },
       fileList: [],
       rules: {
         name: [
@@ -282,6 +297,8 @@ export default {
       this.fetchData()
     }
     this.fetchToken()
+  },
+  mounted() {
   },
   methods: {
     onSubmit() {
