@@ -475,7 +475,7 @@ export default {
     handleRemove_IntroImgs(file, fileList) {
       let url = ''
       if(file.response) {
-        url = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + file.response.key
+        url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + file.response.key
       } else {
         url = file.url
       }
@@ -488,16 +488,16 @@ export default {
       this.merchantForm.introVideo = ''
     },
     handleSuccess_IntroImgs(res, file) {
-      this.merchantForm.introImgs.push('http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key)
+      this.merchantForm.introImgs.push('https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key)
     },
     handleSuccess_introVideo(res, file) {
-      this.merchantForm.introVideo = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      this.merchantForm.introVideo = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handleDataSuccess(res, file, type, index, field) {
       if (index > -1) {
-        this.merchantForm[type][index][field] = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+        this.merchantForm[type][index][field] = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
       } else {
-        this.merchantForm[type] = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+        this.merchantForm[type] = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
       }
     },
     handleChange(file, fileList) {
