@@ -95,6 +95,20 @@ export const constantRoutes = [
     meta: { title: '活动管理', icon: 'activity' },
     children: [
       {
+        path: 'create',
+        name: 'createActivity',
+        component: () => import('@/views/activity/create'),
+        meta: { title: '创建活动', activeMenu: '/activity/list' },
+        hidden: true
+      },
+      {
+        path: 'edit/:id(\\d+)/:type(\\d+)',
+        name: 'editActivity',
+        component: () => import('@/views/activity/edit'),
+        meta: { title: '编辑活动', icon: 'activity', activeMenu: '/activity/list' },
+        hidden: true
+      },
+      {
         path: 'list',
         name: 'Activity',
         component: () => import('@/views/activity/list'),
