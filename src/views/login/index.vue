@@ -43,6 +43,8 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登  录</el-button>
 
+    <router-link style="color: white; display:none;" to="/wxlogin">微信登陆</router-link>
+
     </el-form>
   </div>
 </template>
@@ -182,7 +184,7 @@ $light_gray:#eee;
     position: relative;
     width: 520px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 100px 35px 0;
     margin: 0 auto;
     overflow: hidden;
   }

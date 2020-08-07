@@ -1,6 +1,8 @@
 import { login, logout, getInfo } from '@/api/user'
+import { wxlogin } from '@/api/wx'
 import { getToken, setToken, removeToken, getUserInfo, setUserInfo, removeUserInfo } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import axios from 'axios'
 
 const getDefaultState = () => {
   return {
@@ -103,7 +105,42 @@ const actions = {
       commit('RESET_STATE')
       resolve()
     })
-  }
+  },
+
+  wxlogin({ commit }, wxInfo) {
+    const { code, state } = wxInfo
+    console.log(code)
+    console.log(state)
+    return new Promise((resolve, reject) => {
+      axios.get('http://9466ut.natappfree.cc/system/login/callBack?code=' + code + '&state=' + state)
+        .then(function (response) {
+          // handle success
+          console.log(response)
+          response = response.data
+          commit('SET_TOKEN', response.data.token)
+          setToken(response.data.token)
+          setUserInfo(response.data.user)
+          resolve()
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+          reject(error)
+        })
+        .then(function () {
+          // always executed
+        })
+      /*wxlogin({ code: code, state: state }).then(response => {
+        console.log(response)
+        commit('SET_TOKEN', response.data.token)
+        setToken(response.data.token)
+        setUserInfo(response.data.user)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })*/
+    })
+  },
 }
 
 export default {

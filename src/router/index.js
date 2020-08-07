@@ -39,7 +39,16 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
+  {
+    path: '/wxlogin',
+    component: () => import('@/views/login/wxlogin'),
+    hidden: true
+  },
+  {
+    path: '/wxcallback',
+    component: () => import('@/views/login//wxcallback'),
+    hidden: true
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -438,7 +447,7 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

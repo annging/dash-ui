@@ -10,3 +10,11 @@ export function getImgUrl(data) {
     data
   })
 }
+
+export function wxlogin(query) {
+  return request({
+    url: '/system/login/callBack',
+    method: 'get',
+    params: query
+  })
+}
