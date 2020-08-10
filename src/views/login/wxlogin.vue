@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<wxlogin id="login_container" :appid="appid" :scope="scope" :redirect_uri="redirect_uri" :self_redirect="self_redirect" :state="state"></wxlogin>
+		<wxlogin v-if="getready" id="login_container" :appid="appid" :scope="scope" :redirect_uri="redirect_uri" :self_redirect="self_redirect" :state="state"></wxlogin>
 	</div>
 </template>
 
@@ -13,9 +13,10 @@ export default {
   components: { wxlogin },
   data() {
     return {
+    	getready: false,
     	self_redirect: '',
     	id: '',
-      appid: 'wx4d4dfe03eaf75d3c',
+      appid: '',
       scope: '',
       redirect_uri: '',
       state: ''
@@ -27,6 +28,7 @@ export default {
   methods: {
   	initWxLogin() {
   		let that = this
+  		this.getready = false
   		axios.get('http://47.107.137.16:8090/system/login/wxLogin')
 			  .then(function (response) {
 			    // handle success
@@ -39,6 +41,7 @@ export default {
 	          that.scope = response.data.scope
 	          that.redirect_uri = response.data.redirectUri
 	          that.state = response.data.state
+	          that.getready = true
 					}
 			  })
 			  .catch(function (error) {
