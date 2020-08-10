@@ -15,7 +15,7 @@ export default {
     return {
     	self_redirect: '',
     	id: '',
-      appid: '',
+      appid: 'wx4d4dfe03eaf75d3c',
       scope: '',
       redirect_uri: '',
       state: ''

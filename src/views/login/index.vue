@@ -43,7 +43,7 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登  录</el-button>
 
-    <router-link style="color: white; display:none;" to="/wxlogin">微信登陆</router-link>
+    <router-link style="color: white;" to="/wxlogin">微信登陆</router-link>
 
     </el-form>
   </div>

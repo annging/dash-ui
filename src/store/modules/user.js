@@ -112,7 +112,7 @@ const actions = {
     console.log(code)
     console.log(state)
     return new Promise((resolve, reject) => {
-      axios.get('http://9466ut.natappfree.cc/system/login/callBack?code=' + code + '&state=' + state)
+      axios.get('http://47.107.137.16:8090/system/login/callBack?code=' + code + '&state=' + state)
         .then(function (response) {
           // handle success
           console.log(response)
