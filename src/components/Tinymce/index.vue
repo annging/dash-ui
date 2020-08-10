@@ -1,7 +1,7 @@
 <template>
   <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
     <textarea :id="tinymceId" class="tinymce-textarea" />
-    <div class="editor-custom-btn-container">
+    <div class="editor-custom-btn-container" v-if="hasUpload">
       <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
     </div>
   </div>
@@ -54,6 +54,11 @@ export default {
       type: [Number, String],
       required: false,
       default: 'auto'
+    },
+    hasUpload: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   data() {

@@ -36,6 +36,7 @@
     	<el-tab-pane :label="activityTypes[activity.type] + '管理'" name="second">
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
+    				<type-apply-setting :activity=activity v-if="activity.type==1"/><!-- 报名 -->
     				<vote-setting v-model="activity"  v-if="activity.type == 'vote'"/>
     			</div>
     		</el-scrollbar>
@@ -56,12 +57,13 @@
 import { getActivityInfo } from '@/api/activity'
 import { parseTime } from '@/utils'
 import BaseApplySetting from './baseSetting/Apply'
+import TypeApplySetting from './typeSetting/Apply'
 import VoteSetting from './VoteSetting'
 import VoteMoreSetting from './VoteMoreSetting'
 
 export default {
 	name: 'ActivityEditor',
-	components: { BaseApplySetting, VoteSetting, VoteMoreSetting },
+	components: { BaseApplySetting, TypeApplySetting, VoteSetting, VoteMoreSetting },
 	props: {
 		isEdit: {
 		  type: Boolean,
@@ -103,7 +105,7 @@ export default {
           response.data.activitySetting = JSON.parse(response.data.activitySetting)
           response.data.address = JSON.parse(response.data.address)
           response.data.content = JSON.parse(response.data.content)
-          
+          response.data.requireColumns = JSON.parse(response.data.requireColumns)
 		  		this.activity = response.data
 		  	} else {
 		  		this.$message({
@@ -213,6 +215,9 @@ export default {
 		left: 0;
 		right: 0;
 		bottom: 0;
+	}
+	.editor-custom-btn-container {
+		display: none
 	}
 </style>
 <style lang="scss">

@@ -4,18 +4,18 @@
 			<el-form-item label="活动封面" prop="introImgs">
         <div>{{ activity.cover.length }}/5</div>
         <el-upload
-          ref="upload"
+          ref="upload1"
           :data="dataObj"
           multiple
           :limit="5"
           list-type="picture-card"
-          :file-list="fileList"
+          :file-list="coverFileList"
           action="http://upload-z2.qiniup.com"
           :on-success="handleSuccess"
           :on-remove="handleRemove"
           :before-upload="beforeUpload"
-          :on-change="handleChange"
-          :on-exceed="handleExceed">
+          :on-change="handleChangeCover"
+          :on-exceed="handleExceedCover">
           <i class="el-icon-plus"></i>
           <div slot="tip" class="el-upload__tip">（用于活动封面，尺寸为750*400最佳,最多5张）</div>
         </el-upload>
@@ -60,7 +60,8 @@
 		    </el-date-picker>
       </el-form-item>
       <el-form-item label="活动地址">
-        <el-input :value="(activity.address.province === activity.address.city ? '' : activity.address.province) + activity.address.city + activity.address.distinct + activity.address.detail">
+        <el-input v-if="Object.keys(activity.address).length > 0" :value="(activity.address.province === activity.address.city ? '' : activity.address.province) + activity.address.city + activity.address.distinct + activity.address.detail" />
+          <el-input v-else value=""/>
           <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
         </el-input>
       </el-form-item>
@@ -71,11 +72,78 @@
       	<div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.content" :key="index">
           <div style="margin: 0 10px 0 0; width: 610px;">
           	<el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
-          	<Tinymce v-if="item.type=='text'" ref="editor1" v-model="item.value" :height="150"  :toolbar="toolbar" :menubar="menubar" />
+            <div v-if="item.type=='label'">
+              <el-select
+                v-model="item.value"
+                popper-class="hiddenDown"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="请输入标签"
+                style="width: 600px">
+              </el-select>
+            </div>
+          	<Tinymce v-if="item.type=='text'" ref="editor1" v-model="item.value" :height="150"  :toolbar="toolbar" :menubar="menubar" :hasUpload="false" />
+            <el-upload
+              v-if="item.type=='bigImg'"
+              :data="dataObj"
+              :multiple="false"
+              class="uploader"
+              action="http://upload-z2.qiniup.com"
+              :show-file-list="false"
+              :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'bigImg',activity.address.length, 'value')}"
+              :on-remove="(file)=>{return handleContentRemove(file,'bigImg',activity.address.length)}"
+              :before-upload="beforeUpload">
+              <img v-if="item.value" :src="item.value" class="uploader-img">
+              <i  v-else class="el-icon-plus uploader-icon"></i>
+              <div slot="tip" class="el-upload__tip"></div>
+            </el-upload>
+            <div v-if="item.type=='smallImg'">
+              <el-upload
+                ref="upload2"
+                :data="dataObj"
+                multiple
+                :limit="9"
+                list-type="picture-card"
+                :file-list="smallImgFileList[index]"
+                action="http://upload-z2.qiniup.com"
+                :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'smallImg',index, 'value')}"
+                :on-remove="(file)=>{return handleContentRemove(file,'smallImg',index)}"
+                :before-upload="beforeUpload"
+                :on-change="handleChangeSmallImg"
+                :on-exceed="handleExceedSmallImg">
+                <i class="el-icon-plus"></i>
+                <div slot="tip" class="el-upload__tip">（最多9张）</div>
+              </el-upload>
+            </div>
+            <div v-if="item.type=='video'">
+              <el-upload
+                :data="dataObj"
+                :multiple="false"
+                class="uploader"
+                action="http://upload-z2.qiniup.com"
+                :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'video',index, 'value')}"
+                :on-remove="(file)=>{return handleContentRemove(file,'video',index)}">
+                <video v-if="item.value.length > 0" controls width="500" class="avatar2">
+                <source :src="item.value">
+                  Sorry, your browser doesn't support embedded videos.
+                </video>
+                <i  v-else class="el-icon-plus uploader-icon"></i>
+                <div slot="tip" class="el-upload__tip">（尺寸为720*416最佳）</div>
+                </el-upload>
+            </div>
           </div>
           <el-button size="mini" @click.prevent="removeConItem(item, index)">删除</el-button>
         </div>
-        <el-button size="mini" @click.prevent="addCon('text')">+添加文字</el-button>
+        <el-button size="mini" @click.prevent="addCon('text', '')">+添加文字</el-button>
+        <el-button size="mini" @click.prevent="addCon('bigImg', '')">+添加大图</el-button>
+        <el-button size="mini" @click.prevent="addCon('smallImg', [])">+添加小图</el-button>
+        <el-button size="mini" @click.prevent="addCon('video', [])">+添加视频</el-button>
+        <el-button v-if="activity.content[0].type !== 'label'" size="mini" @click.prevent="addCon('label', [])">+添加标签</el-button>
+      </el-form-item>
+      <el-form-item label="活动规则">
+        <Tinymce  ref="editor2" v-model="activity.activityRule" :height="200"  :toolbar="toolbar" :menubar="menubar" :hasUpload="false" />
       </el-form-item>
 		</el-form>
 		<el-dialog 
@@ -123,7 +191,8 @@ export default {
       rules: {
       },
       dataObj: { token: '' },
-      fileList: [],
+      coverFileList: [],
+      smallImgFileList: [],
       map: null,
       geocoder: null,
       mapDialogTableVisible: false,
@@ -158,11 +227,26 @@ export default {
     init() {
     	this.activity.cover.forEach((item, index) => {
         let m = {name: '', uid: index, url: item, status: 'success'}
-        this.fileList.push(m)
+        this.coverFileList.push(m)
+      })
+      this.activity.content.forEach((item, index) => {
+        if (item.type === 'smallImg') {
+          let ns = []
+          item.value.forEach((it, idx) => {
+            let n = {name: '', uid: idx, url: it, status: 'success'}
+            ns.push(n)
+          })
+          this.smallImgFileList.push(ns)
+        } else {
+          this.smallImgFileList.push(0)
+        }
       })
     },
     handleSuccess(res, file) {
       this.activity.cover.push('https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key)
+    },
+    handleSuccess_smallImg(res, file) {
+
     },
     handleRemove(file, fileList) {
       let url = ''
@@ -184,11 +268,17 @@ export default {
       }
       return isLt2M
     },
-    handleChange(file, fileList) {
+    handleChangeSmallImg(file, fileList) {
       this.fileList = fileList
     },
-    handleExceed(files, fileList) {
+    handleChangeCover(file, fileList) {
+      this.coverFileList = fileList
+    },
+    handleExceedCover(files, fileList) {
       this.$message.warning(`最多传5张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
+    },
+    handleExceedSmallImg(files, fileList) {
+      this.$message.warning(`最多传9张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
     },
     initMap() {
       let that = this
@@ -272,12 +362,63 @@ export default {
     removeConItem(item, index) {
     	this.activity.content.splice(index,1)
     },
-    addCon(type) {
-			this.activity.content.push({
-				type: type,
-				value: ''
-			})
+    addCon(type, v) {
+      if (type === 'smallImg') {
+        this.activity.content.push({
+          type: type,
+          value: v
+        })
+      } else if (type === 'label') {
+        if (this.activity.content[0].type !== 'label') {
+          this.activity.content.unshift({
+            type: type,
+            value: v
+          })
+        }
+      } else {
+        this.activity.content.push({
+          type: type,
+          value: v
+        })
+      }
 		},
+    beforeUpload(file) {
+      // const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!')
+      }
+      return isLt2M
+    },
+    handleContentUploadSuccess(res, file, type, index, field) {
+      if (index > -1) {
+        if (type === 'bigImg') {
+        this.activity.content[index][field] = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+        } else if (type === 'smallImg') {
+          this.activity.content[index][field].push('https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key)
+        } else {
+          this.activity.content[index][field] = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+        }
+      }
+    },
+    handleContentRemove(file, type, index) {
+      if (index > -1) {
+        if (type === 'smallImg') {
+          let url = ''
+          if(file.response) {
+            url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + file.response.key
+          } else {
+            url = file.url
+          }
+          let idx = this.activity.content[index].value.indexOf(url)
+          if (idx > -1) {
+            this.activity.content[index].value.splice(idx, 1)
+          }
+        } else {
+          this.activity.content.splice(index,1)
+        }
+      }
+    }
   }
 }
 </script>
@@ -286,4 +427,32 @@ export default {
 	.editor-custom-btn-container {
 		display: none
 	}
+  .uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .uploader-img {
+    max-width: 300px;
+    display: block;
+  }
+</style>
+
+<style>
+  .uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .hiddenDown {
+    display: none
+  }
 </style>

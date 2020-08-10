@@ -207,3 +207,11 @@ export function getActivityOptions(query, data) {
     }]
   })
 }
+
+// /api/v1/activity/config/require/column 获取全部常用字段
+export function getRequirecolumns() {
+  return request({
+    url: 'https://tuantuanzhan.cn/api/v1/activity/config/require/column',
+    method: 'get'
+  })
+}
