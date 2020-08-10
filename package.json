@@ -1,6 +1,6 @@
 {
   "name": "tuantuanstation-dash",
-  "version": "0.1.13",
+  "version": "0.1.15",
   "description": "团团站后台管理中心",
   "author": "团团站",
   "scripts": {
@@ -53,7 +53,8 @@
     "serve-static": "1.13.2",
     "svg-sprite-loader": "4.1.3",
     "svgo": "1.2.2",
-    "vue-template-compiler": "2.6.10"
+    "vue-template-compiler": "2.6.10",
+    "vue-wxlogin": "^1.0.2"
   },
   "browserslist": [
     "> 1%",
