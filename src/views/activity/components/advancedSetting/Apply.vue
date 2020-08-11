@@ -124,7 +124,6 @@ export default {
 		  })
     },
     chooseMusic(value) {
-    	console.log(value)
     	this.bgMusicList.forEach((t, i) => {
     		if (t.id == value) {
     			this.activity.advancedSetting.bgMusicName = t.name
