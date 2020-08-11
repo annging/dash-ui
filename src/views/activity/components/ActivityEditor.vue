@@ -44,6 +44,7 @@
     	<el-tab-pane label="高级设置" name="third">
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
+    				<advanced-apply-setting :activity=activity v-if="activity.type==1"/><!-- 报名 -->
     				<vote-more-setting  v-if="activity.type == 'vote'"/>
     			</div>
     		</el-scrollbar>
@@ -58,12 +59,13 @@ import { getActivityInfo } from '@/api/activity'
 import { parseTime } from '@/utils'
 import BaseApplySetting from './baseSetting/Apply'
 import TypeApplySetting from './typeSetting/Apply'
+import AdvancedApplySetting from './advancedSetting/Apply'
 import VoteSetting from './VoteSetting'
 import VoteMoreSetting from './VoteMoreSetting'
 
 export default {
 	name: 'ActivityEditor',
-	components: { BaseApplySetting, TypeApplySetting, VoteSetting, VoteMoreSetting },
+	components: { BaseApplySetting, TypeApplySetting, AdvancedApplySetting, VoteSetting, VoteMoreSetting },
 	props: {
 		isEdit: {
 		  type: Boolean,
@@ -106,6 +108,8 @@ export default {
           response.data.address = JSON.parse(response.data.address)
           response.data.content = JSON.parse(response.data.content)
           response.data.requireColumns = JSON.parse(response.data.requireColumns)
+          response.data.storeIds = JSON.parse(response.data.storeIds)
+          response.data.advancedSetting = JSON.parse(response.data.advancedSetting)
 		  		this.activity = response.data
 		  	} else {
 		  		this.$message({
@@ -233,6 +237,11 @@ export default {
 			bottom: 0;
 		}
 		.el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+		}
+		.el-tabs--card>.el-tabs__header .el-tabs__item:first-child {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			margin-left: 1px;
 		}
 	}
 </style>

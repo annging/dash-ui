@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-form ref="first" :rules="rules" :model="activity" label-width="100px" size="small">
+		<el-form ref="first" :rules="rules" :model="activity" label-width="120px" size="small">
 			<el-form-item label="活动封面" prop="introImgs">
         <div>{{ activity.cover.length }}/5</div>
         <el-upload

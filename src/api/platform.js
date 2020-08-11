@@ -22,6 +22,15 @@ export function fetchMusicList(query, data) {
   })
 }
 
+// /api/v1/activity/config/bgmusic 获取全部背景音乐
+export function bgmusic(query) {
+  return request({
+    url: 'https://www.tuantuanzhan.cn/api/v1/activity/config/bgmusic',
+    method: 'get',
+    params: query
+  })
+}
+
 export function saveOrUpdate(data) {
   return request({
     url: '/system/management/music/saveOrUpdate',

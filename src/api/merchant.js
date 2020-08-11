@@ -78,10 +78,10 @@ export function CancelRecommended(query) {
   })
 }
 
-// https://www.tuantuanzhan.cn//api/v1/merchant/dataAnalysis 数据分析
+// https://www.tuantuanzhan.cn/api/v1/merchant/dataAnalysis 数据分析
 export function dataAnalysis(query) {
   return request({
-    url: 'https://www.tuantuanzhan.cn//api/v1/merchant/dataAnalysis',
+    url: 'https://www.tuantuanzhan.cn/api/v1/merchant/dataAnalysis',
     method: 'get',
     params: query
   })
@@ -96,5 +96,14 @@ export function updateMerchant(data) {
     headers: {
       loginToken: 'adminLoginToken'
     }
+  })
+}
+
+// /api/v1/store/query/merchant 根据商户id查询商户的所有门店
+export function getStores(query) {
+  return request({
+    url: 'https://www.tuantuanzhan.cn/api/v1/store/query/merchant',
+    method: 'get',
+    params: query
   })
 }

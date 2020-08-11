@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-form ref="second" :rules="rules" :model="activity" label-width="100px" size="small">
+		<el-form ref="second" :rules="rules" :model="activity" label-width="120px" size="small">
 			<el-form-item label="报名字段" prop="">
         <el-row type="flex" class="row-bg">
 				  <el-col :span="12"><div class="grid-content selectField-content">
@@ -48,6 +48,35 @@
       </el-form-item>
       <el-form-item label="预付款" prop="" v-if="!activity.activitySetting.fullPay">
       	<el-input type="digit" v-model="activity.activitySetting.advancePay" maxlength="6" placeholder="输入订金金额"></el-input>
+      </el-form-item>
+      <el-form-item label="报名列表显示">
+        <el-switch
+          v-model="activity.activitySetting.listShowType"
+          active-color="#13ce66"
+          :active-value="1"
+          :inactive-value="0">
+        </el-switch>
+      </el-form-item>
+      <el-form-item label="留言">
+        <el-switch
+          v-model="activity.activitySetting.leaveMsg"
+          active-color="#13ce66"
+          :active-value="true"
+          :inactive-value="false">
+        </el-switch>
+      </el-form-item>
+      <el-form-item label="报名按钮文案（可自定义）" prop="">
+      	<el-input v-model="activity.activitySetting.buttonText" maxlength="10" placeholder="可定义报名按钮文案"></el-input>
+      </el-form-item>
+      <el-form-item label="参与门店" prop="">
+      	<el-select v-model="activity.storeIds" multiple placeholder="请选择" style="width: 600px;">
+			    <el-option
+			      v-for="item in stores"
+			      :key="item.id"
+			      :label="item.name"
+			      :value="item.id">
+			    </el-option>
+			  </el-select>
       </el-form-item>
 		</el-form>
 		<el-dialog
@@ -117,6 +146,7 @@
 
 <script>
 import { getRequirecolumns } from '@/api/activity'
+import { getStores } from '@/api/merchant'
 
 export default {
 	name: 'TypeApply',
@@ -138,7 +168,8 @@ export default {
       customDialogVisible: false,
       editItem: {},
       editItemIndex: -1,
-      typeName: {'OneLineText': '单行文本', 'TextArea': '多行文本', 'Select': '单选', 'MultiSelect': '多选'}
+      typeName: {'OneLineText': '单行文本', 'TextArea': '多行文本', 'Select': '单选', 'MultiSelect': '多选'},
+      stores: []
     }
   },
   created() {
@@ -149,6 +180,7 @@ export default {
   methods: {
     init() {
     	this.getRequirecolumns()
+    	this.getStores()
     },
     getRequirecolumns() {
     	getRequirecolumns().then(response => {
@@ -171,6 +203,18 @@ export default {
     			}
     		})
       })
+    },
+    getStores() {
+			getStores({ merchantId: this.activity.merchantId }).then(response => {
+		  	if (response.msg === 'ok') {
+		  		this.stores = response.data
+		  	} else {
+		  		this.$message({
+            type: 'error',
+            message: '出了点问题'
+          })
+		  	}
+		  })
     },
     toggleSelect(item, index) {
     	if (item.selected) {
