@@ -148,7 +148,7 @@
         width="600px"
         :before-close="handleClose">
         <div class="cre-container">
-          <el-form ref="form" :rules="rules" :model="cre" label-width="100px" size="small">
+          <el-form ref="form" :rules="creRules" :model="cre" label-width="100px" size="small">
             <el-form-item label="商家">
               <el-select v-model="cre.merchantId" placeholder="请选择商家" style="width: 100%" popper-class="paginationSelect">
                 <el-option v-for="item in merchantList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
@@ -160,14 +160,14 @@
             </el-form-item>
             <el-form-item label="活动类型">
               <el-select v-model="cre.type" placeholder="请选择活动类型">
-                <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
+                <el-option v-for="item in merchantActivityTypes" :key="item.key" :label="item.label" :value="item.key" />
               </el-select>
             </el-form-item>
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="creDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="goCreate()">确 定</el-button>
+          <el-button size="mini" @click="creDialogVisible = false">取 消</el-button>
+          <el-button size="mini" type="primary" @click="goCreate()">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -204,7 +204,8 @@ export default {
         type: '',
         merchantId: ''
       },
-      activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
+      creRules: {},
+      merchantActivityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
       merchantList: [],
       merchantTotal: 0,
       merchantListQuery: {
@@ -315,7 +316,10 @@ export default {
     },
     handelCreate() {
       this.merchantListQuery.current = 1
-      this.getMerchantList()
+      if (this.merchantList.length < 1) {
+        this.getMerchantList()
+      }
+      this.cre = { type: '', merchantId: '' }
       this.creDialogVisible = true
     },
     handleClose(done) {
