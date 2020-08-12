@@ -1,14 +1,12 @@
 <template>
 	<div class="main-content">
 	  	<div class="left-container">
-	    	<el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
+	    	<el-menu default-active="4" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
 		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
 		      	<el-menu-item index="4" :route="{path:'/user/admin'}">后台管理员</el-menu-item>
 	    	</el-menu>
-		    <!--<el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-	      </el-row>-->
 	      <el-row class="list">
 	        <el-table
 	        	v-loading="listLoading"
@@ -39,7 +37,7 @@
 	            </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="昵称">
+	            label="微信昵称">
 	            <template slot-scope="{row}">
 			          <span>{{ row.nickName }}</span>
 			        </template>
@@ -50,12 +48,12 @@
 			          <span>{{ row.mobile }}</span>
 			        </template>
 	          </el-table-column>
-	          <el-table-column
-	            label="地址">
+	          <!--<el-table-column
+	            label="微信号">
 	            <template slot-scope="{row}">
-			          <span>{{ row.address }}</span>
+			          <span>{{ row.wxOpenId }}</span>
 			        </template>
-	          </el-table-column>
+	          </el-table-column>-->
 	          <el-table-column
 	            label="用户类型">
 	            <template slot-scope="{row}">
@@ -68,15 +66,16 @@
 			          <span>{{ userSources[row.source] }}</span>
 			        </template>
 	          </el-table-column>
-	          <el-table-column label="操作" width="200px">
+	          <el-table-column label="操作" width="250px">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
+	                type="text"
 	                @click="handleView(scope.$index, scope.row)">查看</el-button>
-	              <!--<el-button
+	               <el-button
 	                size="mini"
-	                type="danger"
-	                @click="handleDelete(scope.$index, scope.row)">移出小黑屋</el-button>-->
+	                type="text"
+	                @click="handleDelete(scope.$index, scope.row)">取消后台管理员</el-button>
 	            </template>
 	          </el-table-column>
 	        </el-table>
@@ -88,7 +87,7 @@
 </template>
 
 <script>
-import { fetchList, saveOrUpdateUser } from '@/api/user'
+import { fetchList, setAdmin } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -97,19 +96,20 @@ export default {
     return {
       list: null,
       total: 0,
-      listLoading: false,
+      listLoading: true,
       listQuery: {
 	      searchStr: '',
 	      current: 1,
 	      size: 20
 	    },
 	    listFilter: {
-	    	deletedAt: true
-	    },
+	    	type: 3,
+	    	deletedAt: false
+      },
 	    levels: { 1: '普通会员' },
-	    userTypes: { 0: '客户', 1: '管理员', 2:'客服'},
-	    userSources: { 1: '商家版', 2: '用户版' }
-    }
+	    userTypes: { 0: '客户', 1: '管理员', 2:'客服', 3: '员工'},
+	    userSources: { 1: '商家版', 2: '用户版', 3: '管理员', 4: '员工' }
+    };
   },
   created() {
 	  this.getList()
@@ -133,12 +133,13 @@ export default {
     	console.log('查看')
     },
     handleDelete(index, row) {
-      this.$confirm('确认将该用户移除小黑屋?', '提示', {
+      this.$confirm('确认取消设置为后台管理员?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        saveOrUpdateUser({id: row.id, deletedAt: ''}).then(res => {
+      	let d = new Date()
+        /* saveOrUpdateUser({id: row.id, deletedAt: d}).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
@@ -151,7 +152,8 @@ export default {
               message: res.msg
             })
           }
-        })
+        }) */
+        alert('还未实现')
       }).catch(() => {
         this.$message({
           type: 'info',

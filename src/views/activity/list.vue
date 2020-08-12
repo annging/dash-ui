@@ -8,6 +8,7 @@
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+        <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="handelCreate">创建活动</el-button>
         <el-input
           v-model="listQuery.searchStr"
           placeholder="请输入内容"
@@ -109,6 +110,11 @@
               <el-button
                 size="mini"
                 type="text"
+                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <br />
+              <el-button
+                size="mini"
+                type="text"
                 style="color: #F56C6C"
                 v-if="scope.row.specialActivity && scope.row.specialActivity.isRecommend > 0"
                 @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend', 0)">取消推荐到首页</el-button>
@@ -134,6 +140,36 @@
         </el-table>
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
       </el-row>
+      <el-dialog
+        title="创建活动"
+        :visible.sync="creDialogVisible"
+        :modal-append-to-body="false"
+        :append-to-body="true"
+        width="600px"
+        :before-close="handleClose">
+        <div class="cre-container">
+          <el-form ref="form" :rules="rules" :model="cre" label-width="100px" size="small">
+            <el-form-item label="商家">
+              <el-select v-model="cre.merchantId" placeholder="请选择商家" style="width: 100%" popper-class="paginationSelect">
+                <el-option v-for="item in merchantList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
+                  <span class="label-id">{{ item.id }}</span>-
+                  <span class="label-title">{{ item.name }}</span>
+                </el-option>
+                <pagination v-show="merchantTotal>0" :total="merchantTotal" :page.sync="merchantListQuery.current" :limit.sync="merchantListQuery.size" @pagination="getMerchantList" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="活动类型">
+              <el-select v-model="cre.type" placeholder="请选择活动类型">
+                <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="creDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="goCreate()">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
     <!--<div class="secondary-sidebar"></div>-->
   </div>
@@ -141,6 +177,7 @@
 
 <script>
 import { getActivitys, setActivityWithGoodOrRecommend, setWeight } from '@/api/activity'
+import { fetchList} from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -161,7 +198,23 @@ export default {
       clientHeight: '',
       maxHeight: 400,
       activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
-      status: { 1: '正常', 2: '已隐藏' }
+      status: { 1: '正常', 2: '已隐藏' },
+      creDialogVisible: false,
+      cre: {
+        type: '',
+        merchantId: ''
+      },
+      activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
+      merchantList: [],
+      merchantTotal: 0,
+      merchantListQuery: {
+        searchStr: '',
+        current: 1,
+        size: 20
+      },
+      merchantListFilter: {
+        authStatus: 5
+      }
     }
   },
   watch: {
@@ -204,13 +257,24 @@ export default {
         this.listLoading = false
       })
     },
+    getMerchantList() {
+      fetchList(this.merchantListQuery, this.merchantListFilter).then(response => {
+        this.merchantList = response.data.records
+        this.merchantTotal = response.data.total
+      })
+    },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
     handleView(index, row) {
       this.$router.push({
         path: '/activity/detail/' + row.id + '/' + row.type
+      })
+    },
+    handleEdit(index, row) {
+      this.$router.push({
+        path: '/activity/edit/' + row.id + '/' + row.type + '/' + row.merchantId
       })
     },
     // 推荐到首页/设为优秀案例
@@ -247,6 +311,21 @@ export default {
             message: response.msg
           })
         }
+      })
+    },
+    handelCreate() {
+      this.merchantListQuery.current = 1
+      this.getMerchantList()
+      this.creDialogVisible = true
+    },
+    handleClose(done) {
+      console.log('关闭弹窗')
+      done()
+    },
+    goCreate() {
+      this.creDialogVisible = false
+      this.$router.push({
+        path: '/activity/create/' + this.cre.type + '/' + this.cre.merchantId
       })
     }
     // 推荐/优秀
@@ -314,5 +393,20 @@ export default {
   .el-menu--horizontal>.el-menu-item.is-active {
     border-bottom: 1px solid #000;
     color: #303133;
+  }
+</style>
+
+<style lang="scss">
+  .paginationSelect {
+    .el-select-dropdown__wrap {
+      max-height: 500px;
+      height: 500px;
+    }
+    .el-select-dropdown__list {
+      padding-top: 30px;
+    }
+    .el-select-dropdown__item {
+      border-bottom: 1px solid #f5f5f5;
+    }
   }
 </style>

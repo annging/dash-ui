@@ -104,14 +104,14 @@ export const constantRoutes = [
     meta: { title: '活动管理', icon: 'activity' },
     children: [
       {
-        path: 'create',
+        path: 'create/:type(\\d+)/:mid(\\d+)',
         name: 'createActivity',
         component: () => import('@/views/activity/create'),
         meta: { title: '创建活动', activeMenu: '/activity/list' },
         hidden: true
       },
       {
-        path: 'edit/:id(\\d+)/:type(\\d+)',
+        path: 'edit/:id(\\d+)/:type(\\d+)/:mid(\\d+)',
         name: 'editActivity',
         component: () => import('@/views/activity/edit'),
         meta: { title: '编辑活动', icon: 'activity', activeMenu: '/activity/list' },
@@ -303,6 +303,29 @@ export const constantRoutes = [
             hidden: true
           }
         ]
+      },
+      {
+        path: 'lingqu',
+        name: 'merchantLQ',
+        redirect: '/merchant/lingqu/daishenhe',
+        component: () => import('@/views/merchant/lingqu'),
+        meta: { title: '领取审核' },
+        children: [
+          {
+            path: 'daishenhe',
+            name: 'daishenhe',
+            component: () => import('@/views/merchant/lingqu/daishenhe'),
+            meta: { title: '待审核', activeMenu: '/merchant/lingqu' },
+            hidden: true
+          },
+          {
+            path: 'yishenhe',
+            name: 'yishenhe',
+            component: () => import('@/views/merchant/lingqu/yishenhe'),
+            meta: { title: '审核通过', activeMenu: '/merchant/lingqu' },
+            hidden: true
+          }
+        ]
       }
     ]
   }, // 商家管理
@@ -325,6 +348,12 @@ export const constantRoutes = [
         name: 'virtual',
         component: () => import('@/views/user/virtual'),
         meta: { title: '虚拟用户' }
+      },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: () => import('@/views/user/admin'),
+        meta: { title: '后台管理员' }
       },
       {
         path: 'virtualimport',

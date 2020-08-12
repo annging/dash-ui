@@ -5,6 +5,7 @@
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
 		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
+		      	<el-menu-item index="4" :route="{path:'/user/admin'}">后台管理员</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 		    	<el-select size="small" v-model="listFilter.source" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部用户">
@@ -75,14 +76,21 @@
 			          <span>{{ userSources[row.source] }}</span>
 			        </template>
 	          </el-table-column>
-	          <el-table-column label="操作" width="200px">
+	          <el-table-column label="操作" width="250px">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
+	                type="text"
 	                @click="handleView(scope.$index, scope.row)">查看</el-button>
+	               <el-button
+	               	v-if="scope.row.source==1"
+	                size="mini"
+	                type="text"
+	                @click="handleSetStaff(scope.$index, scope.row)">设为后台管理员</el-button>
 	              <el-button
 	                size="mini"
-	                type="danger"
+	                type="text"
+	                style="color: #F56C6C"
 	                @click="handleDelete(scope.$index, scope.row)">加入小黑屋</el-button>
 	            </template>
 	          </el-table-column>
@@ -95,7 +103,7 @@
 </template>
 
 <script>
-import { fetchList, saveOrUpdateUser } from '@/api/user'
+import { fetchList, saveOrUpdateUser, setAdmin } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -166,6 +174,21 @@ export default {
           type: 'info',
           message: '已取消操作'
         })      
+      })
+    },
+    handleSetStaff(index, row) {
+			setAdmin({userId: row.id}).then(res => {
+        if (res.code * 1 === 200 ) {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.msg
+          })
+        }
       })
     }
   }

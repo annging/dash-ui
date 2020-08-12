@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-form ref="second" :rules="rules" :model="activity" label-width="120px" size="small">
+		<el-form ref="second" :rules="rules" :model="activity" label-width="150px" size="small">
 			<el-form-item label="报名字段" prop="">
         <el-row type="flex" class="row-bg">
 				  <el-col :span="12"><div class="grid-content selectField-content">

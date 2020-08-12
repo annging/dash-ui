@@ -23,7 +23,7 @@
         </el-select>
         <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
-        </el-button>  
+        </el-button>
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">新增方案</el-button>
       </el-row>
       <el-row class="list">

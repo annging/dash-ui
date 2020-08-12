@@ -63,6 +63,15 @@ export function deleteVirtualUser(query) {
   })
 }
 
+// /system/user/setAdmin /设置用户为管理员
+export function setAdmin(query) {
+  return request({
+    url: '/system/user/setAdmin',
+    method: 'post',
+    params: query
+  })
+}
+
 export function batchAddVirtualUser(data) {
   return request({
     url: '/system/user/batchAddVirtualUser',

@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// 获取商家认证列表
 export function fetchList(query, data) {
   return request({
     url: '/system/merchant/getMerchants?size=' + query.size + '&current=' + query.current,
@@ -21,6 +22,7 @@ export function fetchList(query, data) {
   })
 }
 
+// 商家认证审核
 export function isOrNoAuthentication(query) {
   return request({
     url: '/system/merchant/isOrNoAuthentication',
@@ -29,8 +31,38 @@ export function isOrNoAuthentication(query) {
   })
 }
 
+// /system/merchant/getApplyGetMerchant 获得领取商家的认证信息
+export function getApplyGetMerchant(query, data) {
+  return request({
+    url: '/system/merchant/getApplyGetMerchant?size=' + query.size + '&current=' + query.current,
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
+  })
+}
 
+// 领取商家的认证信息审核
+export function isOrNoGetAuthentication(query) {
+  return request({
+    url: '/system/merchant/isOrNoGetAuthentication',
+    method: 'post',
+    params: query
+  })
+}
 
+// 获取商家认证
 export function fetchMerchant(id) {
   return request({
     url: '/system/merchant/getMerchantInfo',

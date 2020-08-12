@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-form ref="first" :rules="rules" :model="activity" label-width="120px" size="small">
+		<el-form ref="first" :rules="rules" :model="activity" label-width="150px" size="small">
 			<el-form-item label="活动封面" prop="introImgs">
         <div>{{ activity.cover.length }}/5</div>
         <el-upload
@@ -69,7 +69,7 @@
         <el-input v-model="activity.address.tips"></el-input>
       </el-form-item>
       <el-form-item label="活动详情">
-      	<div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.content" :key="index">
+      	<div style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="index">
           <div style="margin: 0 10px 0 0; width: 610px;">
           	<el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
             <div v-if="item.type=='label'">
@@ -95,9 +95,8 @@
               :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'bigImg',activity.address.length, 'value')}"
               :on-remove="(file)=>{return handleContentRemove(file,'bigImg',activity.address.length)}"
               :before-upload="beforeUpload">
-              <img v-if="item.value" :src="item.value" class="uploader-img">
-              <i  v-else class="el-icon-plus uploader-icon"></i>
-              <div slot="tip" class="el-upload__tip"></div>
+              <img v-if="item.value" :src="item.value" class="uploader-img big-img">
+              <i v-else class="el-icon-plus uploader-icon"></i>
             </el-upload>
             <div v-if="item.type=='smallImg'">
               <el-upload
@@ -111,7 +110,7 @@
                 :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'smallImg',index, 'value')}"
                 :on-remove="(file)=>{return handleContentRemove(file,'smallImg',index)}"
                 :before-upload="beforeUpload"
-                :on-change="handleChangeSmallImg"
+                :on-change="(file,fileList)=>{return handleChangeSmallImg(file,fileList,index)}"
                 :on-exceed="handleExceedSmallImg">
                 <i class="el-icon-plus"></i>
                 <div slot="tip" class="el-upload__tip">（最多9张）</div>
@@ -134,13 +133,19 @@
                 </el-upload>
             </div>
           </div>
-          <el-button size="mini" @click.prevent="removeConItem(item, index)">删除</el-button>
+          <div style="margin-top: 20px;">
+            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(item, index)"></el-button>
+            <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-up" :disabled="(index == 1 && activity.content[0].type == 'label') || (index == 0)" @click.prevent="upConItem(item, index)"></el-button>
+            <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-down" :disabled="(item.type == 'label') || (index == activity.content.length -1)" @click.prevent="downConItem(item, index)"></el-button>
+          </div>
         </div>
-        <el-button size="mini" @click.prevent="addCon('text', '')">+添加文字</el-button>
-        <el-button size="mini" @click.prevent="addCon('bigImg', '')">+添加大图</el-button>
-        <el-button size="mini" @click.prevent="addCon('smallImg', [])">+添加小图</el-button>
-        <el-button size="mini" @click.prevent="addCon('video', [])">+添加视频</el-button>
-        <el-button v-if="activity.content[0].type !== 'label'" size="mini" @click.prevent="addCon('label', [])">+添加标签</el-button>
+        <div style="margin-bottom: 20px;">
+          <el-button type="primary" plain size="mini" @click.prevent="addCon('text', '')">+添加文字</el-button>
+          <el-button type="primary" plain size="mini" @click.prevent="addCon('bigImg', '')">+添加大图</el-button>
+          <el-button type="primary" plain size="mini" @click.prevent="addCon('smallImg', [])">+添加小图</el-button>
+          <el-button type="primary" plain size="mini" @click.prevent="addCon('video', [])">+添加视频</el-button>
+          <el-button type="primary" plain v-if="activity.content[0].type !== 'label'" size="mini" @click.prevent="addCon('label', [])">+添加标签</el-button>
+        </div>
       </el-form-item>
       <el-form-item label="活动规则">
         <Tinymce  ref="editor2" v-model="activity.activityRule" :height="200"  :toolbar="toolbar" :menubar="menubar" :hasUpload="false" />
@@ -225,10 +230,12 @@ export default {
       })
     },
     init() {
+      this.coverFileList = []
     	this.activity.cover.forEach((item, index) => {
         let m = {name: '', uid: index, url: item, status: 'success'}
         this.coverFileList.push(m)
       })
+      this.smallImgFileList = []
       this.activity.content.forEach((item, index) => {
         if (item.type === 'smallImg') {
           let ns = []
@@ -238,7 +245,7 @@ export default {
           })
           this.smallImgFileList.push(ns)
         } else {
-          this.smallImgFileList.push(0)
+          this.smallImgFileList.push([])
         }
       })
     },
@@ -268,8 +275,8 @@ export default {
       }
       return isLt2M
     },
-    handleChangeSmallImg(file, fileList) {
-      this.fileList = fileList
+    handleChangeSmallImg(file, fileList, index) {
+      this.smallImgFileList[index] = fileList
     },
     handleChangeCover(file, fileList) {
       this.coverFileList = fileList
@@ -362,6 +369,24 @@ export default {
     removeConItem(item, index) {
     	this.activity.content.splice(index,1)
     },
+    upConItem(item, index) {
+      let oldIndex = index
+      let newIndex = index - 1
+      this.activity.content.splice(oldIndex, 1)
+      this.activity.content.splice(newIndex, 0, item)
+      let oldSmallImgFileItem = this.smallImgFileList[oldIndex]
+      this.smallImgFileList.splice(oldIndex, 1)
+      this.smallImgFileList.splice(newIndex, 0, oldSmallImgFileItem)
+    },
+    downConItem(item, index) {
+      let oldIndex = index
+      let newIndex = index + 1
+      this.activity.content.splice(oldIndex, 1)
+      this.activity.content.splice(newIndex, 0, item)
+      let oldSmallImgFileItem = this.smallImgFileList[oldIndex]
+      this.smallImgFileList.splice(oldIndex, 1)
+      this.smallImgFileList.splice(newIndex, 0, oldSmallImgFileItem)
+    },
     addCon(type, v) {
       if (type === 'smallImg') {
         this.activity.content.push({
@@ -441,6 +466,9 @@ export default {
   .uploader-img {
     max-width: 300px;
     display: block;
+  }
+  .uploader-img.big-img {
+    max-width: 600px;
   }
 </style>
 

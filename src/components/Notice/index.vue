@@ -37,12 +37,12 @@ export default {
     },
     list: {
       type: Object,
-      default: {1: 0, 2: 0}
+      default: {1: 0, 2: 0, 3: 0}
     }
   },
   data() {
     return {
-      type: {1: {name: '商家认证', path: '/merchant/renzheng/daishenhe'}, 2: {name: '提现', path: '/account/tixianshenhe/daishenhe'}}
+      type: {1: {name: '商家认证', path: '/merchant/renzheng/daishenhe'}, 2: {name: '提现', path: '/account/tixianshenhe/daishenhe'}, 3: {name: '商家领取', path: '/merchant/lingqu/daishenhe'}}
     }
   },
   computed: {

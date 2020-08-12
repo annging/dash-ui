@@ -1,10 +1,13 @@
 <template>
 	<el-row class="avtivity-editor-container" v-bind:class="{ fullScreen: isFullScreen}">
-		<el-row class="action-bar" type="flex" align="middle" justify="end">
-			<el-button size="small" type="text">保存</el-button>
-			<el-button size="small">预览</el-button>
-			<el-button size="small" type="primary" style="min-width: 120px;">发布</el-button>
-			<el-button class="btn-fullScreen" size="small" @click="isFullScreen = !isFullScreen">全屏</el-button>
+		<el-row class="action-bar" type="flex" align="middle" justify="space-between">
+			<div class="left" style="padding-left: 15px;"><router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId">商家:{{merchant.name}}</router-link></div>
+			<div class="right" style="padding-right: 15px;">
+				<el-button size="small" type="text">保存</el-button>
+				<el-button size="small">预览</el-button>
+				<el-button size="small" type="primary" style="min-width: 120px;">发布</el-button>
+				<el-button class="btn-fullScreen" size="small" @click="isFullScreen = !isFullScreen">全屏</el-button>
+			</div>
 		</el-row>
 		<el-scrollbar class="devicewin" style="display: none">
 			<div class="device">
@@ -56,6 +59,7 @@
 
 <script>
 import { getActivityInfo } from '@/api/activity'
+import { fetchMerchant } from '@/api/merchant'
 import { parseTime } from '@/utils'
 import BaseApplySetting from './baseSetting/Apply'
 import TypeApplySetting from './typeSetting/Apply'
@@ -75,7 +79,15 @@ export default {
 	created() {
 		if (this.isEdit) {
 			const id = this.$route.params && this.$route.params.id
+			const mid = this.$route.params && this.$route.params.mid
       this.fetchData(id)
+      this.getMerchant(mid)
+    } else {
+    	const type = this.$route.params && this.$route.params.type
+    	const mid = this.$route.params && this.$route.params.mid
+    	this.getMerchant(mid)
+    	this.activity.type = type
+    	this.activity.merchantId = mid
     }
   },
 	data() {
@@ -90,7 +102,36 @@ export default {
 				activityStartTime: '',
 				activityEndTime: '',
 				address: { province: '', city: '', distinct: '', detail: '', tips: '' },
-				content:[{type:'text',value:''}]
+				content: [{type:'text',value:''}],
+				activityRule: "<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>",
+				requireColumns: [],
+				activitySetting: {
+					advancePay:'',
+					buttonText:'',
+					fullPay:true,
+					individualLimit:'',
+					leaveMsg:true,
+					listShowType:1,
+					needCheck:false,
+					registerCost:'0',
+					registerNum:''
+				},
+				advancedSetting: {
+					bgMusicName:'',
+					bgMusicUrl:'',
+					distributionCommission:'',
+					recommendTtz:true,
+					registerOnlyAcceptWord:false,
+					registerWord:'',
+					showCommission:false,
+					supportedActivityDistribution:false,
+					virtualPersonCount:''
+				},
+				enableAdvancedSetting: false
+			},
+			merchant: {
+				id: '',
+				name: ''
 			},
 			pageLoading: false,
 			isFullScreen: false,
@@ -118,6 +159,18 @@ export default {
           })
 		  	}
 		    this.pageLoading = false
+		  })
+		},
+		getMerchant(id) {
+			fetchMerchant(id).then(response => {
+		  	if (response.data) {
+		  		this.merchant = response.data
+		  	} else {
+		  		this.$message({
+            type: 'error',
+            message: '出了点问题'
+          })
+		  	}
 		  })
 		}
 	}
@@ -231,7 +284,7 @@ export default {
 		}
 		.el-tabs__content {
 			position: absolute;
-			top: 40px;
+			top: 41px;
 			left: 0;
 			right: 0;
 			bottom: 0;

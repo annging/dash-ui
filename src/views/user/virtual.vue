@@ -5,6 +5,7 @@
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
 		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
+            <el-menu-item index="4" :route="{path:'/user/admin'}">后台管理员</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 		    	<el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">批量添加虚拟用户</el-button>
