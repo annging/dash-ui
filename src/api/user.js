@@ -67,7 +67,7 @@ export function deleteVirtualUser(query) {
 export function setAdmin(query) {
   return request({
     url: '/system/user/setAdmin',
-    method: 'post',
+    method: 'get',
     params: query
   })
 }

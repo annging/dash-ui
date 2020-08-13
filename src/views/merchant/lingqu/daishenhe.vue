@@ -115,7 +115,6 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        searchStr: '',
         current: 1,
         size: 20
       },
@@ -140,7 +139,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getApplyGetMerchant(this.listQuery, this.listFilter).then(response => {
+      getApplyGetMerchant(this.listQuery).then(response => {
         if (response.data) {
           this.list = response.data.records
           this.total = response.data.total
