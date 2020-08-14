@@ -30,9 +30,22 @@
               </template>
             </el-table-column>
             <el-table-column
+              label="LOGO"
+              width="60">
+              <template slot-scope="{row}">
+                <img :src="row.logo" style="width: 40px;height: 40px;">
+              </template>
+            </el-table-column>
+            <el-table-column
               label="商家名称">
               <template slot-scope="{row}">
                 <span>{{ row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="申请用户">
+              <template slot-scope="{row}">
+                <router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.userId ">{{ row.user.nickName || row.userId  }}</router-link>
               </template>
             </el-table-column>
             <el-table-column
@@ -42,7 +55,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="认证资料">
+              label="资料">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -119,13 +132,13 @@ export default {
         size: 20
       },
       listFilter: {
-        authStatus: 1 // 1待审核  2认证通过  4认证失败 5待领取
+        status: 1 // 1 已申请带审核 2 审核通过  3 审核不通过
       },
       dialogVisible: false,
       renzheng: {
         authInfo: '',
         authType: 1, // 认证类型 1 个人认证, 2 企业认证
-        authStatus: 1
+        status: 1
       },
       textMap: {
         1: '个人认证',
@@ -139,7 +152,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getApplyGetMerchant(this.listQuery).then(response => {
+      getApplyGetMerchant(this.listQuery, this.listFilter).then(response => {
         if (response.data) {
           this.list = response.data.records
           this.total = response.data.total
@@ -148,14 +161,14 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
     // 查看商家认证资料
     handleView(index, row) {
       this.renzheng.authType = row.authType
       this.renzheng.authInfo = JSON.parse(row.authInfo)
-      this.renzheng.authStatus = row.authStatus
+      this.renzheng.status = row.status
       this.dialogVisible = true
     },
     handleClose(done) {
@@ -164,12 +177,16 @@ export default {
     },
     handleShenhe(index, row, status) {
       //处理审核
-      this.$confirm('确认商家认证资料' + (status === 2 ? '通过' : '未通过') +'审核?', '提示', {
+      /*this.$prompt('请输入理由' + (status ? '' : ',不能为空'), '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {*/
+      this.$prompt('请输入' + (status === 2 ? '通过' : '未通过') + '的原因', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        isOrNoGetAuthentication({id: row.id, authStatus: status}).then(response => {
+      }).then(({ value }) => {
+        isOrNoGetAuthentication({id: row.id, status: status, desc: value}).then(response => {
           if (response.code === '200') {
             this.$message({
               type: 'success',

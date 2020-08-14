@@ -146,7 +146,7 @@ export default {
       this.getList()
     },
     handleView(index, row) {
-    	console.log('查看')
+    	this.$router.push({ path: '/user/detail/' + row.id })
     },
     handleDelete(index, row) {
       this.$confirm('确认将改用户加入小黑屋?', '提示', {

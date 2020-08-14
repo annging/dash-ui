@@ -344,6 +344,13 @@ export const constantRoutes = [
         meta: { title: '用户列表' }
       },
       {
+        path: 'detail/:id(\\d+)',
+        name: 'userDetail',
+        component: () => import('@/views/user/detail'),
+        meta: { title: '用户详情', activeMenu: '/user/index' },
+        hidden: true
+      },
+      {
         path: 'virtual',
         name: 'virtual',
         component: () => import('@/views/user/virtual'),

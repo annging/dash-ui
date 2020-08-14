@@ -6,16 +6,9 @@
 		      	<el-menu-item index="2" :route="{path:'/merchant/lingqu/yishenhe'}">已审核</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
-          <el-input
-            v-model="listQuery.searchStr"
-            placeholder="请输入内容"
-            prefix-icon="el-icon-search"
-            size="small"
-            class="filter-item"
-            @keyup.enter.native="handleFilter" />
-          <el-select size="small" v-model="listFilter.authStatus" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
-            <el-option  label="认证通过" :value="2" />
-            <el-option  label="认证失败" :value="4" />
+          <el-select size="small" v-model="listFilter.status" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="活动类型">
+            <el-option  label="已通过" :value="2" />
+            <el-option  label="不通过" :value="3" />
           </el-select>
           <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
@@ -44,9 +37,22 @@
               </template>
             </el-table-column>
             <el-table-column
+              label="LOGO"
+              width="60">
+              <template slot-scope="{row}">
+                <img :src="row.logo" style="width: 40px;height: 40px;">
+              </template>
+            </el-table-column>
+            <el-table-column
               label="商家名称">
               <template slot-scope="{row}">
                 <span>{{ row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="申请用户">
+              <template slot-scope="{row}">
+                <router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.userId ">{{ row.user.nickName || row.userId  }}</router-link>
               </template>
             </el-table-column>
             <el-table-column
@@ -72,7 +78,7 @@
             <el-table-column
               label="审核结果">
               <template slot-scope="{row}">
-                <span>{{row.authStatus == 2 ? '认证通过' : '认证失败' }}</span>
+                <span>{{row.status == 2 ? '认证通过' : '认证失败' }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -119,7 +125,7 @@
 </template>
 
 <script>
-import { fetchList, fetchMerchant } from '@/api/merchant'
+import { getApplyGetMerchant, fetchList, fetchMerchant } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -135,7 +141,7 @@ export default {
         size: 20
       },
       listFilter: {
-        authStatus: 2 // 1待审核  2认证通过  4认证失败
+        status: 2 // 1 已申请带审核 2 审核通过  3 审核不通过
       },
       dialogVisible: false,
       renzheng: {
@@ -155,7 +161,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery, this.listFilter).then(response => {
+      getApplyGetMerchant(this.listQuery, this.listFilter).then(response => {
         if (response.data) {
           this.list = response.data.records
           this.total = response.data.total
@@ -164,14 +170,14 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.current = 1
       this.getList()
     },
     // 查看商家认证资料
     handleView(index, row) {
       this.renzheng.authType = row.authType
       this.renzheng.authInfo = JSON.parse(row.authInfo)
-      this.renzheng.authStatus = row.authStatus
+      this.renzheng.status = row.status
       this.dialogVisible = true
     },
     handleClose(done) {
