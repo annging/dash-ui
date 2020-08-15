@@ -270,13 +270,13 @@ export const constantRoutes = [
           {
             path: 'overview',
             component: () => import('@/views/merchant/detail/overview'),
-            name: '商家详情',
+            name: '商家详情-概览',
             meta: { title: '商家详情', activeMenu: '/merchant/index' }
           },
           {
             path: 'statistics',
             component: () => import('@/views/merchant/detail/statistics'),
-            name: '商家详情',
+            name: '商家详情-数据统计',
             meta: { title: '商家详情', activeMenu: '/merchant/index' }
           }
         ]
@@ -313,14 +313,14 @@ export const constantRoutes = [
         children: [
           {
             path: 'daishenhe',
-            name: 'daishenhe',
+            name: 'daishenheLQ',
             component: () => import('@/views/merchant/lingqu/daishenhe'),
             meta: { title: '待审核', activeMenu: '/merchant/lingqu' },
             hidden: true
           },
           {
             path: 'yishenhe',
-            name: 'yishenhe',
+            name: 'yishenheLQ',
             component: () => import('@/views/merchant/lingqu/yishenhe'),
             meta: { title: '审核通过', activeMenu: '/merchant/lingqu' },
             hidden: true

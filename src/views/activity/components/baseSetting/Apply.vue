@@ -60,10 +60,16 @@
 		    </el-date-picker>
       </el-form-item>
       <el-form-item label="活动地址">
-        <el-input v-if="Object.keys(activity.address).length > 0" :value="(activity.address.province === activity.address.city ? '' : activity.address.province) + activity.address.city + activity.address.distinct + activity.address.detail" />
-          <el-input v-else value=""/>
-          <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
-        </el-input>
+        <div v-if="Object.keys(activity.address).length > 0">
+          <el-input :value="(activity.address.province === activity.address.city ? '' : activity.address.province) + activity.address.city + activity.address.distinct + activity.address.detail" >
+            <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
+          </el-input>
+        </div>
+        <div v-else>
+          <el-input value="">
+            <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
+          </el-input>
+        </div>
       </el-form-item>
       <el-form-item label="详细地址描述">
         <el-input v-model="activity.address.tips"></el-input>
@@ -92,8 +98,8 @@
               class="uploader"
               action="http://upload-z2.qiniup.com"
               :show-file-list="false"
-              :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'bigImg',activity.address.length, 'value')}"
-              :on-remove="(file)=>{return handleContentRemove(file,'bigImg',activity.address.length)}"
+              :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'bigImg',index, 'value')}"
+              :on-remove="(file)=>{return handleContentRemove(file,'bigImg',index)}"
               :before-upload="beforeUpload">
               <img v-if="item.value" :src="item.value" class="uploader-img big-img">
               <i v-else class="el-icon-plus uploader-icon"></i>

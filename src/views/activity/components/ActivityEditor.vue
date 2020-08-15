@@ -5,7 +5,7 @@
 			<div class="right" style="padding-right: 15px;">
 				<el-button size="small" type="text">保存</el-button>
 				<el-button size="small">预览</el-button>
-				<el-button size="small" type="primary" style="min-width: 120px;">发布</el-button>
+				<el-button size="small" type="primary" style="min-width: 120px;" @click="publish()" :disabled="disabledPublishButton">发布</el-button>
 				<el-button class="btn-fullScreen" size="small" @click="isFullScreen = !isFullScreen">全屏</el-button>
 			</div>
 		</el-row>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getActivityInfo } from '@/api/activity'
+import { getActivityInfo, createActivity, updateActivity } from '@/api/activity'
 import { fetchMerchant } from '@/api/merchant'
 import { parseTime } from '@/utils'
 import BaseApplySetting from './baseSetting/Apply'
@@ -137,6 +137,7 @@ export default {
 			isFullScreen: false,
 			activeTabName: 'first',
 			activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+			disabledPublishButton: false
 		}
 	},
 	methods: {
@@ -172,6 +173,56 @@ export default {
           })
 		  	}
 		  })
+		},
+		publish() {
+			this.disabledPublishButton = true
+			let _activityVO = JSON.parse(JSON.stringify(this.activity))
+			_activityVO.cover = JSON.stringify(_activityVO.cover)
+      _activityVO.activitySetting = JSON.stringify(_activityVO.activitySetting)
+      _activityVO.address = JSON.stringify(_activityVO.address)
+      _activityVO.content = JSON.stringify(_activityVO.content)
+      _activityVO.requireColumns = JSON.stringify(_activityVO.requireColumns)
+      _activityVO.storeIds = JSON.stringify(_activityVO.storeIds)
+      _activityVO.advancedSetting = JSON.stringify(_activityVO.advancedSetting)
+      console.log(_activityVO)
+      let that = this
+      if (this.isEdit) {
+      	console.log('edit...')
+      	updateActivity(_activityVO).then(response => {
+			  	if (response.data) {
+			  		this.$message({
+	            type: 'success',
+	            message: '修改成功',
+	            onClose: function() {
+	            	that.$router.push({ path: '/activity/list' })
+	            }
+	          })
+			  	} else {
+			  		this.$message({
+	            type: 'error',
+	            message: res.msg
+	          })
+			  	}
+			  })
+      } else {
+      	console.log('create...')
+	      createActivity(_activityVO).then(response => {
+			  	if (response.data) {
+			  		this.$message({
+	            type: 'success',
+	            message: '创建成功！',
+	            onClose: function() {
+	            	that.$router.push({ path: '/activity/list' })
+	            }
+	          })
+			  	} else {
+			  		this.$message({
+	            type: 'error',
+	            message: res.msg
+	          })
+			  	}
+			  })
+			}
 		}
 	}
 }

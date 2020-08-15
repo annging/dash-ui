@@ -40,6 +40,7 @@
               </template>
             </el-table-column>
             <el-table-column
+              width="200px"
               label="商家名称">
               <template slot-scope="{row}">
                 <span>{{ row.name }}</span>

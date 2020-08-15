@@ -215,3 +215,28 @@ export function getRequirecolumns() {
     method: 'get'
   })
 }
+
+// /api/v1/activity/common/create 创建活动, data里返回的是活动id
+export function createActivity(data) {
+  return request({
+    url: 'http://test.tuantuanzhan.cn/api/v1/activity/common/create',
+    method: 'post',
+    data: data,
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
+  })
+}
+
+// /api/v1/activity/common/update  更新活动
+export function updateActivity(data) {
+  return request({
+    url: 'http://test.tuantuanzhan.cn/api/v1/activity/common/update',
+    method: 'post',
+    data: data,
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
+  })
+}
+

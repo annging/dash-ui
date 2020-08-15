@@ -247,6 +247,7 @@ export default {
     		this.editItem = this.activity.requireColumns[index]
     		if (this.editItem.ext) {
 	    		this.editItem.ext = JSON.parse(JSON.stringify(this.editItem.ext))
+	    		this.editItem.ext.values = JSON.parse(this.editItem.ext.values)
 	    	}
     		this.editItemIndex =  index
     	} else {
@@ -259,6 +260,7 @@ export default {
     		} else if (type == 'MultiSelect') {
     			this.editItem = {ext: {"min":1,"max":"","values":[]}, name: "", required: false, type: "MultiSelect"}
     		}
+    		this.editItemIndex = -1
     	}
     	this.customDialogVisible = true
     },
@@ -270,6 +272,7 @@ export default {
     },
     handleClose(done) {
       console.log('关闭弹窗')
+      this.customDialogVisible = false
       done()
     },
     onSubmit() {
@@ -278,10 +281,11 @@ export default {
 	    	this.editItem.ext.values = v
 	    }
 	    if (this.editItemIndex && this.editItemIndex > -1) {
-	    	this.requireColumns.splice(this.editItemIndex, 1 , this.ediItem)
+	    	this.activity.requireColumns.splice(this.editItemIndex, 1 , this.editItem)
 	    } else {
-    		this.requireColumns.push(this.editItem)
+    		this.activity.requireColumns.push(this.editItem)
     	}
+    	this.customDialogVisible = false
     },
     resetForm(form) {
     	this.customDialogVisible = false
