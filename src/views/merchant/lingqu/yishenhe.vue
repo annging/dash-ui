@@ -78,7 +78,7 @@
             <el-table-column
               label="审核结果">
               <template slot-scope="{row}">
-                <span>{{row.status == 2 ? '认证通过' : '认证失败' }}</span>
+                <span>{{row.status == 2 ? '通过' : '不通过' }}</span>
               </template>
             </el-table-column>
           </el-table>
