@@ -1,13 +1,22 @@
 <template>
 	<div>
 		<el-form ref="second" :rules="rules" :model="activity" label-width="150px" size="small">
-			<el-form-item label="减免金额(元)" prop="">
+			<el-form-item label="减免金额(元)" prop="" v-if="activity.type==10">
       	<el-input type="digit" v-model="activity.activitySetting.reduceAmount" maxlength="6" placeholder="请输入减免金额"></el-input>
       </el-form-item>
-			<el-form-item label="使用门槛(元)" prop="">
+      <el-form-item label="折扣" prop="" v-if="activity.type == 11">
+	      <el-input type="digit" v-model="activity.activitySetting.discount" maxlength="" placeholder="请输入折扣"></el-input>
+	    </el-form-item>
+			<el-form-item label="使用门槛(元)" prop="" v-if="activity.type==10 || activity.type == 11 || activity.type == 12">
 	      <el-input type="digit" v-model="activity.activitySetting.consumeThreshold" maxlength="" placeholder="满多少可用,0则无门槛"></el-input>
 	    </el-form-item>
-	    <el-form-item label="优惠券数量" prop="">
+	    <el-form-item label="原价" prop="" v-if="activity.type == 13">
+	      <el-input type="digit" v-model="activity.activitySetting.originalPrice" maxlength="4" placeholder="请输入原价"></el-input>
+	    </el-form-item>
+	    <el-form-item label="体验价" prop="" v-if="activity.type == 13">
+	      <el-input type="digit" v-model="activity.activitySetting.experiencePrice" maxlength="4" placeholder="请输入体验价"></el-input>
+	    </el-form-item>
+	    <el-form-item :label="activityTypes[activity.type] + '数量'" prop="">
 	      <el-input type="number" v-model="activity.activitySetting.couponNum" maxlength="" placeholder="请合理设置"></el-input>
 	    </el-form-item>
 	    <el-form-item label="参与门店" prop="">

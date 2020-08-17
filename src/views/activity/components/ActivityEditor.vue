@@ -97,6 +97,9 @@ export default {
     	const mid = this.$route.params && this.$route.params.mid
     	this.getMerchant(mid)
     	this.activity.type = type
+    	this.activity.merchantId = mid
+    	this.discount.merchantId = mid
+    	this.discount.type = type
     	this.type = type
     	this.activity.merchantId = mid
     	this.merchantId = mid
@@ -116,6 +119,8 @@ export default {
 				enableActivityTime: 0,
 				activityStartTime: '',
 				activityEndTime: '',
+				merchantId: 0,
+				type: 0,
 				address: { province: '', city: '', distinct: '', detail: '', tips: '' },
 				content: [{type:'text',value:''}],
 				activityRule: "<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>",
@@ -154,8 +159,9 @@ export default {
 				enableActivityTime: 0,
 				activityStartTime: '',
 				activityEndTime: '',
-				type: '',
+				type: 0,
 				content: [],
+				merchantId: 0,
 				activitySetting: {
 					consumeThreshold: '', //优惠券使用消费门槛,0元表示无门槛
 					couponFrom: '',
@@ -163,9 +169,9 @@ export default {
 					couponPrice: '',
 					couponType: '',
 					discount: '',
-					exclusive: '',
+					exclusive: false,
 					experiencePrice: '',
-					necessary: '',
+					necessary: false,
 					originalPrice: '',
 					reduceAmount: '',
 					title: '',
@@ -230,7 +236,7 @@ export default {
 			this.disabledPublishButton = true
 			let _activityVO = {}
 			if (this.discountTypes.indexOf(this.type*1) != -1) {
-        _activityVO = JSON.parse(JSON.stringify(this.dicount))
+        _activityVO = JSON.parse(JSON.stringify(this.discount))
       } else {
 			 	_activityVO = JSON.parse(JSON.stringify(this.activity))
 			} 

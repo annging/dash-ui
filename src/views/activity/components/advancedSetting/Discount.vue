@@ -11,7 +11,35 @@
         </el-switch>
       </el-form-item>
       <div v-if="activity.enableAdvancedSetting > 0">
-      	
+      	<el-form-item label="超级优惠券">
+          <el-switch
+            v-model="activity.activitySetting.needShare"
+            active-color="#13ce66"
+            :active-value="true"
+            :inactive-value="false">
+          </el-switch>
+        </el-form-item>
+        <el-form-item label="邀请好友数" prop="" v-if="activity.activitySetting.needShare">
+          <el-input type="number" v-model="activity.activitySetting.shareNum" placeholder="领取超级优惠券需邀请好友数(最多9人)"></el-input>
+        </el-form-item>
+        <el-form-item label="新客专享">
+          <el-switch
+            v-model="activity.activitySetting.exclusive"
+            active-color="#13ce66"
+            :active-value="true"
+            :inactive-value="false">
+          </el-switch>
+          <div style="color: #999; font-size: 12px;">打开后，该优惠券只允许从未下过单的顾客领取</div>
+        </el-form-item>
+        <el-form-item label="领券必填">
+          <el-switch
+            v-model="activity.activitySetting.necessary"
+            active-color="#13ce66"
+            :active-value="true"
+            :inactive-value="false">
+          </el-switch>
+          <div style="color: #999; font-size: 12px;">打开后，领取需获取顾客手机号码</div>
+        </el-form-item>
 	    </div>
 		</el-form>
   </div>

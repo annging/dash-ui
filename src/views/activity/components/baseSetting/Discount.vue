@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<el-form ref="first" :rules="rules" :model="activity" label-width="150px" size="small">
-      <el-form-item :label="activityTypes[activity.type] + '名称'" prop="控制在30字以内">
-        <el-input v-model="activity.activitySetting.title" maxlength="50"></el-input>
+      <el-form-item :label="activityTypes[activity.type * 1] + '名称'" prop="">
+        <el-input v-model="activity.activitySetting.title" maxlength="50" placeholder="控制在30字以内"></el-input>
       </el-form-item>
       <el-form-item label="开始领取时间" prop="startTime">
       	<el-date-picker
@@ -17,6 +17,13 @@
 		      type="datetime"
 		      placeholder="请选择报名结束时间">
 		    </el-date-picker>
+      </el-form-item>
+      <el-form-item label="规则">
+        <div style="color: #666; font-size: 12px; padding: 10px 15px; background-color: #fafafa">
+          <p>1.订单中包含特价商品时不能使用优惠券，不能与其他优惠（如促销活动）同时使用;</p>
+          <p>2.每个订单只能使用一张优惠券;</p>
+          <p>3.商家对优惠券使用细则的最终解释权。</p>
+        </div>
       </el-form-item>
 		</el-form>
   </div>
