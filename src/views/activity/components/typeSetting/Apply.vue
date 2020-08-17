@@ -157,6 +157,10 @@ export default {
 		  default: function() {
         return {}
       }
+		},
+		merchantId: {
+		  type: String,
+		  default: 0
 		}
 	},
 	data() {
@@ -205,7 +209,7 @@ export default {
       })
     },
     getStores() {
-			getStores({ merchantId: this.activity.merchantId }).then(response => {
+			getStores({ merchantId: this.merchantId }).then(response => {
 		  	if (response.msg === 'ok') {
 		  		this.stores = response.data
 		  	} else {

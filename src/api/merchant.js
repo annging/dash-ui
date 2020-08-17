@@ -134,8 +134,11 @@ export function updateMerchant(data) {
 // /api/v1/store/query/merchant 根据商户id查询商户的所有门店
 export function getStores(query) {
   return request({
-    url: 'https://www.tuantuanzhan.cn/api/v1/store/query/merchant',
+    url: 'http://test.tuantuanzhan.cn/api/v1/store/query/merchant',
     method: 'get',
-    params: query
+    params: query,
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
   })
 }

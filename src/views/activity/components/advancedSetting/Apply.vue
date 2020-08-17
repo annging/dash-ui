@@ -10,7 +10,7 @@
           :inactive-value="0">
         </el-switch>
       </el-form-item>
-      <div v-if="activity.enableAdvancedSetting">
+      <div v-if="activity.enableAdvancedSetting > 0">
 	      <el-form-item label="参与报名需审核">
 	        <el-switch
 	          v-model="activity.activitySetting.needCheck"

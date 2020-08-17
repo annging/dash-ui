@@ -33,13 +33,15 @@
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
     				<base-apply-setting :activity=activity v-if="activity.type==1"/><!-- 报名 -->
+    				<base-discount-setting :activity=discount v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     			</div>
     		</el-scrollbar>
     	</el-tab-pane>
-    	<el-tab-pane :label="activityTypes[activity.type] + '管理'" name="second">
+    	<el-tab-pane :label="activityTypes[type] + '管理'" name="second">
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
-    				<type-apply-setting :activity=activity v-if="activity.type==1"/><!-- 报名 -->
+    				<type-apply-setting :activity=activity :merchantId=merchantId v-if="type==1"/><!-- 报名 -->
+    				<type-discount-setting :activity=discount :merchantId=merchantId v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     				<vote-setting v-model="activity"  v-if="activity.type == 'vote'"/>
     			</div>
     		</el-scrollbar>
@@ -48,6 +50,7 @@
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
     				<advanced-apply-setting :activity=activity v-if="activity.type==1"/><!-- 报名 -->
+    				<advanced-discount-setting :activity=discount v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
     				<vote-more-setting  v-if="activity.type == 'vote'"/>
     			</div>
     		</el-scrollbar>
@@ -62,14 +65,17 @@ import { getActivityInfo, createActivity, updateActivity } from '@/api/activity'
 import { fetchMerchant } from '@/api/merchant'
 import { parseTime } from '@/utils'
 import BaseApplySetting from './baseSetting/Apply'
+import BaseDiscountSetting from './baseSetting/Discount'
 import TypeApplySetting from './typeSetting/Apply'
+import TypeDiscountSetting from './typeSetting/Discount'
 import AdvancedApplySetting from './advancedSetting/Apply'
+import AdvancedDiscountSetting from './advancedSetting/Discount'
 import VoteSetting from './VoteSetting'
 import VoteMoreSetting from './VoteMoreSetting'
 
 export default {
 	name: 'ActivityEditor',
-	components: { BaseApplySetting, TypeApplySetting, AdvancedApplySetting, VoteSetting, VoteMoreSetting },
+	components: { BaseApplySetting, BaseDiscountSetting, TypeApplySetting, TypeDiscountSetting, AdvancedApplySetting, AdvancedDiscountSetting, VoteSetting, VoteMoreSetting },
 	props: {
 		isEdit: {
 		  type: Boolean,
@@ -79,7 +85,11 @@ export default {
 	created() {
 		if (this.isEdit) {
 			const id = this.$route.params && this.$route.params.id
+			const type = this.$route.params && this.$route.params.type
 			const mid = this.$route.params && this.$route.params.mid
+			this.id = id
+			this.type = type
+			this.merchantId = mid
       this.fetchData(id)
       this.getMerchant(mid)
     } else {
@@ -87,11 +97,16 @@ export default {
     	const mid = this.$route.params && this.$route.params.mid
     	this.getMerchant(mid)
     	this.activity.type = type
+    	this.type = type
     	this.activity.merchantId = mid
+    	this.merchantId = mid
     }
   },
 	data() {
 		return {
+			id: '',
+			type: '',
+			merchantId: '',
 			activity: {
 				id: 0,
 				cover: [],
@@ -127,7 +142,39 @@ export default {
 					supportedActivityDistribution:false,
 					virtualPersonCount:''
 				},
-				enableAdvancedSetting: false
+				userSaleSetting: null,
+				enableAdvancedSetting: 1
+			},
+			discount: {
+				id: 0,
+				cover: [],
+				title: '',
+				startTime: '',
+				endTime: '',
+				enableActivityTime: 0,
+				activityStartTime: '',
+				activityEndTime: '',
+				type: '',
+				content: [],
+				activitySetting: {
+					consumeThreshold: '', //优惠券使用消费门槛,0元表示无门槛
+					couponFrom: '',
+					couponNum: '',
+					couponPrice: '',
+					couponType: '',
+					discount: '',
+					exclusive: '',
+					experiencePrice: '',
+					necessary: '',
+					originalPrice: '',
+					reduceAmount: '',
+					title: '',
+					needShare: false,
+					shareNum: ''
+				},
+				advancedSetting: null,
+				userSaleSetting: null,
+				enableAdvancedSetting: 0
 			},
 			merchant: {
 				id: '',
@@ -137,6 +184,7 @@ export default {
 			isFullScreen: false,
 			activeTabName: 'first',
 			activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+			discountTypes: [10, 11, 12, 13],
 			disabledPublishButton: false
 		}
 	},
@@ -152,7 +200,11 @@ export default {
           response.data.requireColumns = JSON.parse(response.data.requireColumns)
           response.data.storeIds = JSON.parse(response.data.storeIds)
           response.data.advancedSetting = JSON.parse(response.data.advancedSetting)
-		  		this.activity = response.data
+          if (this.discountTypes.indexOf(this.type*1) != -1) {
+          	this.discount = response.data
+          } else {
+			  		this.activity = response.data
+			  	}
 		  	} else {
 		  		this.$message({
             type: 'error',
@@ -176,7 +228,12 @@ export default {
 		},
 		publish() {
 			this.disabledPublishButton = true
-			let _activityVO = JSON.parse(JSON.stringify(this.activity))
+			let _activityVO = {}
+			if (this.discountTypes.indexOf(this.type*1) != -1) {
+        _activityVO = JSON.parse(JSON.stringify(this.dicount))
+      } else {
+			 	_activityVO = JSON.parse(JSON.stringify(this.activity))
+			} 
 			_activityVO.cover = JSON.stringify(_activityVO.cover)
       _activityVO.activitySetting = JSON.stringify(_activityVO.activitySetting)
       _activityVO.address = JSON.stringify(_activityVO.address)
