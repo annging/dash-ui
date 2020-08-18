@@ -148,7 +148,7 @@ export default {
 					virtualPersonCount:''
 				},
 				userSaleSetting: null,
-				enableAdvancedSetting: 1
+				enableAdvancedSetting: 0
 			},
 			discount: {
 				id: 0,

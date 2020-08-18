@@ -240,3 +240,13 @@ export function updateActivity(data) {
   })
 }
 
+// /api/v1/activity/common/deleteActivityById/{activityId} 根据活动id删除活动信息
+export function deleteActivityById(activityId) {
+  return request({
+    url: 'http://test.tuantuanzhan.cn/api/v1/activity/common/deleteActivityById/' + activityId,
+    method: 'delete',
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
+  })
+}

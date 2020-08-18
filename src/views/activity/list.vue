@@ -148,9 +148,9 @@
         width="600px"
         :before-close="handleClose">
         <div class="cre-container">
-          <el-form ref="form" :rules="creRules" :model="cre" label-width="100px" size="small">
-            <el-form-item label="商家">
-              <el-select v-model="cre.merchantId" placeholder="请选择商家" style="width: 100%" popper-class="paginationSelect">
+          <el-form ref="creForm" :rules="creRules" :model="cre" label-width="100px" size="small">
+            <el-form-item label="商家" prop="merchantId">
+              <el-select v-model="cre.merchantId" placeholder="请选择商家" style="width: 100%" popper-class="paginationSelect" >
                 <el-option v-for="item in merchantList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
                   <span class="label-id">{{ item.id }}</span>-
                   <span class="label-title">{{ item.name }}</span>
@@ -158,7 +158,7 @@
                 <pagination v-show="merchantTotal>0" :total="merchantTotal" :page.sync="merchantListQuery.current" :limit.sync="merchantListQuery.size" @pagination="getMerchantList" />
               </el-select>
             </el-form-item>
-            <el-form-item label="活动类型">
+            <el-form-item label="活动类型" prop="type">
               <el-select v-model="cre.type" placeholder="请选择活动类型">
                 <el-option v-for="item in merchantActivityTypes" :key="item.key" :label="item.label" :value="item.key" />
               </el-select>
@@ -204,7 +204,14 @@ export default {
         type: '',
         merchantId: ''
       },
-      creRules: {},
+      creRules: {
+        merchantId: [
+          { required: true, message: '请选择一个商家', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请选择一个活动类型', trigger: 'blur' }
+        ]
+      },
       merchantActivityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
       merchantList: [],
       merchantTotal: 0,
@@ -321,15 +328,23 @@ export default {
       }
       this.cre = { type: '', merchantId: '' }
       this.creDialogVisible = true
+      this.$refs.creForm.clearValidate()
     },
     handleClose(done) {
       console.log('关闭弹窗')
       done()
     },
     goCreate() {
-      this.creDialogVisible = false
-      this.$router.push({
-        path: '/activity/create/' + this.cre.type + '/' + this.cre.merchantId
+      this.$refs.creForm.validate(valid => {
+        if (valid) {
+          this.creDialogVisible = false
+          this.$router.push({
+            path: '/activity/create/' + this.cre.type + '/' + this.cre.merchantId
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     }
     // 推荐/优秀

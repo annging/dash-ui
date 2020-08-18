@@ -3,9 +3,9 @@
 	  	<div class="left-container">
 	    	<el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
-		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
 		      	<el-menu-item index="4" :route="{path:'/user/admin'}">后台管理员</el-menu-item>
+		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 		    	<el-select size="small" v-model="listFilter.source" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部用户">
@@ -83,10 +83,16 @@
 	                type="text"
 	                @click="handleView(scope.$index, scope.row)">查看</el-button>
 	               <el-button
-	               	v-if="scope.row.source==1"
+	               	v-if="scope.row.source==1 && scope.row.isAdmin==0"
 	                size="mini"
 	                type="text"
 	                @click="handleSetStaff(scope.$index, scope.row)">设为后台管理员</el-button>
+	                <el-button
+	               	v-if="scope.row.source==1 && scope.row.isAdmin==1"
+	                size="mini"
+	                type="text"
+	                style="color: #F56C6C"
+	                @click="handleCancleStaff(scope.$index, scope.row)">取消后台管理员</el-button>
 	              <el-button
 	                size="mini"
 	                type="text"
@@ -103,7 +109,7 @@
 </template>
 
 <script>
-import { fetchList, saveOrUpdateUser, setAdmin } from '@/api/user'
+import { fetchList, saveOrUpdateUser, setAdmin, cancelAdmin } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -183,12 +189,40 @@ export default {
             type: 'success',
             message: '操作成功!'
           })
+          this.list[index].isAdmin = 1
         } else {
           this.$message({
             type: 'error',
             message: res.msg
           })
         }
+      })
+    },
+    handleCancleStaff(index, row) {
+      this.$confirm('确认取消设置为后台管理员?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        cancelAdmin({userId: row.id}).then(res => {
+          if (res.code * 1 === 200 ) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.list[index].isAdmin = 0
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })      
       })
     }
   }

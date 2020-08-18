@@ -71,6 +71,14 @@ export function setAdmin(query) {
     params: query
   })
 }
+// /system/user/cancelAdmin /取消管理员
+export function cancelAdmin(query) {
+  return request({
+    url: '/system/user/cancelAdmin',
+    method: 'get',
+    params: query
+  })
+}
 
 export function batchAddVirtualUser(data) {
   return request({

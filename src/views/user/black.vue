@@ -3,9 +3,9 @@
 	  	<div class="left-container">
 	    	<el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		      	<el-menu-item index="1" :route="{path:'/user/index'}">用户列表</el-menu-item>
-		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 		      	<el-menu-item index="2" :route="{path:'/user/virtual'}">虚拟用户</el-menu-item>
 		      	<el-menu-item index="4" :route="{path:'/user/admin'}">后台管理员</el-menu-item>
+		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 	    	</el-menu>
 		    <!--<el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
 	      </el-row>-->
