@@ -7,14 +7,20 @@
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
       </el-menu>
-      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
+        <div>
+          <el-input
+            v-model="listFilter.title"
+            placeholder="请输入活动标题"
+            prefix-icon="el-icon-search"
+            size="small"
+            style="width: 300px; margin-right: 20px;"
+            @keyup.enter.native="handleFilter" />
+          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+              搜索
+          </el-button>
+        </div>
         <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="handelCreate">创建活动</el-button>
-        <el-input
-          v-model="listQuery.searchStr"
-          placeholder="请输入内容"
-          prefix-icon="el-icon-search"
-          size="small"
-          @keyup.enter.native="handleFilter" />
       </el-row>
       <el-row class="list">
         <el-table
@@ -193,6 +199,7 @@ export default {
         size: 20
       },
       listFilter: {
+        title: '',
         type: ''
       },
       clientHeight: '',
