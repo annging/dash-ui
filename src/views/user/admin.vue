@@ -79,7 +79,6 @@
 	            </template>
 	          </el-table-column>
 	        </el-table>
-	        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
 	      </el-row>
 	    </div>
 	  	<!--<div class="secondary-sidebar"></div>-->
@@ -87,25 +86,14 @@
 </template>
 
 <script>
-import { fetchList, setAdmin, cancelAdmin } from '@/api/user'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { fetchList, setAdmin, cancelAdmin, getAdminUsers } from '@/api/user'
 
 export default {
-	components: { Pagination },
+	components: {  },
   data() {
     return {
       list: null,
-      total: 0,
       listLoading: true,
-      listQuery: {
-	      searchStr: '',
-	      current: 1,
-	      size: 20
-	    },
-	    listFilter: {
-	    	type: 3,
-	    	deletedAt: false
-      },
 	    levels: { 1: '普通会员' },
 	    userTypes: { 0: '客户', 1: '管理员', 2:'客服', 3: '员工'},
 	    userSources: { 1: '商家版', 2: '用户版', 3: '管理员', 4: '员工' }
@@ -117,17 +105,12 @@ export default {
   methods: {
   	getList() {
       this.listLoading = true
-      fetchList(this.listQuery, this.listFilter).then(response => {
+      getAdminUsers().then(response => {
       	if (response.data) {
-	        this.list = response.data.records
-	        this.total = response.data.total
+	        this.list = response.data
 	      }
         this.listLoading = false
       })
-    },
-    handleFilter() {
-      this.listQuery.current = 1
-      this.getList()
     },
     handleView(index, row) {
     	console.log('查看')

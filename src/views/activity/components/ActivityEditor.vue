@@ -3,10 +3,11 @@
 		<el-row class="action-bar" type="flex" align="middle" justify="space-between">
 			<div class="left" style="padding-left: 15px;"><router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId">商家:{{merchant.name}}</router-link></div>
 			<div class="right" style="padding-right: 15px;">
-				<el-button size="small" type="text">保存</el-button>
-				<el-button size="small">预览</el-button>
+				<!--<el-button size="small" type="text">保存</el-button>
+				<el-button size="small">预览</el-button>-->
+				<el-button size="small" type="text" @click="goList()">取消</el-button>
 				<el-button size="small" type="primary" style="min-width: 120px;" @click="publish()" :disabled="disabledPublishButton">发布</el-button>
-				<el-button class="btn-fullScreen" size="small" @click="isFullScreen = !isFullScreen">全屏</el-button>
+				<el-button class="btn-fullScreen" size="small" @click="isFullScreen = !isFullScreen">{{ isFullScreen ? '退出全屏': '全屏' }}</el-button>
 			</div>
 		</el-row>
 		<el-scrollbar class="devicewin" style="display: none">
@@ -136,6 +137,7 @@ export default {
 					registerCost:'0',
 					registerNum:''
 				},
+				storeIds: [],
 				advancedSetting: {
 					bgMusicName:'',
 					bgMusicUrl:'',
@@ -292,6 +294,9 @@ export default {
         	that.disabledPublishButton = false
         })
 			}
+		},
+		goList() {
+			this.$router.push({ path: '/activity/list' })
 		}
 	}
 }

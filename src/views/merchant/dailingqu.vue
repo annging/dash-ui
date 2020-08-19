@@ -2,10 +2,10 @@
 	<div class="main-content">
 	  	<div class="left-container">
 	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		      	<el-menu-item index="1" :route="{path:'/merchant/index'}">商家列表</el-menu-item>
-            <el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
+		      	<el-menu-item index="1" :route="{path:'/merchant/index'}">已入驻商家</el-menu-item>
             <el-menu-item index="3" :route="{path:'/merchant/paid'}">付费商家</el-menu-item>
             <el-menu-item index="4" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
+            <el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
 	    	</el-menu>
         <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
           <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加商家</el-button>
@@ -108,7 +108,7 @@
                   size="mini"
                   type="text"
                   style="color: #F56C6C"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                  @click="handleDelete(scope.$index, scope.row)">下架</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -186,7 +186,7 @@ export default {
       })
     },
     handleDelete(index, row) {
-      alert('删除还没实现')
+      alert('开发中...')
     }
   }
 }

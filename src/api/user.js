@@ -71,6 +71,16 @@ export function setAdmin(query) {
     params: query
   })
 }
+
+// /system/user/getAdminUsers getAdminUsers
+export function getAdminUsers(query) {
+  return request({
+    url: '/system/user/getAdminUsers',
+    method: 'get',
+    params: query
+  })
+}
+
 // /system/user/cancelAdmin /取消管理员
 export function cancelAdmin(query) {
   return request({

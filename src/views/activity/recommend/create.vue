@@ -59,7 +59,7 @@ export default {
         current: 1,
         size: 10
       },
-      activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
+      activityTypes: {1: { key: 1, label: '报名' }, 2: { key: 2, label: '抽奖' }, 3: { key: 3, label: '海报' }, 4: { key: 4, label: '砍价' }, 5: { key: 5, label: '秒杀' }, 6: { key: 6, label: '拼团' }, 7: { key: 7, label: '投票' }, 8: { key: 8, label: '预约' }, 9: { key: 9, label: '助力' }, 10: { key: 10, label: '代金券' }, 11: { key: 11, label: '折扣券' }, 12: { key: 12, label: '兑换券' }, 13: { key: 13, label: '体验券' }},
       rules: {
         activityId: [
           { required: true, message: '请选择一个活动', trigger: 'blur' }

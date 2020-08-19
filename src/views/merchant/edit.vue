@@ -2,10 +2,10 @@
 <div class="main-content">
   <div class="left-container">
     <el-menu default-active="5" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/merchant/index'}">商家列表</el-menu-item>
-      <el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
+      <el-menu-item index="1" :route="{path:'/merchant/index'}">已入驻商家</el-menu-item>
       <el-menu-item index="3" :route="{path:'/merchant/paid'}">付费商家</el-menu-item>
       <el-menu-item index="4" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
+      <el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
       <el-menu-item index="5" :route="{path:'/merchant/edit/' + id}">编辑商家</el-menu-item>
     </el-menu>
     <el-row>
