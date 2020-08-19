@@ -8,7 +8,17 @@
 		      	<el-menu-item index="3" :route="{path:'/user/black'}">小黑屋(已删除的用户)</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-		    	<el-select size="small" v-model="listFilter.source" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部用户">
+          <el-input
+            class="filter-item"
+            v-model="listFilter.nickName"
+            placeholder="请输入用户微信昵称"
+            prefix-icon="el-icon-search"
+            size="small"
+            clearable
+            style="width: 300px; margin-right: 20px;"
+            @keyup.enter.native="handleFilter"
+            @clear="handleFilter" />
+		    	<el-select size="small" v-model="listFilter.source" style="width: 200px; margin-right: 20px;" class="filter-item" @change="handleFilter" placeholder="全部用户">
 		    		<el-option  label="全部用户" value="" />
             <el-option  label="商家版" :value="1" />
             <el-option  label="用户版" :value="2" />
@@ -120,11 +130,11 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-	      searchStr: '',
 	      current: 1,
 	      size: 20
 	    },
 	    listFilter: {
+        nickName: '',
 	    	source: 1,
 	    	deletedAt: false
       },

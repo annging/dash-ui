@@ -14,8 +14,10 @@
             placeholder="请输入活动标题"
             prefix-icon="el-icon-search"
             size="small"
+            clearable
             style="width: 300px; margin-right: 20px;"
-            @keyup.enter.native="handleFilter" />
+            @keyup.enter.native="handleFilter"
+            @clear="handleFilter" />
           <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
               搜索
           </el-button>

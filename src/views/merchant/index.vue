@@ -7,8 +7,22 @@
 		      	<el-menu-item index="3" :route="{path:'/merchant/paid'}">付费商家</el-menu-item>
 		      	<el-menu-item index="4" :route="{path:'/merchant/recommend'}">推荐商家</el-menu-item>
 	    	</el-menu>
-		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-          <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加商家</el-button>
+		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
+          <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加商家</el-button>
+          <div>
+	          <el-input
+	            v-model="listFilter.name"
+	            placeholder="请输入商家名称"
+	            prefix-icon="el-icon-search"
+	            size="small"
+	            clearable
+	            style="width: 300px; margin-right: 20px;"
+	            @keyup.enter.native="handleFilter"
+	            @clear="handleFilter" />
+	          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+	              搜索
+	          </el-button>
+	        </div>
         </el-row>
 	      <el-row class="list">
 	        <el-table
@@ -164,10 +178,12 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-	      searchStr: '',
 	      current: 1,
 	      size: 20
 	    },
+	    listFilter: {
+	    	name: ''
+      },
 	    qrcodeImgUrl: '',
 	    levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' } // '会员级别 0普通会员 1 体验会员 2会员'
     }
@@ -178,7 +194,7 @@ export default {
   methods: {
   	getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchList(this.listQuery, this.listFilter).then(response => {
       	if (response.data) {
 	        this.list = response.data.records
 	        this.total = response.data.total

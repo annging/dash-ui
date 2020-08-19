@@ -8,11 +8,13 @@
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
         <el-input
           class="filter-item"
-          v-model="listQuery.searchStr"
-          placeholder="请输入内容"
+          v-model="listFilter.title"
+          placeholder="请输入方案标题"
           prefix-icon="el-icon-search"
           size="small"
-          @keyup.enter.native="handleFilter" />
+          clearable
+          @keyup.enter.native="handleFilter"
+          @clear="handleFilter" />
         <el-select size="small" v-model="listFilter.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部类型">
           <el-option  label="全部类型" value="" />
           <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
@@ -152,11 +154,11 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        searchStr: '',
         current: 1,
         size: 20
       },
       listFilter: {
+        title: '',
         type: '',
         industry: ''
       },
