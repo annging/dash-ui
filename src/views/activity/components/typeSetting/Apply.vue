@@ -247,7 +247,7 @@ export default {
     	this.editCustom(item.type, index)
     },
     editCustom(type, index) {
-    	if (index && index > -1) {
+    	if (index > -1) {
     		this.editItem = this.activity.requireColumns[index]
     		if (this.editItem.ext) {
 	    		this.editItem.ext = JSON.parse(JSON.stringify(this.editItem.ext))
@@ -284,7 +284,7 @@ export default {
 	    	let v = JSON.stringify(this.editItem.ext.values)
 	    	this.editItem.ext.values = v
 	    }
-	    if (this.editItemIndex && this.editItemIndex > -1) {
+	    if (this.editItemIndex > -1) {
 	    	this.activity.requireColumns.splice(this.editItemIndex, 1 , this.editItem)
 	    } else {
     		this.activity.requireColumns.push(this.editItem)

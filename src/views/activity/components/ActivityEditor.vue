@@ -266,7 +266,10 @@ export default {
 	            message: res.msg
 	          })
 			  	}
-			  })
+			  }).catch(() => {
+        }).then(() => {
+        	that.disabledPublishButton = false
+        })
       } else {
       	console.log('create...')
 	      createActivity(_activityVO).then(response => {
@@ -284,7 +287,10 @@ export default {
 	            message: res.msg
 	          })
 			  	}
-			  })
+			  }).catch(() => {
+        }).then(() => {
+        	that.disabledPublishButton = false
+        })
 			}
 		}
 	}
