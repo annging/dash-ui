@@ -10,7 +10,7 @@
             <el-option  label="已通过" :value="2" />
             <el-option  label="不通过" :value="3" />
           </el-select>
-          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>
         </el-row>

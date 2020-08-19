@@ -17,7 +17,7 @@
             <el-option  label="认证通过" :value="2" />
             <el-option  label="认证失败" :value="4" />
           </el-select>
-          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>
         </el-row>

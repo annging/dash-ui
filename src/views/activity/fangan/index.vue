@@ -23,7 +23,7 @@
           <el-option  label="全部行业" value="" />
           <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="value" />
         </el-select>
-        <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
             搜索
         </el-button>
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">新增方案</el-button>

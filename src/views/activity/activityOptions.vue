@@ -9,7 +9,7 @@
           <el-option label="全部类型" value="" />
           <el-option v-for="(value, key, index) in optionTypes" :key="key" :label="value" :value="key" />
         </el-select>
-        <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
           搜索
         </el-button>
       </el-row>

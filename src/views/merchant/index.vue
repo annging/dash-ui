@@ -19,7 +19,7 @@
 	            style="width: 300px; margin-right: 20px;"
 	            @keyup.enter.native="handleFilter"
 	            @clear="handleFilter" />
-	          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+	          <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
 	              搜索
 	          </el-button>
 	        </div>

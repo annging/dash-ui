@@ -23,7 +23,7 @@
             <el-option  label="商家版" :value="1" />
             <el-option  label="用户版" :value="2" />
           </el-select>
-          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>
 	      </el-row>

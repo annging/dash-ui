@@ -19,7 +19,7 @@
             <!--<el-option  label="全部付费商家" value="" />-->
             <el-option v-for="item in typeOptions" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
-          <el-button size="small" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>
         </el-row>
