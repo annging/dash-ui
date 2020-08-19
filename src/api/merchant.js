@@ -35,7 +35,7 @@ export function isOrNoAuthentication(query) {
 export function getApplyGetMerchant(query, data) {
   return request({
     url: '/system/merchant/getApplyGetMerchant?size=' + query.size + '&current=' + query.current,
-    method: 'get',
+    method: 'post',
     data,
     headers: {
       'Content-Type': 'application/json'

@@ -136,7 +136,6 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        searchStr: '',
         current: 1,
         size: 20
       },
@@ -167,6 +166,8 @@ export default {
           this.total = response.data.total
         }
         this.listLoading = false
+      }).catch(() => {
+      }).then(() => {
       })
     },
     handleFilter() {
