@@ -121,7 +121,7 @@ export default {
               type: 'success',
               message: '操作成功!'
             })
-            this.list.splice(index, 1);
+            this.list.splice(index, 1)
           }
         })
       }).catch(() => {

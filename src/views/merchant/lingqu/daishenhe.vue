@@ -45,21 +45,27 @@
             <el-table-column
               label="申请用户">
               <template slot-scope="{row}">
-                <router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.userId ">{{ row.user.nickName || row.userId  }}</router-link>
+                <router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.userId ">{{ row.user ? row.user.nickName : row.userId  }}</router-link>
               </template>
             </el-table-column>
-            <el-table-column
+            <!--<el-table-column
               label="认证类型">
               <template slot-scope="{row}">
                 <span>{{ row.authType == 1 ? '个人认证': '企业认证' }}</span>
               </template>
-            </el-table-column>
+            </el-table-column>-->
             <el-table-column
               label="资料">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   @click="handleView(scope.$index, scope.row)">点击查看</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="申请时间">
+              <template slot-scope="{row}">
+                <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -70,29 +76,25 @@
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="handleShenhe(scope.$index, scope.row, 4)">不通过</el-button>
+                  @click="handleShenhe(scope.$index, scope.row, 3)">不通过</el-button>
               </template>
             </el-table-column>
           </el-table>
           <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>
         <el-dialog
-          :title="textMap[renzheng.authType]"
+          title="申请领取提交的资料"
           :visible.sync="dialogVisible"
           :modal-append-to-body="false"
           :append-to-body="true"
           width="600px"
           :before-close="handleClose">
           <div class="rz-container">
-            <div class="businessLicense" v-if="renzheng.authType == 2">
+            <div class="businessLicense">
               <div class="block">
                 <span class="demonstration">营业执照</span>
                 <el-image :src="renzheng.authInfo.businessLicense"></el-image>
               </div>
-            </div>
-            <div class="info" v-if="renzheng.authType == 2">
-              <div class="item"><span class="label">企业全称:</span>{{ renzheng.authInfo.enterpriseNname }}</div>
-              <div class="item"><span class="label">营业执照:</span>{{ renzheng.authInfo.creditCode }}</div>
             </div>
             <div class="icard">
               <div class="block">
@@ -179,14 +181,9 @@ export default {
     },
     handleShenhe(index, row, status) {
       //处理审核
-      /*this.$prompt('请输入理由' + (status ? '' : ',不能为空'), '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({ value }) => {*/
       this.$prompt('请输入' + (status === 2 ? '通过' : '未通过') + '的原因', '提示', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+        cancelButtonText: '取消'
       }).then(({ value }) => {
         isOrNoGetAuthentication({id: row.id, status: status, desc: value}).then(response => {
           if (response.code === '200') {
@@ -201,7 +198,7 @@ export default {
         this.$message({
           type: 'info',
           message: '已取消操作'
-        })         
+        })
       })
     }
   }

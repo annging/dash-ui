@@ -52,17 +52,17 @@
             <el-table-column
               label="申请用户">
               <template slot-scope="{row}">
-                <router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.userId ">{{ row.user.nickName || row.userId  }}</router-link>
+                <router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.userId ">{{ row.user ? row.user.nickName : row.userId  }}</router-link>
               </template>
             </el-table-column>
-            <el-table-column
+            <!--<el-table-column
               label="认证类型">
               <template slot-scope="{row}">
                 <span>{{ row.authType == 1 ? '个人认证': '企业认证' }}</span>
               </template>
-            </el-table-column>
+            </el-table-column>-->
             <el-table-column
-              label="认证资料">
+              label="审核资料">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -70,37 +70,33 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="提交时间">
+              label="审核时间">
               <template slot-scope="{row}">
-                <span>{{ 'no' }}</span>
+                <span><span>{{ row.updateddAt | moment("YYYY-MM-DD HH:mm:ss") }}</span></span>
               </template>
             </el-table-column>
             <el-table-column
               label="审核结果">
               <template slot-scope="{row}">
-                <span>{{row.status == 2 ? '通过' : '不通过' }}</span>
+                <span>{{statusName[row.status *1] }}</span>
               </template>
             </el-table-column>
           </el-table>
           <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>
         <el-dialog
-          :title="textMap[renzheng.authType]"
+          title="申请领取提交的资料"
           :visible.sync="dialogVisible"
           :modal-append-to-body="false"
           :append-to-body="true"
           width="600px"
           :before-close="handleClose">
           <div class="rz-container">
-            <div class="businessLicense" v-if="renzheng.authType == 2">
+            <div class="businessLicense">
               <div class="block">
                 <span class="demonstration">营业执照</span>
                 <el-image :src="renzheng.authInfo.businessLicense"></el-image>
               </div>
-            </div>
-            <div class="info" v-if="renzheng.authType == 2">
-              <div class="item"><span class="label">企业全称:</span>{{ renzheng.authInfo.enterpriseNname }}</div>
-              <div class="item"><span class="label">营业执照:</span>{{ renzheng.authInfo.creditCode }}</div>
             </div>
             <div class="icard">
               <div class="block">
@@ -151,7 +147,8 @@ export default {
       textMap: {
         1: '个人认证',
         2: '企业认证'
-      }
+      },
+      statusName: {1: '待审核', 2: '已通过', 3: '不通过'}
     }
   },
   created() {
