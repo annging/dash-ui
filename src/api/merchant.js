@@ -62,6 +62,15 @@ export function isOrNoGetAuthentication(query) {
   })
 }
 
+// /system/merchant/groundingOrUndercarriage 商家上下架
+export function groundingOrUndercarriage(query) {
+  return request({
+    url: '/system/merchant/groundingOrUndercarriage',
+    method: 'get',
+    params: query
+  })
+}
+
 // 获取商家认证
 export function fetchMerchant(id) {
   return request({

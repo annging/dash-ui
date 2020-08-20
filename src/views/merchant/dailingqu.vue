@@ -40,44 +40,50 @@
               </template>
             </el-table-column>
             <el-table-column
-              width="200px"
+              width="180px"
               label="商家名称">
               <template slot-scope="{row}">
                 <span>{{ row.name }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="活动总数">
+              label="活动总数"
+              width="70px">
+              <template slot-scope="{row}">
+                <span>{{ row.activities ? row.activities.length : '0' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="访问人数"
+              width="70px">
               <template slot-scope="{row}">
                 <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="访问人数">
+              label="参与人数"
+              width="70px">
               <template slot-scope="{row}">
                 <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="参与人数">
+              label="累计收入"
+              width="70px">
               <template slot-scope="{row}">
                 <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="累计收入">
+              label="门店数量"
+              width="70px">
               <template slot-scope="{row}">
                 <span>-</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="门店数量">
-              <template slot-scope="{row}">
-                <span>-</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="员工数量">
+              label="员工数量"
+              width="70px">
               <template slot-scope="{row}">
                 <span>-</span>
               </template>
@@ -94,21 +100,36 @@
               <template slot-scope="{row}">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}
               </template>
             </el-table-column>
+            <el-table-column
+              label="状态"
+              width="70px">
+              <template slot-scope="{row}">
+                <el-tag type="success" size="mini" v-if="row.type">上架</el-tag>
+                <el-tag type="info" size="mini" v-else>已下架</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="120px">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   type="text"
                   @click="handleView(scope.$index, scope.row)">查看</el-button>
-                  <el-button
+                <el-button
                   size="mini"
                   type="text"
                   @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 <el-button
                   size="mini"
                   type="text"
+                  v-if="scope.row.type == 1"
                   style="color: #F56C6C"
-                  @click="handleDelete(scope.$index, scope.row)">下架</el-button>
+                  @click="handleUnderOrGrounding(scope.$index, scope.row, 0)">下架</el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  v-else
+                  style=""
+                  @click="handleUnderOrGrounding(scope.$index, scope.row, 1)">上架</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -120,7 +141,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/merchant'
+import { fetchList, groundingOrUndercarriage } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -136,7 +157,7 @@ export default {
         size: 20
       },
       listFilter: {
-        authStatus: 5
+        authStatus: 5 //待领取商家
       },
       levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
       typeOptions: [{ key: 2, label: 'VIP会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
@@ -185,8 +206,32 @@ export default {
         path: '/merchant/detail/' + row.id
       })
     },
-    handleDelete(index, row) {
-      alert('开发中...')
+    handleUnderOrGrounding(index, row, type) {
+      this.$confirm('确认' + (type ? '上架' : '下架') +'商家?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        groundingOrUndercarriage({merchantId: row.id, type: type}).then(response => {
+          if (response.code === '200') {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.list[index].type = type
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.msg
+            })
+          }
+        }) 
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })        
+      })
     }
   }
 }
