@@ -104,7 +104,7 @@
               label="状态"
               width="70px">
               <template slot-scope="{row}">
-                <el-tag type="success" size="mini" v-if="row.type">上架</el-tag>
+                <el-tag type="success" size="mini" v-if="!row.deletedAt">上架</el-tag>
                 <el-tag type="info" size="mini" v-else>已下架</el-tag>
               </template>
             </el-table-column>
@@ -121,15 +121,14 @@
                 <el-button
                   size="mini"
                   type="text"
-                  v-if="scope.row.type == 1"
-                  style="color: #F56C6C"
-                  @click="handleUnderOrGrounding(scope.$index, scope.row, 0)">下架</el-button>
+                  v-if="scope.row.deletedAt"
+                  @click="handleUnderOrGrounding(scope.$index, scope.row, 1)">上架</el-button>
                 <el-button
                   size="mini"
                   type="text"
                   v-else
-                  style=""
-                  @click="handleUnderOrGrounding(scope.$index, scope.row, 1)">上架</el-button>
+                  style="color: #F56C6C"
+                  @click="handleUnderOrGrounding(scope.$index, scope.row, 0)">下架</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -218,7 +217,7 @@ export default {
               type: 'success',
               message: '操作成功!'
             })
-            this.list[index].type = type
+            this.getList()
           } else {
             this.$message({
               type: 'error',
