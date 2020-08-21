@@ -70,15 +70,22 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="审核时间">
+              label="审核结果">
               <template slot-scope="{row}">
-                <span><span>{{ row.updateddAt | moment("YYYY-MM-DD HH:mm:ss") }}</span></span>
+                <el-tag type="success" size="mini" v-if="row.status == 2">{{statusName[row.status *1] }}</el-tag>
+                <el-tag type="info" size="mini" v-else>{{statusName[row.status *1] }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column
-              label="审核结果">
+              label="原因">
               <template slot-scope="{row}">
-                <span>{{statusName[row.status *1] }}</span>
+                <span>{{ row.desc }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="审核时间">
+              <template slot-scope="{row}">
+                <span><span>{{ row.updateddAt | moment("YYYY-MM-DD HH:mm:ss") }}</span></span>
               </template>
             </el-table-column>
           </el-table>

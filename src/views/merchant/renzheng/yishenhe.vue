@@ -52,7 +52,7 @@
             <el-table-column
               label="认证类型">
               <template slot-scope="{row}">
-                <span>{{ row.authType == 1 ? '个人认证': '企业认证' }}</span>
+                <span>{{ textMap[row.authType*1] || '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -72,7 +72,7 @@
             <el-table-column
               label="审核结果">
               <template slot-scope="{row}">
-                <span>{{row.authStatus == 2 ? '认证通过' : '认证失败' }}</span>
+                <span>{{ row.authStatus == 2 ? '认证通过' : '认证失败' }}</span>
               </template>
             </el-table-column>
           </el-table>

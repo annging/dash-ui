@@ -38,7 +38,7 @@
             <el-table-column
               label="认证类型">
               <template slot-scope="{row}">
-                <span>{{ row.authType == 1 ? '个人认证': row.authType == 2 ? '企业认证': '未知' }}</span>
+                <span>{{ textMap[row.authType*1] || '-' }}</span>
               </template>
             </el-table-column>
             <el-table-column
