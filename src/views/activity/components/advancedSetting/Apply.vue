@@ -11,6 +11,31 @@
         </el-switch>
       </el-form-item>
       <div v-if="activity.enableAdvancedSetting > 0">
+      	<el-form-item label="活动分销">
+      		<div style="font-size: 12px; color: #999">合理设置分销佣金，人人都是推广员(总佣金不能超过付款金额)</div>
+	        <el-switch
+	          v-model="activity.enableUserSale"
+	          active-color="#13ce66"
+	          :active-value="1"
+	          :inactive-value="0">
+	        </el-switch>
+	      </el-form-item>
+	      <el-form-item label="一级佣金" prop="" v-if="activity.enableUserSale">
+	      	<el-input type="digit" v-model="activity.userSaleSetting.levelOne" placeholder="请输入"></el-input>
+	      	<div style="font-size: 12px; color: #999">按每单多少元计算</div>
+	      </el-form-item>
+	      <el-form-item label="二级佣金" prop="" v-if="activity.enableUserSale">
+	      	<el-input type="digit" v-model="activity.userSaleSetting.levelTwo" placeholder="不填写则默认开启一级分销"></el-input>
+	      	<div style="font-size: 12px; color: #999">按每单多少元计算</div>
+	      </el-form-item>
+	      <el-form-item label="用户付款后显示分销佣金" v-if="activity.enableUserSale">
+	        <el-switch
+	          v-model="activity.userSaleSetting.showFee"
+	          active-color="#13ce66"
+	          :active-value="1"
+	          :inactive-value="0">
+	        </el-switch>
+	      </el-form-item>
 	      <el-form-item label="参与报名需审核">
 	        <el-switch
 	          v-model="activity.activitySetting.needCheck"
@@ -48,8 +73,8 @@
 	      	<el-input v-model="activity.advancedSetting.shibbolethHint" placeholder="提示参与者如何获取口令，比如通过关注某公众号获取(选填）"></el-input>
 	      </el-form-item>
 	      <el-form-item label="背景音乐" prop="">
-	      	<el-select v-model="bgMusicId" placeholder="请选择" style="width: 100%" popper-class="paginationSelect" @change="chooseMusic">
-            <el-option v-for="item in bgMusicList" :key="item.id" :label="item.id + '-' + item.firstClass + '-' + item.secondClass + '-' + item.name" :value="item.id">
+	      	<el-select v-model="activity.advancedSetting.bgMusicUrl" placeholder="请选择" style="width: 100%" popper-class="paginationSelect" @change="chooseMusic">
+            <el-option v-for="item in bgMusicList" :key="item.id" :label="item.id + '-' + item.firstClass + '-' + item.secondClass + '-' + item.name" :value="item.url">
               <span class="label-item">{{ item.id }}</span>-
               <span class="label-item">{{ item.firstClass }}</span>-
               <span class="label-item">{{ item.secondClass }}</span>-
@@ -91,7 +116,6 @@ export default {
     return {
       rules: {
       },
-      bgMusicId: '',
       bgMusicList: [],
       bgMusicTotal: 0,
       bgMusicListQuery: {
@@ -125,9 +149,9 @@ export default {
     },
     chooseMusic(value) {
     	this.bgMusicList.forEach((t, i) => {
-    		if (t.id == value) {
+    		if (t.url == value) {
     			this.activity.advancedSetting.bgMusicName = t.name
-    			this.activity.advancedSetting.bgMusicUrl = t.url
+    			// this.activity.advancedSetting.bgMusicUrl = t.url
     		}
     	})
     }

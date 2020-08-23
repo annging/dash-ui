@@ -149,7 +149,8 @@ export default {
 					supportedActivityDistribution:false,
 					virtualPersonCount:''
 				},
-				userSaleSetting: null,
+				enableUserSale: 0,
+				userSaleSetting: {"isVerification":0,"levelOne":"","levelTwo":"","showFee":0},
 				enableAdvancedSetting: 0
 			},
 			discount: {
@@ -180,8 +181,9 @@ export default {
 					needShare: false,
 					shareNum: ''
 				},
+				enableUserSale: 0,
 				advancedSetting: null,
-				userSaleSetting: null,
+				userSaleSetting: {"isVerification":0,"levelOne":"","levelTwo":"","showFee":0},
 				enableAdvancedSetting: 0
 			},
 			merchant: {
@@ -208,6 +210,7 @@ export default {
           response.data.requireColumns = JSON.parse(response.data.requireColumns)
           response.data.storeIds = JSON.parse(response.data.storeIds)
           response.data.advancedSetting = JSON.parse(response.data.advancedSetting)
+          response.data.userSaleSetting = JSON.parse(response.data.userSaleSetting)
           if (this.discountTypes.indexOf(this.type*1) != -1) {
           	this.discount = response.data
           } else {
@@ -249,6 +252,8 @@ export default {
       _activityVO.requireColumns = JSON.stringify(_activityVO.requireColumns)
       _activityVO.storeIds = JSON.stringify(_activityVO.storeIds)
       _activityVO.advancedSetting = JSON.stringify(_activityVO.advancedSetting)
+      _activityVO.userSaleSetting = JSON.stringify(_activityVO.userSaleSetting)
+      
       console.log(_activityVO)
       let that = this
       if (this.isEdit) {
