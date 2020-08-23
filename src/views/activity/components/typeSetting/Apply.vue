@@ -135,7 +135,7 @@
 		    		</el-form-item>
 	    		</div>
 	    		<el-form-item>
-	          <el-button type="primary" @click="onSubmit">立即添加</el-button>
+	          <el-button type="primary" @click="onSubmit">保存</el-button>
 	          <el-button  @click="resetForm('custom')">取消</el-button>
 	        </el-form-item>
 	    	</el-form>
@@ -250,8 +250,10 @@ export default {
     	if (index > -1) {
     		this.editItem = this.activity.requireColumns[index]
     		if (this.editItem.ext) {
-	    		this.editItem.ext = JSON.parse(JSON.stringify(this.editItem.ext))
-	    		this.editItem.ext.values = JSON.parse(this.editItem.ext.values)
+    			if(typeof(this.editItem.ext)=='string') {
+		    		this.editItem.ext = JSON.parse(this.editItem.ext)
+		    	}
+	    		// this.editItem.ext.values = JSON.parse(this.editItem.ext.values)
 	    	}
     		this.editItemIndex =  index
     	} else {
@@ -281,8 +283,7 @@ export default {
     },
     onSubmit() {
     	if (this.editItem.ext) {
-	    	let v = JSON.stringify(this.editItem.ext.values)
-	    	this.editItem.ext.values = v
+	    	this.editItem.ext = JSON.stringify(this.editItem.ext)
 	    }
 	    if (this.editItemIndex > -1) {
 	    	this.activity.requireColumns.splice(this.editItemIndex, 1 , this.editItem)
@@ -294,6 +295,7 @@ export default {
     resetForm(form) {
     	this.customDialogVisible = false
     	this.editItem = {}
+    	this.editItemIndex = -1
     }
   }
 }
