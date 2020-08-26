@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<el-form ref="second" :rules="rules" :model="activity" label-width="150px" size="small">
-			<el-form-item label="报名字段" prop="">
+			<el-form-item label="拼团字段" prop="">
         <el-row type="flex" class="row-bg">
 				  <el-col :span="12"><div class="grid-content selectField-content">
 				  	<div class="tit">已选字段( {{ activity.requireColumns.length }} )</div>
@@ -29,14 +29,20 @@
 				  </div></el-col>
 				</el-row>
       </el-form-item>
-      <el-form-item label="报名总人数" prop="">
-      	<el-input type="number" v-model="activity.activitySetting.registerNum" maxlength="6" placeholder="无限制"></el-input>
+      <el-form-item label="商品原价" prop="">
+      	<el-input type="digit" v-model="activity.activitySetting.originPrice" maxlength="5" placeholder="输入"></el-input>
       </el-form-item>
-      <el-form-item label="报名费用" prop="">
-      	<el-input type="digit" v-model="activity.activitySetting.registerCost" maxlength="6" placeholder="输入0表示免费"></el-input>
-      </el-form-item>
-      <el-form-item label="单人限制" prop="">
-      	<el-input type="number" v-model="activity.activitySetting.individualLimit" maxlength="5" placeholder="单人可报人数,留空表示不限制"></el-input>
+      <el-form-item label="成团信息">
+        <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.groups" :key="index">
+          <div style="margin: 0 10px 0 0; width: 610px;">
+          	<div>{{ index + 1 }}号团</div>
+            <el-input v-model="item.personNum" style="margin-bottom: 5px;" placeholder="人数"><template slot="prepend">人数</template></el-input>
+            <el-input v-model="item.price" style="margin-bottom: 5px;" placeholder="价格"><template slot="prepend">价格</template></el-input>
+            <el-input v-model="item.commodityAmount" style="margin-bottom: 5px;" placeholder="无限制"><template slot="prepend">商品数量</template></el-input>
+          </div>
+          <el-button size="mini" v-if="index > 0" @click.prevent="removeGroup(item, index)">删除</el-button>
+        </div>
+        <el-button size="mini" @click.prevent="addGroup()">+添加新团</el-button>
       </el-form-item>
       <el-form-item label="全额支付">
         <el-switch
@@ -49,7 +55,14 @@
       <el-form-item label="预付款" prop="" v-if="!activity.activitySetting.fullPay">
       	<el-input type="digit" v-model="activity.activitySetting.advancePay" maxlength="6" placeholder="输入订金金额"></el-input>
       </el-form-item>
-      <el-form-item label="报名列表显示">
+      <el-form-item label="成团时间" prop="">
+      	<el-select v-model="activity.activitySetting.agglomerationTime" placeholder="请选择" style="width: 600px;">
+			    <el-option label="24小时" :value="24"></el-option>
+			    <el-option label="48小时" :value="48"></el-option>
+			    <el-option label="72小时" :value="72"></el-option>
+			  </el-select>
+      </el-form-item>
+      <el-form-item label="拼团列表显示">
         <el-switch
           v-model="activity.activitySetting.listShowType"
           active-color="#13ce66"
@@ -65,8 +78,8 @@
           :inactive-value="false">
         </el-switch>
       </el-form-item>
-      <el-form-item label="报名按钮文案（可自定义）" prop="">
-      	<el-input v-model="activity.activitySetting.buttonText" maxlength="10" placeholder="可定义报名按钮文案"></el-input>
+      <el-form-item label="按钮文案（可自定义）" prop="">
+      	<el-input v-model="activity.activitySetting.buttonText" maxlength="10" placeholder="立即拼团"></el-input>
       </el-form-item>
       <el-form-item label="参与门店" prop="">
       	<el-select v-model="activity.storeIds" multiple placeholder="请选择" style="width: 600px;">
@@ -149,7 +162,7 @@ import { getRequirecolumns } from '@/api/activity'
 import { getStores } from '@/api/merchant'
 
 export default {
-	name: 'TypeApply',
+	name: 'TypeGroup',
 	components: { },
 	props: {
 		activity: {
@@ -298,6 +311,12 @@ export default {
     	this.customDialogVisible = false
     	this.editItem = {}
     	this.editItemIndex = -1
+    },
+    addGroup() {
+    	this.activity.activitySetting.groups.push({personNum:'',price:'',commodityAmount:''})
+    },
+    removeGroup(item, index) {
+    	this.activity.activitySetting.groups.splice(index, 1)
     }
   }
 }

@@ -18,6 +18,10 @@
             style="width: 300px; margin-right: 20px;"
             @keyup.enter.native="handleFilter"
             @clear="handleFilter" />
+          <el-select size="small" v-model="listFilter.type" style="width: 200px; margin-right: 20px;" class="filter-item" @change="handleFilter" placeholder="全部类型">
+            <el-option  label="全部类型" value="" />
+            <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
+          </el-select>
           <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
               搜索
           </el-button>

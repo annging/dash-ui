@@ -11,6 +11,27 @@
         </el-switch>
       </el-form-item>
       <div v-if="activity.enableAdvancedSetting > 0">
+      	<el-form-item label="团长优惠">
+	        <el-switch
+	          v-model="activity.activitySetting.leaderDiscount"
+	          active-color="#13ce66"
+	          :active-value="true"
+	          :inactive-value="false">
+	        </el-switch>
+	        <div style="font-size: 12px; color: #999">开启后，团长免费和团长优惠选其中一种</div>
+	      </el-form-item>
+	      <el-form-item label="团长免费" v-if="activity.activitySetting.leaderDiscount">
+	        <el-switch
+	          v-model="activity.activitySetting.leaderFree"
+	          active-color="#13ce66"
+	          :active-value="true"
+	          :inactive-value="false">
+	        </el-switch>
+	      </el-form-item>
+	      <el-form-item label="团长可享受优惠" prop="" v-if="activity.activitySetting.leaderDiscount">
+	      	<el-input type="digit" v-model="activity.userSaleSetting.discountFee" placeholder="请输入"></el-input>
+	      	<div style="font-size: 12px; color: #999">团长优惠多少元(不填写则为0)</div>
+	      </el-form-item>
       	<el-form-item label="活动分销">
 	        <el-switch
 	          v-model="activity.enableUserSale"
@@ -44,15 +65,7 @@
 	          :inactive-value="0">
 	        </el-switch>
 	      </el-form-item>-->
-	      <el-form-item label="参与报名需审核">
-	        <el-switch
-	          v-model="activity.activitySetting.needCheck"
-	          active-color="#13ce66"
-	          :active-value="true"
-	          :inactive-value="false">
-	        </el-switch>
-	      </el-form-item>
-	      <el-form-item label="虚拟报名人气">
+	      <el-form-item label="虚拟拼团人气">
 	        <el-switch
 	          v-model="activity.advancedSetting.virtual"
 	          active-color="#13ce66"
@@ -66,19 +79,23 @@
 	      <el-form-item label="虚拟参与量" prop="" v-if="activity.advancedSetting.virtual">
 	      	<el-input v-model="activity.advancedSetting.virtualPersonCount" placeholder="（最大数500）"></el-input>
 	      </el-form-item>
-	      <el-form-item label="参与报名需输入口令">
+	      <el-form-item label="自动成团">
 	        <el-switch
-	          v-model="activity.advancedSetting.registerOnlyAcceptWord"
+	          v-model="activity.advancedSetting.supportedAutoGroup"
 	          active-color="#13ce66"
 	          :active-value="true"
 	          :inactive-value="false">
 	        </el-switch>
+	        <div style="font-size: 12px; color: #999">开启后，系统将在拼团失败前15分钟，帮助未满团成员成团</div>
 	      </el-form-item>
-	      <el-form-item label="口令内容" prop="" v-if="activity.advancedSetting.registerOnlyAcceptWord">
-	      	<el-input v-model="activity.advancedSetting.registerWord" placeholder="1-20个字符" maxlength="10"></el-input>
-	      </el-form-item>
-	      <el-form-item label="获取口令的提示" prop="" v-if="activity.advancedSetting.registerOnlyAcceptWord">
-	      	<el-input v-model="activity.advancedSetting.shibbolethHint" placeholder="提示参与者如何获取口令，比如通过关注某公众号获取(选填）"></el-input>
+	      <el-form-item label="原价购买">
+	        <el-switch
+	          v-model="activity.advancedSetting.supportedOriginalPrice"
+	          active-color="#13ce66"
+	          :active-value="true"
+	          :inactive-value="false">
+	        </el-switch>
+	        <div style="font-size: 12px; color: #999">开启后买家能以原价购买活动商品，无需组团也可以成交</div>
 	      </el-form-item>
 	      <el-form-item label="背景音乐" prop="">
 	      	<el-select v-model="activity.advancedSetting.bgMusicUrl" placeholder="请选择" style="width: 100%" popper-class="paginationSelect" @change="chooseMusic">
@@ -110,7 +127,7 @@ import { fetchMusicList } from '@/api/platform'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-	name: 'AdvancedApply',
+	name: 'AdvancedGroup',
 	components: { Pagination },
 	props: {
 		activity: {

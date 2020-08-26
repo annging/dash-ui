@@ -28,13 +28,14 @@
 				</div>
 			</div>
 		</el-scrollbar>
-		<div id="propertywin">
+		<div id="propertywin" v-if="!pageLoading">
 			<el-tabs v-model="activeTabName" type="card" class="top-tab">
     	<el-tab-pane label="基本设置" name="first">
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
-    				<base-apply-setting :activity=activity v-if="activity.type==1"/><!-- 报名 -->
-    				<base-discount-setting :activity=discount v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
+    				<base-apply-setting :activity=activity :dataObj=dataObj  v-if="type==1"/><!-- 报名 -->
+    				<base-group-setting :activity=activity :dataObj=dataObj v-if="type==6"/><!-- 拼团 -->
+    				<base-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     			</div>
     		</el-scrollbar>
     	</el-tab-pane>
@@ -42,7 +43,8 @@
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
     				<type-apply-setting :activity=activity :merchantId=merchantId v-if="type==1"/><!-- 报名 -->
-    				<type-discount-setting :activity=discount :merchantId=merchantId v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
+    				<type-group-setting :activity=activity :merchantId=merchantId v-if="type==6"/><!-- 拼团 -->
+    				<type-discount-setting :activity=activity :merchantId=merchantId v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     				<vote-setting v-model="activity"  v-if="activity.type == 'vote'"/>
     			</div>
     		</el-scrollbar>
@@ -50,7 +52,8 @@
     	<el-tab-pane label="高级设置" name="third">
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
-    				<advanced-apply-setting :activity=activity v-if="activity.type==1"/><!-- 报名 -->
+    				<advanced-apply-setting :activity=activity v-if="type==1"/><!-- 报名 -->
+    				<advanced-group-setting :activity=activity v-if="type==6"/><!-- 拼团 -->
     				<advanced-discount-setting :activity=discount v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
     				<vote-more-setting  v-if="activity.type == 'vote'"/>
     			</div>
@@ -64,19 +67,38 @@
 <script>
 import { getActivityInfo, createActivity, updateActivity } from '@/api/activity'
 import { fetchMerchant } from '@/api/merchant'
+import { getToken } from '@/api/qiniu'
 import { parseTime } from '@/utils'
+
 import BaseApplySetting from './baseSetting/Apply'
+import BaseGroupSetting from './baseSetting/Group'
 import BaseDiscountSetting from './baseSetting/Discount'
+
 import TypeApplySetting from './typeSetting/Apply'
+import TypeGroupSetting from './typeSetting/Group'
 import TypeDiscountSetting from './typeSetting/Discount'
+
 import AdvancedApplySetting from './advancedSetting/Apply'
+import AdvancedGroupSetting from './advancedSetting/Group'
 import AdvancedDiscountSetting from './advancedSetting/Discount'
 import VoteSetting from './VoteSetting'
 import VoteMoreSetting from './VoteMoreSetting'
 
 export default {
 	name: 'ActivityEditor',
-	components: { BaseApplySetting, BaseDiscountSetting, TypeApplySetting, TypeDiscountSetting, AdvancedApplySetting, AdvancedDiscountSetting, VoteSetting, VoteMoreSetting },
+	components: {
+		BaseApplySetting,
+		BaseGroupSetting,
+		BaseDiscountSetting,
+		TypeApplySetting,
+		TypeGroupSetting,
+		TypeDiscountSetting,
+		AdvancedApplySetting,
+		AdvancedGroupSetting,
+		AdvancedDiscountSetting,
+		VoteSetting,
+		VoteMoreSetting
+	},
 	props: {
 		isEdit: {
 		  type: Boolean,
@@ -84,32 +106,28 @@ export default {
 		}
 	},
 	created() {
+		const type = this.$route.params && this.$route.params.type * 1
+		const mid = this.$route.params && this.$route.params.mid
+
+		this.type = type
+		this.merchantId = mid
+		this.activity.type = type
+		this.activity.activitySetting = JSON.parse(JSON.stringify(this.activitySetting[type]))
+		this.activity.advancedSetting = JSON.parse(JSON.stringify(this.advancedSetting[type]))
+		this.activity.activityRule = JSON.parse(JSON.stringify(this.activityRule[type]))
+  	this.activity.merchantId = mid
+    this.getMerchant(mid)
+    this.fetchToken()
 		if (this.isEdit) {
 			const id = this.$route.params && this.$route.params.id
-			const type = this.$route.params && this.$route.params.type
-			const mid = this.$route.params && this.$route.params.mid
 			this.id = id
-			this.type = type
-			this.merchantId = mid
       this.fetchData(id)
-      this.getMerchant(mid)
-    } else {
-    	const type = this.$route.params && this.$route.params.type
-    	const mid = this.$route.params && this.$route.params.mid
-    	this.getMerchant(mid)
-    	this.activity.type = type
-    	this.activity.merchantId = mid
-    	this.discount.merchantId = mid
-    	this.discount.type = type
-    	this.type = type
-    	this.activity.merchantId = mid
-    	this.merchantId = mid
     }
   },
 	data() {
 		return {
 			id: '',
-			type: '',
+			type: 0,
 			merchantId: '',
 			activity: {
 				id: 0,
@@ -137,7 +155,6 @@ export default {
 					registerCost:'0',
 					registerNum:''
 				},
-				storeIds: [],
 				advancedSetting: {
 					bgMusicName:'',
 					bgMusicUrl:'',
@@ -153,19 +170,43 @@ export default {
 				userSaleSetting: {"isVerification":0,"levelOne":"","levelTwo":"","showFee":0},
 				enableAdvancedSetting: 0
 			},
-			discount: {
-				id: 0,
-				cover: [],
-				title: '',
-				startTime: '',
-				endTime: '',
-				enableActivityTime: 0,
-				activityStartTime: '',
-				activityEndTime: '',
-				type: 0,
-				content: [],
-				merchantId: 0,
-				activitySetting: {
+			dataObj: { token: '' },
+			activityRule: {
+				0: '',
+				1: "<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>",
+				6: '<p>1. 开团成为团长，并邀请好友参团，在拼团有效时间内凑齐成团人数，即可拼团成功；也可直接参与其它团长的团;</p><br/><p>2. 拼团有效时间内未凑齐成团人数，即拼团失败。系统自动取消订单并全额退款，支付金额将会原路退回付款账户；</p><br/><p>3. 拼团有效时间为24小时，即拼团允许邀请好友参团的时间，可在拼团详情页查看倒计时；</p><br/><p>4.拼团成功后，可在【电子券】中，查看自己的拼团订单;</p><br/><p>5.活动最终解释权归发布者所有，与团团站平台无关。</p>',
+				10: '',
+				11: '',
+				12: '',
+				13: ''
+			},
+			activitySetting: {
+				0: {},
+				1: {
+					advancePay:'',
+					buttonText:'',
+					fullPay:true,
+					individualLimit:'',
+					leaveMsg:true,
+					listShowType:1,
+					needCheck:false,
+					registerCost:'0',
+					registerNum:''
+				},
+				6: {
+					advancePay:'',
+					agglomerationTime:'',
+					buttonText:'',
+					fullPay:true,
+					groups:[{personNum:'',price:'',commodityAmount:''}],
+					leaderDiscount:false,
+					leaderFree: false,
+					discountFee:'0',
+					leaveMsg:false,
+					listShowType:0,
+					originPrice:''
+				},
+				10: {
 					consumeThreshold: '', //优惠券使用消费门槛,0元表示无门槛
 					couponFrom: '',
 					couponNum: '',
@@ -181,10 +222,86 @@ export default {
 					needShare: false,
 					shareNum: ''
 				},
-				enableUserSale: 0,
-				advancedSetting: null,
-				userSaleSetting: {"isVerification":0,"levelOne":"","levelTwo":"","showFee":0},
-				enableAdvancedSetting: 0
+				11: {
+					consumeThreshold: '', //优惠券使用消费门槛,0元表示无门槛
+					couponFrom: '',
+					couponNum: '',
+					couponPrice: '',
+					couponType: '',
+					discount: '',
+					exclusive: false,
+					experiencePrice: '',
+					necessary: false,
+					originalPrice: '',
+					reduceAmount: '',
+					title: '',
+					needShare: false,
+					shareNum: ''
+				},
+				12: {
+					consumeThreshold: '', //优惠券使用消费门槛,0元表示无门槛
+					couponFrom: '',
+					couponNum: '',
+					couponPrice: '',
+					couponType: '',
+					discount: '',
+					exclusive: false,
+					experiencePrice: '',
+					necessary: false,
+					originalPrice: '',
+					reduceAmount: '',
+					title: '',
+					needShare: false,
+					shareNum: ''
+				},
+				13: {
+					consumeThreshold: '', //优惠券使用消费门槛,0元表示无门槛
+					couponFrom: '',
+					couponNum: '',
+					couponPrice: '',
+					couponType: '',
+					discount: '',
+					exclusive: false,
+					experiencePrice: '',
+					necessary: false,
+					originalPrice: '',
+					reduceAmount: '',
+					title: '',
+					needShare: false,
+					shareNum: ''
+				}
+			},
+			advancedSetting: {
+				0: {},
+				1: {
+					bgMusicName:'',
+					bgMusicUrl:'',
+					distributionCommission:'',
+					recommendTtz:true,
+					registerOnlyAcceptWord:false,
+					registerWord:'',
+					showCommission:false,
+					supportedActivityDistribution:false,
+					virtualPersonCount:''
+				},
+				6: {
+					bgMusicName:'', // string 背景音乐名称
+					bgMusicUrl:'', // string 背景音乐地址
+					distributionCommission:'', // number($float) 佣金金额(按每单多少元计算,单位:元)
+					distributionNum:'', // 	integer($int32) 活动分销份数
+					recommendTtz:true, // boolean 推荐团团站
+					showCommission:false,
+					supportedActivityDistribution:false,
+					supportedAutoGroup:false,
+					supportedOriginalPrice:false,
+					virtual: false,
+					virtualViewCount: '',
+					virtualPersonCount:''
+				},
+				10: null,
+				11: null,
+				12: null,
+				13: null
 			},
 			merchant: {
 				id: '',
@@ -211,11 +328,7 @@ export default {
           response.data.storeIds = JSON.parse(response.data.storeIds)
           response.data.advancedSetting = JSON.parse(response.data.advancedSetting)
           response.data.userSaleSetting = JSON.parse(response.data.userSaleSetting)
-          if (this.discountTypes.indexOf(this.type*1) != -1) {
-          	this.discount = response.data
-          } else {
-			  		this.activity = response.data
-			  	}
+			  	this.activity = response.data
 		  	} else {
 		  		this.$message({
             type: 'error',
@@ -237,15 +350,42 @@ export default {
 		  	}
 		  })
 		},
+		fetchToken() {
+      const _self = this
+      getToken().then(response => {
+        const token = response.data
+        _self._data.dataObj.token = token
+      })
+    },
+    init() {
+      this.coverFileList = []
+    	this.activity.cover.forEach((item, index) => {
+        console.log('init cover...')
+        let m = {name: '', uid: index, url: item, status: 'success'}
+        this.coverFileList.push(m)
+      })
+      this.smallImgFileList = []
+      this.activity.content.forEach((item, index) => {
+        if (item.type === 'smallImg') {
+          let ns = []
+          item.value.forEach((it, idx) => {
+            let n = {name: '', uid: idx, url: it, status: 'success'}
+            ns.push(n)
+          })
+          this.smallImgFileList.push(ns)
+        } else {
+          this.smallImgFileList.push([])
+        }
+      })
+    },
 		publish() {
 			this.disabledPublishButton = true
 			let _activityVO = {}
-			if (this.discountTypes.indexOf(this.type*1) != -1) {
-        _activityVO = JSON.parse(JSON.stringify(this.discount))
-      } else {
-			 	_activityVO = JSON.parse(JSON.stringify(this.activity))
-			} 
+			_activityVO = JSON.parse(JSON.stringify(this.activity))
 			_activityVO.cover = JSON.stringify(_activityVO.cover)
+			if (_activityVO.activitySetting.groups) {
+				_activityVO.activitySetting.groups = this.adJustObjectArray(_activityVO.activitySetting.groups)
+			}
       _activityVO.activitySetting = JSON.stringify(_activityVO.activitySetting)
       _activityVO.address = JSON.stringify(_activityVO.address)
       _activityVO.content = JSON.stringify(_activityVO.content)
@@ -302,7 +442,26 @@ export default {
 		},
 		goList() {
 			this.$router.push({ path: '/activity/list' })
-		}
+		},
+		adJustObjectArray(array) {
+      let arrayBoo = []
+      array.forEach((item, index) => {
+        arrayBoo[index] = 0
+        for( let key in item ){
+          if(item[key].trim()) {
+            arrayBoo[index] = arrayBoo[index] + 1
+          } else {
+            arrayBoo[index] = arrayBoo[index] + 0
+          }
+        }
+      })
+      arrayBoo.forEach((item, index) => {
+        if(item < 1) {
+          array.splice(index, 1)
+        }
+      })
+      return array
+    },
 	}
 }
 </script>

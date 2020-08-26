@@ -6,7 +6,7 @@
 import ActivityEditor from './components/ActivityEditor'
 
 export default {
-  name: 'hdCreate',
+  name: 'HdCreate',
   components: { ActivityEditor }
 }
 </script>

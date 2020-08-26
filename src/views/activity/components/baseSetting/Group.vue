@@ -4,7 +4,7 @@
 			<el-form-item label="活动封面" prop="introImgs">
         <div>{{ activity.cover.length }}/5</div>
         <el-upload
-          ref="upload1"
+          ref="upload2"
           :data="dataObj"
           multiple
           :limit="5"
@@ -23,56 +23,19 @@
       <el-form-item label="活动标题" prop="title">
         <el-input v-model="activity.title" maxlength="50"></el-input>
       </el-form-item>
-      <el-form-item label="报名开始" prop="startTime">
+      <el-form-item label="拼团开始" prop="startTime">
       	<el-date-picker
 		      v-model="activity.startTime"
 		      type="datetime"
-		      placeholder="请选择报名开始时间">
+		      placeholder="请选择拼团开始时间">
 		    </el-date-picker>
       </el-form-item>
-      <el-form-item label="报名结束" prop="endTime">
+      <el-form-item label="拼团结束" prop="endTime">
       	<el-date-picker
 		      v-model="activity.endTime"
 		      type="datetime"
-		      placeholder="请选择报名结束时间">
+		      placeholder="请选择拼团结束时间">
 		    </el-date-picker>
-      </el-form-item>
-      <el-form-item label="活动开始/截止时间">
-        <el-switch
-          v-model="activity.enableActivityTime"
-          active-color="#13ce66"
-          :active-value="1"
-          inactive-value="0">
-        </el-switch>
-      </el-form-item>
-      <el-form-item label="活动开始" prop="activityStartTime" v-if="activity.enableActivityTime > 0">
-      	<el-date-picker
-		      v-model="activity.activityStartTime"
-		      type="datetime"
-		      placeholder="请选择活动开始时间">
-		    </el-date-picker>
-      </el-form-item>
-      <el-form-item label="活动结束" prop="activityEndTime" v-if="activity.enableActivityTime  > 0">
-      	<el-date-picker
-		      v-model="activity.activityEndTime"
-		      type="datetime"
-		      placeholder="请选择活动结束时间">
-		    </el-date-picker>
-      </el-form-item>
-      <el-form-item label="活动地址">
-        <div v-if="Object.keys(activity.address).length > 0">
-          <el-input :value="(activity.address.province === activity.address.city ? '' : activity.address.province) + activity.address.city + activity.address.distinct + activity.address.detail" >
-            <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
-          </el-input>
-        </div>
-        <div v-else>
-          <el-input value="">
-            <el-button slot="append" icon="el-icon-location-outline" @click.prevent="getLocation()"></el-button>
-          </el-input>
-        </div>
-      </el-form-item>
-      <el-form-item label="详细地址描述">
-        <el-input v-model="activity.address.tips"></el-input>
       </el-form-item>
       <el-form-item label="活动详情">
       	<div style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="index">
@@ -157,33 +120,16 @@
         <Tinymce  ref="editor2" v-model="activity.activityRule" :height="200"  :toolbar="toolbar" :menubar="menubar" :hasUpload="false" />
       </el-form-item>
 		</el-form>
-		<el-dialog 
-      title="地图"
-      width="800px"
-      :visible.sync="mapDialogTableVisible"
-      :modal-append-to-body="false"
-      :append-to-body="true">
-      <input id="address" type="textbox" v-model="markerDetail.address">
-      <button @click.prevent="codeAddress(markerDetail.address)">搜索</button>
-      <div id="mapContainer" style="min-height: 400px">
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="mapDialogTableVisible = false">取 消</el-button>
-        <el-button type="primary" @click="mapDialogTableVisible = false; activity.address = Object.assign({}, markersResult)">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getToken } from '@/api/qiniu'
-import maps from 'qqmap'
 import Tinymce from '@/components/Tinymce'
 
-const key = 'UUSBZ-O7S3K-US5JP-AY4LI-KQA7K-O2B6S'
 
 export default {
-	name: 'BaseApply',
+	name: 'BaseGroup',
 	components: { Tinymce },
 	props: {
 		activity: {
@@ -209,23 +155,15 @@ export default {
       },
       /* dataObj: { token: '' }, */
       coverFileList: [],
-      smallImgFileList: [],
-      map: null,
-      geocoder: null,
-      mapDialogTableVisible: false,
-      markersArray: [],
-      markerDetail: {
-        address: '北京,海淀区,海淀大街58号',
-        latLng: {}
-      },
-      markersResult: { province: '', city: '', distinct: '', detail: '', tips: '' }
+      smallImgFileList: []
     }
   },
   created() {
+    console.log('created..')
+    console.log(this.activity)
     this.init()
   },
 	mounted() {
-    console.log('mounted..')
   },
   methods: {
   	fetchToken() {
@@ -236,8 +174,10 @@ export default {
       })
     },
     init() {
+      console.log('init')
       this.coverFileList = []
     	this.activity.cover.forEach((item, index) => {
+        console.log('init cover')
         let m = {name: '', uid: index, url: item, status: 'success'}
         this.coverFileList.push(m)
       })
@@ -292,85 +232,6 @@ export default {
     },
     handleExceedSmallImg(files, fileList) {
       this.$message.warning(`最多传9张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
-    },
-    initMap() {
-      let that = this
-      maps.init(key, () => {
-        var myLatlng = new qq.maps.LatLng(39.916527,116.397128)
-        var  myOptions = {
-          zoom: 8,
-          center: myLatlng,
-          mapTypeId: qq.maps.MapTypeId.ROADMAP
-        }
-        this.map = new qq.maps.Map(
-          document.getElementById("mapContainer"),
-          myOptions
-        )
-        qq.maps.event.addDomListener(this.map, 'click', function(event) {
-          that.deleteOverlays()
-          that.addMarker(event.latLng)
-          that.codeLatLng(event.latLng)
-        })
-        var info = new qq.maps.InfoWindow({
-          map: this.map
-        })
-        this.geocoder = new qq.maps.Geocoder()
-        this.geocoder.setComplete(function(result) {
-          console.log(result)
-          that.deleteOverlays()
-          that.map.setCenter(result.detail.location)
-          var marker = that.addMarker(result.detail.location)
-          that.markersResult.province = result.detail.addressComponents.province || ''
-          that.markersResult.city = result.detail.addressComponents.city || ''
-          that.markersResult.distinct = result.detail.addressComponents.distinct || ''
-          that.markersResult.detail = (result.detail.addressComponents.town || '') + (result.detail.addressComponents.village || '') + (result.detail.addressComponents.street || '') + (result.detail.addressComponents.streetNumber || '')
-          that.markerDetail.address = result.detail.address
-          that.markerDetail.latLng = result.detail.location
-          qq.maps.event.addListener(marker, 'click', function() {
-            info.open()
-            info.setContent('<div style="width:280px;height:100px;">' + result.detail.address + '<br />' + '(' + result.detail.location + ')' + '</div>')
-            info.setPosition(result.detail.location)
-          })
-        })
-
-        this.geocoder.setError(function() {
-          alert("出错了，请输入正确的地址！！！");
-        })
-      })
-    },
-    clearOverlays() {
-      if (this.markersArray) {
-        for (i in this.markersArray) {
-          this.markersArray[i].setMap(null)
-        }
-      }
-    },
-    deleteOverlays() {
-      console.log('deleteOverlays')
-      if (this.markersArray) {
-        for (let i in this.markersArray) {
-          this.markersArray[i].setMap(null)
-        }
-        this.markersArray = []
-      }
-    },
-    addMarker(location) {
-      var marker = new qq.maps.Marker({
-        position: location,
-        map: this.map
-      })
-      this.markersArray.push(marker)
-      return marker
-    },
-    codeAddress(address) {
-      this.geocoder.getLocation(address)
-    },
-    codeLatLng(latLng) {
-      this.geocoder.getAddress(latLng)
-    },
-    getLocation() {
-      this.mapDialogTableVisible = true
-      this.initMap()
     },
     removeConItem(item, index) {
     	this.activity.content.splice(index,1)
