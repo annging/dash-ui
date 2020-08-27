@@ -43,7 +43,8 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登  录</el-button>
 
-    <router-link style="color: white;" to="/wxlogin">微信登录</router-link>
+      <el-divider content-position="center">其他方式</el-divider>
+      <router-link style="display: block;color: white; text-align: center;" to="/wxlogin"><svg-icon icon-class="wx" style="width: 2em; height: 2em; color: white; margin-bottom: 5px;" /><br /><span style="font-size: 12px;">微信登录</span></router-link>
 
     </el-form>
   </div>
@@ -230,5 +231,12 @@ $light_gray:#eee;
     cursor: pointer;
     user-select: none;
   }
+}
+.el-divider {
+  background-color: rgba(255, 255, 255, 0.35)
+}
+.el-divider__text {
+  background-color: #2d3a4b;
+  color: rgba(255, 255, 255, 0.8);
 }
 </style>

@@ -4,7 +4,7 @@
 			<div class="container">
 				<nav class="mast-head-nav">
 					<ul class="nav-list">
-						<li class="nav-list__item"><a href="/downloading?src=index" class="button-link">官网</a></li>
+						<li class="nav-list__item"><a href="/" class="button-link">官网</a></li>
 					</ul>
 					<ul class="nav-list">
 					</ul>
@@ -219,19 +219,20 @@ export default {
     width: 100%;
 	}
 	#login-or-register-page-content {
-    padding-top: 126px;
+    padding-top: 106px;
     text-align: center;
 	}
 	#login-or-register-page-content .login-or-register-img {
     display: none
 	}
 	@media (min-width: 991px) {
-    #login-or-register-page-content .login-or-register-img {
-      display:inline-block;
-      vertical-align: middle;
-      margin-right: 90px;
-      margin-bottom: 31px;
-    }
+        #login-or-register-page-content .login-or-register-img {
+          display:inline-block;
+          vertical-align: middle;
+          margin-right: 90px;
+          margin-bottom: 31px;
+            margin-top: -60px;
+        }
 	}
 	.login-register-container-wrapper {
     display: inline-block;
