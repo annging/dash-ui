@@ -51,7 +51,7 @@
 	      </el-form-item>
 	      <el-form-item label="用户付款后即返佣金" v-if="activity.enableUserSale">
 	        <el-switch
-	          v-model="activity.userSaleSetting.showFee"
+	          v-model="activity.userSaleSetting.isVerification"
 	          active-color="#13ce66"
 	          :active-value="1"
 	          :inactive-value="0">
