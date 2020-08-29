@@ -10,7 +10,7 @@
           </div>
         </el-col>
       </el-row>
-      <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px;">
+      <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px; display: none">
         <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/overview'">概览</el-menu-item>
         <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/statistics'" style="display: none">统计数据</el-menu-item>
       </el-menu>

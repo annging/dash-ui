@@ -113,7 +113,7 @@ export default {
       })
     },
     handleView(index, row) {
-    	console.log('查看')
+    	this.$router.push({ path: '/user/detail/' + row.id })
     },
     handleDelete(index, row) {
       this.$confirm('确认取消设置为后台管理员?', '提示', {
