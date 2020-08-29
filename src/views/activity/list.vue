@@ -163,6 +163,10 @@
           <el-form ref="creForm" :rules="creRules" :model="cre" label-width="100px" size="small">
             <el-form-item label="商家" prop="merchantId">
               <el-select v-model="cre.merchantId" placeholder="请选择商家" style="width: 100%" popper-class="paginationSelect" >
+                <div class="filterBar" style="padding: 20px;">
+                  <span :class="merchantListFilter.authStatus == 5 ? 'active' : ''"  @click="filterMerchant(5)">待领取商家</span>
+                  <span :class="merchantListFilter.authStatus == 5 ? '' : 'active'"  @click.prevent="filterMerchant('')">已入驻商家</span>
+                </div>
                 <el-option v-for="item in merchantList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
                   <span class="label-id">{{ item.id }}</span>-
                   <span class="label-title">{{ item.name }}</span>
@@ -345,6 +349,11 @@ export default {
       }
       this.creDialogVisible = true
     },
+    filterMerchant(val) {
+      this.merchantListFilter.authStatus = val
+      this.merchantListQuery.current = 1
+      this.getMerchantList()
+    },
     handleClose(done) {
       console.log('关闭弹窗')
       done()
@@ -427,6 +436,17 @@ export default {
   .el-menu--horizontal>.el-menu-item.is-active {
     border-bottom: 1px solid #000;
     color: #303133;
+  }
+  .filterBar span {
+    display: inline-block;
+    padding: 5px 15px;
+    margin-right: 10px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .filterBar span.active {
+    border: 1px solid #409EFF;
+    border-radius: 5px;
   }
 </style>
 
