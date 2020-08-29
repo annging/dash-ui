@@ -413,7 +413,8 @@ export const constantRoutes = [
         path: 'index',
         name: 'base',
         component: () => import('@/views/account/index'),
-        meta: { title: '账户总览' }
+        meta: { title: '账户总览' },
+        hidden: true
       },
       {
         path: 'lishi',

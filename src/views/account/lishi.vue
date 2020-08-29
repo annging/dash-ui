@@ -2,7 +2,7 @@
 	<div class="main-content">
 	  	<div class="left-container">
 	    	<el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
-	      	<el-menu-item index="1" :route="{path:'/account/index'}">账户总览</el-menu-item>
+	      	<el-menu-item index="1" :route="{path:'/account/index'}" style="display: none">账户总览</el-menu-item>
 	      	<el-menu-item index="2" :route="{path:'/account/plan'}">明细</el-menu-item>
 	      	</el-menu>
 		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">

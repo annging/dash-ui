@@ -5,7 +5,7 @@
       <panel-group :marketingData=marketingData
      @handleSetLineChartData="handleSetLineChartData" />
 
-      <el-row style="position: relative; background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <el-row style="position: relative; background:#fff;padding:16px 16px 0;margin-bottom:32px; display: none;">
         <div class="filter" style="float: right; position: relative; z-index: 9">
           <el-button plain size="mini" @click="pickTime(7)">近7日</el-button>
           <el-button plain size="mini" @click="pickTime(15)">近15日</el-button>
@@ -171,7 +171,8 @@ export default {
       this.$router.push({ path: '/activity/fangan/create' })
     },
     handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+      // this.lineChartData = lineChartData[type]
+      this.lineChartData = []
     },
     pickTime(days) {
       const end = new Date()

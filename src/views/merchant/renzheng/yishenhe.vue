@@ -63,12 +63,12 @@
                   @click="handleView(scope.$index, scope.row)">点击查看</el-button>
               </template>
             </el-table-column>
-            <el-table-column
+            <!--<el-table-column
               label="提交时间">
               <template slot-scope="{row}">
                 <span>{{ 'no' }}</span>
               </template>
-            </el-table-column>
+            </el-table-column>-->
             <el-table-column
               label="审核结果">
               <template slot-scope="{row}">

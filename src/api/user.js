@@ -136,6 +136,17 @@ export function getInfo(token) {
   })
 }
 
+// /api/v1/user/{userId} 根据用户id查询用户信息
+export function getUserInfo(userId) {
+  return request({
+    url: 'http://test.tuantuanzhan.cn/api/v1/user/' + userId,
+    method: 'get',
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
+  })
+}
+
 export function logout() {
   return request({
     url: '/vue-admin-template/user/logout',
