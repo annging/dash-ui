@@ -282,6 +282,8 @@ export default {
 					registerWord:'',
 					showCommission:false,
 					supportedActivityDistribution:false,
+					virtual: false,
+					virtualViewCount: '',
 					virtualPersonCount:''
 				},
 				6: {
