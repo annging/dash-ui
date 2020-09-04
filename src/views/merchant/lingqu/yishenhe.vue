@@ -85,7 +85,7 @@
             <el-table-column
               label="审核时间">
               <template slot-scope="{row}">
-                <span><span>{{ row.updateddAt | moment("YYYY-MM-DD HH:mm:ss") }}</span></span>
+                <span><span>{{ row.updatedAt | moment("YYYY-MM-DD HH:mm:ss") }}</span></span>
               </template>
             </el-table-column>
           </el-table>
