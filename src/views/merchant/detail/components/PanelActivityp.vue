@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="title">
-      <div class="left">活动成家率漏斗</div>
+      <div class="left">活动成交率漏斗</div>
       <div class="right">
         <svg-icon icon-class="filter" />
         <span>筛选</span>
       </div>
     </div>
     <el-row :gutter="20" class="panel-group" style="clear: both">
-      <funnel-chart width="100%" :chartData=activityData />
+      <funnel-chart width="100%" :chartData=activityTurnoverRate />
     </el-row>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     FunnelChart
   },
   props: {
-    activityData: {
+    activityTurnoverRate: {
       type: Object,
         default: function() {
           return {}

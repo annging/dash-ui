@@ -14,14 +14,16 @@
         </el-date-picker>
       </div>
     </el-row>
-    <panel-activitys :activityData=activitysData />
-    <panel-activityp :activityData=activitypData />
+    <panel-activitys :activityDataStatistics=activityDataStatistics />
+    <panel-activityp :activityTurnoverRate=activityTurnoverRate />
   </div>
 </template>
 
 <script>
+import { dataAnalysis } from '@/api/merchant'
 import PanelActivitys from './components/PanelActivitys'
 import PanelActivityp from './components/PanelActivityp'
+
 const defaultDataAnalysis = {
 	id: undefined
 }
@@ -30,23 +32,46 @@ export default {
   name: 'Statistics',
   components: {
     PanelActivitys, // 活动数据统计
-    PanelActivityp // 活动成家率漏斗
+    PanelActivityp // 活动成交率漏斗
   },
   data() {
     return {
     	id: '',
-    	analysisData: Object.assign({}, defaultDataAnalysis),
-      data_time_end: [],
-      activitysData: {
-        activityTotal: 20,
-        viewTotal: 50,
-        shareTotal: 90
+      pageLoading: false,
+    	analysisData: {
+        "activityDataStatistics": {
+          "activityStatistics": '-',
+          "pageView": '-',
+          "forwardingNumber": '-'
+        },
+        "activityTurnoverRate":{
+        },
+        "couponStatistics":{
+          "drawNum": '-',
+          "used": '-',
+          "pageView": '-'
+        },
+        "actualIncome":{
+        },
+        "userAnalysis":{
+          "newUser":'-',
+          "oldUser":'-'
+        },
+        "accessNumbers":{
+        },
+        "userActivation":{
+        },
+        "spectrophotometer":{
+        }
       },
-      activitypData: {
-        viewTotal: 50000,
-        orderTotal: 5,
-        participationTotal: 1000
-      }
+      activityDataStatistics: {
+        "activityStatistics": '-',
+        "pageView": '-',
+        "forwardingNumber": '-'
+      },
+      activityTurnoverRate: {},
+      message: '',
+      data_time_end: []
     }
   },
   computed: {
@@ -58,19 +83,23 @@ export default {
   },
   created() {
 		this.id = this.$route.params && this.$route.params.id
-    // this.fetchData(this.id)
+    this.fetchData(this.id)
   },
   methods: {
   	fetchData(id) {
+      this.pageLoading = true
       dataAnalysis({merchantId: id}).then(response => {
-      	if (response.code === '200') {
-      		this.analysisData = response.data
-	      } else {
-	      	this.$message({
-            type: 'error',
-            message: response.msg
-          })
-	      }
+        _Temp = response.data
+        this.activityDataStatistics = _Temp.activityDataStatistics
+        this.activityTurnoverRate = _Temp.activityTurnoverRate.map(item => {
+          return {
+            value: item.data ? item.data : 0,
+            name: item.name
+          }
+        })
+        this.pageLoading = false
+      }).catch((err) => {
+        this.pageLoading = false
       })
     },
     pickTime(days) {

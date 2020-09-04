@@ -104,14 +104,14 @@ export const constantRoutes = [
     meta: { title: '活动管理', icon: 'activity' },
     children: [
       {
-        path: 'create/:type(\\d+)/:mid(\\d+)',
+        path: 'create/:type/:mid(\\d+)',
         name: 'createActivity',
         component: () => import('@/views/activity/create'),
         meta: { title: '创建活动', activeMenu: '/activity/list' },
         hidden: true
       },
       {
-        path: 'edit/:id(\\d+)/:type(\\d+)/:mid(\\d+)',
+        path: 'edit/:id(\\d+)/:type/:mid(\\d+)',
         name: 'editActivity',
         component: () => import('@/views/activity/edit'),
         meta: { title: '编辑活动', icon: 'activity', activeMenu: '/activity/list' },
@@ -272,6 +272,12 @@ export const constantRoutes = [
             component: () => import('@/views/merchant/detail/overview'),
             name: '商家详情-概览',
             meta: { title: '商家详情', activeMenu: '/merchant/index' }
+          },
+          {
+            path: 'activitys',
+            component: () => import('@/views/merchant/detail/activitys'),
+            name: '商家详情-活动列表',
+            meta: { title: '商家详情-活动列表', activeMenu: '/merchant/index' }
           },
           {
             path: 'statistics',

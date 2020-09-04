@@ -14,17 +14,7 @@
             <div class="card-panel-text">
               发布活动(场)
             </div>
-            <div class="card-panel-num">{{ activityData.activityTotal }}</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              进行中的活动(场)
-            </div>
-            <div class="card-panel-num">{{ activityData.activityTotal }}</div>
+            <div class="card-panel-num">{{ activityDataStatistics.activityStatistics }}</div>
           </div>
         </div>
       </el-col>
@@ -34,7 +24,7 @@
             <div class="card-panel-text">
               浏览量(次数)
             </div>
-            <div class="card-panel-num">{{ activityData.viewTotal }}</div>
+            <div class="card-panel-num">{{ activityDataStatistics.pageView }}</div>
           </div>
         </div>
       </el-col>
@@ -44,7 +34,7 @@
             <div class="card-panel-text">
               转发次数
             </div>
-            <div class="card-panel-num">{{ activityData.shareTotal }}</div>
+            <div class="card-panel-num">{{ activityDataStatistics.forwardingNumber }}</div>
           </div>
         </div>
       </el-col>
@@ -59,7 +49,7 @@ export default {
   components: {
   },
   props: {
-    activityData: {
+    activityDataStatistics: {
       type: Object,
         default: function() {
           return {}

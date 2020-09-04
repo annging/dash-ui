@@ -62,7 +62,6 @@ export default {
             }
         },
         legend: {
-            data: ['访问人数','参与订单','参与人数']
         },
         series: [
             {
@@ -100,11 +99,7 @@ export default {
                         fontSize: 20
                     }
                 },
-                data: [
-                    {value: 60, name: '访问人数'},
-                    {value: 40, name: '参与订单'},
-                    {value: 20, name: '参与人数'}
-                ]
+                data: this.chartData.series
             }
         ]
       })

@@ -10,7 +10,7 @@
 		</div>
 		<div class="module module-block">
 			<div class="block__heading">品牌简介</div>
-			<div class="block__subtext">{{ merchant.intro }}</div>
+			<div class="block__subtext" v-html="merchant.intro"></div>
 		</div>
 		<div class="module module-block">
 			<div class="block__heading">品牌相册({{ merchant.introImgs.length }})</div>

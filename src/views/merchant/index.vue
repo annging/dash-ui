@@ -55,7 +55,7 @@
 	          <el-table-column
 	            label="商家名称">
 	            <template slot-scope="{row}">
-			          <span>{{ row.name }}</span>
+	            	<router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + row.id + '/overview'">{{ row.name }}</router-link>
 			        </template>
 	          </el-table-column>
 	          <el-table-column

@@ -124,7 +124,21 @@ export function dataAnalysis(query) {
   return request({
     url: 'https://www.tuantuanzhan.cn/api/v1/merchant/dataAnalysis',
     method: 'get',
-    params: query
+    params: query,
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
+  })
+}
+
+// /api/v1/activity/common/getByMerchantId/{merchantId} 查询商家主页活动
+export function getActivityByMerchantId(id) {
+  return request({
+    url: 'https://www.tuantuanzhan.cn/api/v1/activity/common/getByMerchantId/' + id,
+    method: 'get',
+    headers: {
+      loginToken: 'adminLoginToken'
+    }
   })
 }
 

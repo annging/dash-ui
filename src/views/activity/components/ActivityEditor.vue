@@ -178,7 +178,8 @@ export default {
 				10: '',
 				11: '',
 				12: '',
-				13: ''
+				13: '',
+				'-1': ''
 			},
 			activitySetting: {
 				0: {},
@@ -269,7 +270,8 @@ export default {
 					title: '',
 					needShare: false,
 					shareNum: ''
-				}
+				},
+				'-1': null
 			},
 			advancedSetting: {
 				0: {},
@@ -303,7 +305,8 @@ export default {
 				10: null,
 				11: null,
 				12: null,
-				13: null
+				13: null,
+				'-1': null
 			},
 			merchant: {
 				id: '',
@@ -312,7 +315,7 @@ export default {
 			pageLoading: false,
 			isFullScreen: false,
 			activeTabName: 'first',
-			activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+			activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
 			discountTypes: [10, 11, 12, 13],
 			disabledPublishButton: false
 		}
