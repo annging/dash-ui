@@ -122,7 +122,7 @@
 	            label="会员过期时间"
 	            width="140px">
 	            <template slot-scope="{row}">
-	            	<span>{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
+	            	<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
 		          </template>
 		        </el-table-column>
 		        <el-table-column
@@ -133,12 +133,16 @@
 	            	<el-tag type="info" size="mini" v-else>否</el-tag>
 		          </template>
 		        </el-table-column>
-	          <el-table-column label="操作" width="110">
+	          <el-table-column label="操作" width="120">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"
 	                type="text"
 	                @click="handleView(scope.$index, scope.row)">详情</el-button>
+	              <el-button
+                  size="mini"
+                  type="text"
+                  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
 	               <el-button
 	                size="mini"
 	                type="text"
@@ -228,6 +232,9 @@ export default {
       this.$router.push({
         path: '/merchant/detail/' + row.id
     	})
+    },
+    handleEdit(index, row) {
+      this.$router.push({ path: '/merchant/edit/' + row.id })
     },
     handleRecommend(index, row) {
       recommendMerchant({ merchantId: row.id }).then(response => {

@@ -72,13 +72,13 @@
                 <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作">
+            <!--<el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   @click="handleView(scope.$index, scope.row)">查看详情</el-button>
               </template>
-            </el-table-column>
+            </el-table-column>-->
           </el-table>
           <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>

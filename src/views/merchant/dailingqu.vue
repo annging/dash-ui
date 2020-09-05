@@ -111,7 +111,8 @@
             </el-table-column>
             <el-table-column
               label="会员到期时间">
-              <template slot-scope="{row}">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}
+              <template slot-scope="{row}">
+                <span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </template>
             </el-table-column>
             <el-table-column

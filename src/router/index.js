@@ -90,8 +90,32 @@ export const constantRoutes = [
       {
         path: 'level',
         name: ' level',
+        redirect: '/platform/level/index',
         component: () => import('@/views/platform/level'),
-        meta: { title: '会员等级设置' }
+        meta: { title: '会员等级设置'},
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/platform/level/index'),
+            name: 'levelList',
+            meta: { title: '会员等级' },
+            hidden: true
+          },
+          {
+            path: 'create',
+            component: () => import('@/views/platform/level/create'),
+            name: 'createLevel',
+            meta: { title: '创建会员等级', activeMenu: '/platform/level' },
+            hidden: true
+          },
+          {
+            path: 'edit/:id(\\d+)',
+            name: 'editLevel',
+            component: () => import('@/views/platform/level/edit'),
+            meta: { title: '编辑会员等级', activeMenu: '/platform/level/' },
+            hidden: true,
+          },
+        ]
       },
     ]
   }, // 平台管理

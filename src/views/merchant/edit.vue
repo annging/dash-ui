@@ -185,6 +185,19 @@
           </div>
           <el-button size="mini" @click.prevent="addApplyTry()">+添加</el-button>
         </el-form-item>
+        <!--<el-divider></el-divider>
+        <el-form-item label="会员等级">
+          <el-select v-model="merchantForm.vipLevel" placeholder="请选择会员等级">
+            <el-option v-for="item in vipLevels" :key="item.key" :label="item.label" :value="item.key" />
+          </el-select>
+        </el-form-item>-->
+        <!--<el-form-item label="会员到期时间" prop="vipEndTime">
+          <el-date-picker
+            v-model="merchantForm.vipEndTime"
+            type="datetime"
+            placeholder="会员到期时间">
+          </el-date-picker>
+        </el-form-item>-->
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即提交</el-button>
           <el-button  @click="resetForm('merchantForm')">取消</el-button>
@@ -263,8 +276,10 @@ export default {
         productIntros: [{ img: '', intro: '' }],
         advantage: [{ title: '', content: '' }],
         showApplyTry: 0,
-        applyTry: [{ content: '' }]
+        applyTry: [{ content: '' }],
+        authStatus: 5
       },
+      vipLevels: [{ key: 0, label: '标准会员' }, { key: 1, label: '体验会员' }, { key: 2, label: 'VIP会员' }],
       fileList: [],
       rules: {
         name: [
@@ -334,7 +349,11 @@ export default {
                 message: this.id > 0 ? '修改成功' : '添加成功',
                 type: 'success',
                 onClose: function() {
-                  that.$router.push({ path: '/merchant/dailingqu' })
+                  if (that.merchantForm.authStatus < 5) {
+                    that.$router.push({ path: '/merchant/index' })
+                  } else {
+                    that.$router.push({ path: '/merchant/dailingqu' })
+                  }
                 }
               })
             } else {
