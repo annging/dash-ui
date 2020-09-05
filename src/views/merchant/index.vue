@@ -8,7 +8,6 @@
 		      	<el-menu-item index="2" :route="{path:'/merchant/dailingqu'}">待领取商家</el-menu-item>
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
-          <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加商家</el-button>
           <div>
 	          <el-input
 	            v-model="listFilter.name"
@@ -23,6 +22,7 @@
 	              搜索
 	          </el-button>
 	        </div>
+          <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加商家</el-button>
         </el-row>
 	      <el-row class="list">
 	        <el-table
@@ -108,7 +108,7 @@
 	            label="创建者"
 	            width="">
 	            <template slot-scope="{row}">
-	            	<span>{{ row.user ? row.user.nickName : ''  }}</span>
+	            	<router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.createUserId">{{ row.user ? row.user.nickName : ''  }}</router-link>
 		          </template>
 		        </el-table-column>
 		        <el-table-column
@@ -133,7 +133,7 @@
 	            	<el-tag type="info" size="mini" v-else>否</el-tag>
 		          </template>
 		        </el-table-column>
-	          <el-table-column label="操作" width="120">
+	          <el-table-column label="操作" width="110">
 	            <template slot-scope="scope">
 	              <el-button
 	                size="mini"

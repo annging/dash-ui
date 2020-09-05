@@ -26,7 +26,7 @@
               搜索
           </el-button>
         </div>
-        <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="handelCreate">创建活动</el-button>
+        <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="handelCreate">创建活动</el-button>
       </el-row>
       <el-row class="list">
         <el-table
@@ -112,17 +112,21 @@
               <el-tag type="info" size="mini" v-else>否</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="text"
                 @click="handleView(scope.$index, scope.row)">查看</el-button>
-                <br />
               <el-button
                 size="mini"
                 type="text"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                style="color: #F56C6C"
+                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 <br />
               <el-button
                 size="mini"
@@ -192,7 +196,7 @@
 </template>
 
 <script>
-import { getActivitys, setActivityWithGoodOrRecommend, setWeight } from '@/api/activity'
+import { getActivitys, setActivityWithGoodOrRecommend, setWeight, deleteActivityById } from '@/api/activity'
 import { fetchList} from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -300,6 +304,33 @@ export default {
     handleEdit(index, row) {
       this.$router.push({
         path: '/activity/edit/' + row.id + '/' + row.type + '/' + row.merchantId
+      })
+    },
+    handleDelete(index, row) {
+      this.$confirm('确认删除该活动?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteActivityById(row.id).then(res => {
+          if (res.code * 1 === 200 ) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.list.splice(index, 1)
+          } else {
+            this.$message({
+              type: 'error',
+              message: res.msg
+            });
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })       
       })
     },
     // 推荐到首页/设为优秀案例
