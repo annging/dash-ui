@@ -5,27 +5,30 @@
         <el-menu-item index="1" :route="{path:'/activity/fangan/index/'}">方案列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/fangan/recommend/'}">推荐方案列表</el-menu-item>
       </el-menu>
-      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
-        <el-input
-          class="filter-item"
-          v-model="listFilter.title"
-          placeholder="请输入方案标题"
-          prefix-icon="el-icon-search"
-          size="small"
-          clearable
-          @keyup.enter.native="handleFilter"
-          @clear="handleFilter" />
-        <el-select size="small" v-model="listFilter.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部类型">
-          <el-option  label="全部类型" value="" />
-          <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
-        </el-select>
-        <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部行业">
-          <el-option  label="全部行业" value="" />
-          <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="value" />
-        </el-select>
-        <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
-            搜索
-        </el-button>
+      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
+        <div>
+          <el-input
+            class="filter-item"
+            v-model="listFilter.title"
+            placeholder="请输入方案标题"
+            prefix-icon="el-icon-search"
+            size="small"
+            clearable
+            style="width: 300px; margin-right: 20px;"
+            @keyup.enter.native="handleFilter"
+            @clear="handleFilter" />
+          <el-select size="small" v-model="listFilter.type" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部类型">
+            <el-option  label="全部类型" value="" />
+            <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
+          </el-select>
+          <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部行业">
+            <el-option  label="全部行业" value="" />
+            <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="value" />
+          </el-select>
+          <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
+              搜索
+          </el-button>
+        </div>
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">新增方案</el-button>
       </el-row>
       <el-row class="list">
@@ -108,7 +111,7 @@
                 <el-tag type="info" size="mini" v-else>否</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="150">
               <template slot-scope="scope">
                 <el-button
                   v-if="!scope.row.isRecommend"
