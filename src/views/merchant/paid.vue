@@ -9,12 +9,15 @@
 	    	</el-menu>
 		    <el-row type="flex" class="filter-container"  style="margin-bottom: 20px;">
           <el-input
-            v-model="listQuery.searchStr"
-            placeholder="请输入内容"
+            v-model="listFilter.name"
+            placeholder="请输入商家名称"
             prefix-icon="el-icon-search"
             size="small"
+            clearable
             class="filter-item"
-            @keyup.enter.native="handleFilter" />
+            style="width: 300px; margin-right: 20px;"
+            @keyup.enter.native="handleFilter"
+            @clear="handleFilter" />
           <el-select size="small" v-model="listFilter.vipLevel" style="width: 200px" class="filter-item" @change="handleFilter">
             <!--<el-option  label="全部付费商家" value="" />-->
             <el-option v-for="item in typeOptions" :key="item.key" :label="item.label" :value="item.key" />
@@ -149,6 +152,7 @@ export default {
         size: 20
       },
       listFilter: {
+        name: '',
         vipLevel: 2
       },
       levels: { 0: '标准会员', 1: '体验会员', 2: 'VIP会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
