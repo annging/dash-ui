@@ -104,15 +104,27 @@
             </el-table-column>
             <el-table-column
               label="会员"
-              width="">
+              width="122">
               <template slot-scope="{row}">
-                <span>{{ levels[row.vipLevel] }}</span>
+                <!--<span>{{ levels[row.vipLevel] }}</span>-->
+                <el-select size="mini" v-model="row.vipLevel" style="width: 100px" @change="handleUpdateMerchantViPLevel(row)" placeholder="会员等级">
+                  <el-option v-for="(value, key) in levels" :key="key" :label="value" :value="key * 1" />
+                </el-select>
               </template>
             </el-table-column>
             <el-table-column
-              label="会员到期时间">
+              label="会员到期时间"
+              width="202px">
               <template slot-scope="{row}">
-                <span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
+                <!--<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>-->
+                <el-date-picker
+                  size="mini"
+                  style="width: 180px;"
+                  v-model="row.vipEndTime"
+                  type="datetime"
+                  placeholder="选择会员到期时间"
+                  @change="handleUpdateMerchantViPEndTime(row)">
+                </el-date-picker>
               </template>
             </el-table-column>
             <el-table-column
@@ -155,7 +167,7 @@
 </template>
 
 <script>
-import { fetchList, groundingOrUndercarriage } from '@/api/merchant'
+import { fetchList, groundingOrUndercarriage, updateMerchantViPLevel, updateMerchantViPEndTime } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -185,6 +197,11 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery, this.listFilter).then(response => {
+        response.data.records.forEach(item => {
+          if (item.vipEndTime) {
+            item.vipEndTime = new Date(item.vipEndTime)
+          }
+        })
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
@@ -246,6 +263,57 @@ export default {
           type: 'info',
           message: '已取消操作'
         })        
+      })
+    },
+    handleUpdateMerchantViPLevel(row) {
+      let q = {
+        merchantId: row.id,
+        vipLevel: row.vipLevel
+      }
+      let that = this
+      updateMerchantViPLevel(q).then(response => {
+        if (response.code * 1 === 200 ) {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg,
+            onClose: function() {
+              that.handleFilter()
+            }
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    handleUpdateMerchantViPEndTime(row) {
+      //console.log(typeof row.vipEndTime)
+      let q = {
+        merchantId: row.id,
+        date: row.vipEndTime.toString()
+      }
+      let that = this
+      updateMerchantViPEndTime(q).then(response => {
+        if (response.code * 1 === 200 ) {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg,
+            onClose: function() {
+              that.handleFilter()
+            }
+          })
+        }
+      }).catch((err) => {
+        console.log(err)
       })
     }
   }

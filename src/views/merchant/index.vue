@@ -122,7 +122,7 @@
 		          </template>
 		        </el-table-column>
 		        <el-table-column
-	            label="会员过期时间"
+	            label="会员到期时间"
 	            width="202px">
 	            <template slot-scope="{row}">
 	            	<!--<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>-->
