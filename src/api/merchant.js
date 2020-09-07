@@ -154,6 +154,24 @@ export function updateMerchant(data) {
   })
 }
 
+// /system/merchant/updateMerchantViPEndTime  修改商家会员时间
+export function updateMerchantViPEndTime(query) {
+  return request({
+    url: '/system/merchant/updateMerchantViPEndTime',
+    method: 'get',
+    params: query
+  })
+}
+
+// /system/merchant/updateMerchantViPLevel 修改商家会员级别
+export function updateMerchantViPLevel(query) {
+  return request({
+    url: '/system/merchant/updateMerchantViPLevel',
+    method: 'get',
+    params: query
+  })
+}
+
 // /api/v1/store/query/merchant 根据商户id查询商户的所有门店
 export function getStores(query) {
   return request({

@@ -241,7 +241,7 @@ export default {
             this.$message({
               type: 'error',
               message: res.msg
-            });
+            })
           }
         })
       }).catch(() => {

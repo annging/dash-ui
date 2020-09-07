@@ -54,7 +54,7 @@
     			<div style="padding: 16px;">
     				<advanced-apply-setting :activity=activity v-if="type==1"/><!-- 报名 -->
     				<advanced-group-setting :activity=activity v-if="type==6"/><!-- 拼团 -->
-    				<advanced-discount-setting :activity=discount v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
+    				<advanced-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
     				<vote-more-setting  v-if="activity.type == 'vote'"/>
     			</div>
     		</el-scrollbar>
@@ -143,6 +143,7 @@ export default {
 				address: { province: '', city: '', distinct: '', detail: '', tips: '' },
 				content: [{type:'text',value:''}],
 				activityRule: "<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>",
+				storeIds: '',
 				requireColumns: [],
 				activitySetting: {
 					advancePay:'',
@@ -409,7 +410,11 @@ export default {
 	            type: 'success',
 	            message: '修改成功',
 	            onClose: function() {
-	            	that.$router.push({ path: '/activity/list' })
+	            	if (that.activity.type < 10 ) {
+	            		that.$router.push({ path: '/activity/list' })
+	            	} else {
+	            		that.$router.push({ path: '/activity/discount' })
+	            	}
 	            }
 	          })
 			  	} else {
@@ -430,7 +435,11 @@ export default {
 	            type: 'success',
 	            message: '创建成功！',
 	            onClose: function() {
-	            	that.$router.push({ path: '/activity/list' })
+	            	if (that.activity.type < 10 ) {
+	            		that.$router.push({ path: '/activity/list' })
+	            	} else {
+	            		that.$router.push({ path: '/activity/discount' })
+	            	}
 	            }
 	          })
 			  	} else {

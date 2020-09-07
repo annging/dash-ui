@@ -97,13 +97,6 @@
 			          <span>{{ row.merchantAggregate.employeeCount }}</span>
 			        </template>
 	          </el-table-column>
-	          <el-table-column
-	            label="会员"
-	            width="">
-	            <template slot-scope="{row}">
-	            	<span>{{ levels[row.vipLevel] }}</span>
-		          </template>
-		        </el-table-column>
 		        <el-table-column
 	            label="创建者"
 	            width="">
@@ -118,11 +111,29 @@
 	            	<span>{{ row.formUser ? row.formUser.nickName : '-'  }}</span>
 		          </template>
 		        </el-table-column>
+	          <el-table-column
+	            label="会员"
+	            width="122">
+	            <template slot-scope="{row}">
+	            	<!--<span>{{ levels[row.vipLevel] }}</span>-->
+	            	<el-select size="mini" v-model="row.vipLevel" style="width: 100px" @change="handleUpdateMerchantViPLevel(row)" placeholder="会员等级">
+			            <el-option v-for="(value, key) in levels" :key="key" :label="value" :value="key * 1" />
+			          </el-select>
+		          </template>
+		        </el-table-column>
 		        <el-table-column
 	            label="会员过期时间"
-	            width="140px">
+	            width="202px">
 	            <template slot-scope="{row}">
-	            	<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
+	            	<!--<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>-->
+	            	<el-date-picker
+	            		size="mini"
+	            		style="width: 180px;"
+						      v-model="row.vipEndTime"
+						      type="datetime"
+						      placeholder="选择会员到期时间"
+						      @change="handleUpdateMerchantViPEndTime(row)">
+						    </el-date-picker>
 		          </template>
 		        </el-table-column>
 		        <el-table-column
@@ -169,7 +180,7 @@
 </template>
 
 <script>
-import { fetchList, recommendMerchant, CancelRecommended } from '@/api/merchant'
+import { fetchList, recommendMerchant, CancelRecommended, updateMerchantViPLevel, updateMerchantViPEndTime } from '@/api/merchant'
 import { getImgUrl } from '@/api/wx'
 import { getUserInfo } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -200,6 +211,11 @@ export default {
       this.listLoading = true
       fetchList(this.listQuery, this.listFilter).then(response => {
       	if (response.data) {
+      		response.data.records.forEach(item => {
+            if (item.vipEndTime) {
+              item.vipEndTime = new Date(item.vipEndTime)
+            }
+          })
 	        this.list = response.data.records
 	        this.total = response.data.total
 	      }
@@ -280,6 +296,57 @@ export default {
             message: response.msg
           })
         }
+      })
+    },
+    handleUpdateMerchantViPLevel(row) {
+    	let q = {
+    		merchantId: row.id,
+    		vipLevel: row.vipLevel
+    	}
+    	let that = this
+    	updateMerchantViPLevel(q).then(response => {
+    		if (response.code * 1 === 200 ) {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg,
+            onClose: function() {
+            	that.handleFilter()
+            }
+          })
+        }
+      }).catch((err) => {
+      	console.log(err)
+      })
+    },
+    handleUpdateMerchantViPEndTime(row) {
+    	//console.log(typeof row.vipEndTime)
+    	let q = {
+    		merchantId: row.id,
+    		date: row.vipEndTime.toString()
+    	}
+    	let that = this
+    	updateMerchantViPEndTime(q).then(response => {
+    		if (response.code * 1 === 200 ) {
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: response.msg,
+            onClose: function() {
+            	that.handleFilter()
+            }
+          })
+        }
+      }).catch((err) => {
+      	console.log(err)
       })
     }
   }

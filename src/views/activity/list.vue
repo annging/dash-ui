@@ -20,7 +20,7 @@
             @clear="handleFilter" />
           <el-select size="small" v-model="listFilter.type" style="width: 200px; margin-right: 20px;" class="filter-item" @change="handleFilter" placeholder="全部类型">
             <el-option  label="全部类型" value="" />
-            <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
+            <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" v-if="key < 10" />
           </el-select>
           <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
               搜索
@@ -79,7 +79,7 @@
           <el-table-column
             label="商家">
             <template slot-scope="{row}">
-              <span>{{ row.merchant.name }}</span>
+              <span v-if="row.merchant">{{ row.merchant.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
