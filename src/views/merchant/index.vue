@@ -66,19 +66,22 @@
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="访问数">
+	            label="访问数"
+              width="60">
 	            <template slot-scope="{row}">
 			          <span>{{row.merchantAggregate.visitCount}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="参与数">
+	            label="参与数"
+              width="60">
 	            <template slot-scope="{row}">
 			          <span>{{row.merchantAggregate.participationCount}}</span>
 			        </template>
 	          </el-table-column>
 	          <el-table-column
-	            label="收入(元)">
+	            label="收入(元)"
+              width="80">
 	            <template slot-scope="{row}">
 			          <span>{{row.merchantAggregate.totalIncome}}</span>
 			        </template>
@@ -99,39 +102,44 @@
 	          </el-table-column>
 		        <el-table-column
 	            label="创建者"
-	            width="">
+	            width="80">
 	            <template slot-scope="{row}">
 	            	<router-link target="_blank" style="color: #409EFF" :to="'/user/detail/' + row.createUserId">{{ row.user ? row.user.nickName : ''  }}</router-link>
 		          </template>
 		        </el-table-column>
 		        <el-table-column
 	            label="邀请者"
-	            width="">
+	            width="80">
 	            <template slot-scope="{row}">
 	            	<span>{{ row.formUser ? row.formUser.nickName : '-'  }}</span>
 		          </template>
 		        </el-table-column>
 	          <el-table-column
 	            label="会员"
-	            width="122">
+	            width="86"
+              class-name="miniCol">
 	            <template slot-scope="{row}">
 	            	<!--<span>{{ levels[row.vipLevel] }}</span>-->
-	            	<el-select size="mini" v-model="row.vipLevel" style="width: 100px" @change="handleUpdateMerchantViPLevel(row)" placeholder="会员等级">
+	            	<el-select size="mini" v-model="row.vipLevel" style="width: 80px;padding: 0 3px;" @change="handleUpdateMerchantViPLevel(row)" placeholder="会员等级" name="minimini" class="customSelect">
 			            <el-option v-for="(value, key) in levels" :key="key" :label="value" :value="key * 1" />
 			          </el-select>
 		          </template>
 		        </el-table-column>
 		        <el-table-column
 	            label="会员到期时间"
-	            width="202px">
+              width="130px"
+              class-name="miniCol">
 	            <template slot-scope="{row}">
-	            	<!--<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>-->
+	            	<!--<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span> <br />
+                <i style="color: #409EFF; cursor: pointer" class="el-icon-edit"></i>-->
 	            	<el-date-picker
 	            		size="mini"
-	            		style="width: 180px;"
+	            		style="width: 122px;"
 						      v-model="row.vipEndTime"
 						      type="datetime"
+                  class="mini-dp"
 						      placeholder="选择会员到期时间"
+                  clear-icon=""
 						      @change="handleUpdateMerchantViPEndTime(row)">
 						    </el-date-picker>
 		          </template>
@@ -385,5 +393,33 @@ export default {
   .el-menu--horizontal>.el-menu-item.is-active {
     border-bottom: 1px solid #000;
     color: #303133;
+  }
+  
+</style>
+<style>
+  .el-input__inner[name='minimini'] {
+    padding: 0 3px;
+  }
+  .customSelect .el-input__suffix {
+    right: 1px;
+  }
+  .customSelect .el-input__suffix .el-input__icon {
+    width: 16px;
+  }
+  .customSelect.el-select .el-input .el-select__caret {
+    font-size: 10px;
+  }
+  .miniCol .cell {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  .mini-dp .el-input__prefix {
+    display: none;
+  }
+  .mini-dp.el-input--prefix .el-input__inner {
+    padding-left: 3px;
+  }
+  .mini-dp.el-input--suffix .el-input__inner {
+    padding-right: 3px;   
   }
 </style>

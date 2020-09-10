@@ -355,7 +355,7 @@ export default {
     beforeUpload(file) {
     },
     handleSuccess(res, file) {
-      this.temp.url = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key;
+      this.temp.url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key;
     }
   }
 }
