@@ -148,6 +148,13 @@ export const constantRoutes = [
         meta: { title: '活动管理' }
       },
       {
+        path: 'enableUserSaleActivity',
+        name: 'enableUserSaleActivity',
+        component: () => import('@/views/activity/enableUserSaleActivity'),
+        meta: { title: '分销活动' },
+        hidden: true
+      },
+      {
         path: 'discount',
         name: 'discount',
         component: () => import('@/views/activity/discount'),

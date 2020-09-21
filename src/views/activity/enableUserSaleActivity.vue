@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <div class="left-container">
-      <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
+      <el-menu default-active="5" class="" mode="horizontal" router style="margin-bottom: 20px;">
         <el-menu-item index="1" :route="{path:'/activity/list'}">活动列表</el-menu-item>
         <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
@@ -27,7 +27,6 @@
               搜索
           </el-button>
         </div>
-        <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="handelCreate">创建活动</el-button>
       </el-row>
       <el-row class="list">
         <el-table
@@ -215,7 +214,8 @@ export default {
       },
       listFilter: {
         title: '',
-        type: ''
+        type: '',
+        enableUserSale: 1
       },
       clientHeight: '',
       maxHeight: 400,
