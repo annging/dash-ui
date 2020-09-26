@@ -75,8 +75,8 @@
         <el-input v-model="activity.address.tips"></el-input>
       </el-form-item>
       <el-form-item label="活动详情">
-      	<div style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="index">
-          <div style="margin: 0 10px 0 0; width: 610px;">
+      	<div  v-if="activity.content.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="index">
+          <div style="margin: 0 10px 0 0; width: 610px;" v-if="item">
           	<el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
             <div v-if="item.type=='label'">
               <el-select
@@ -91,36 +91,45 @@
               </el-select>
             </div>
           	<Tinymce v-if="item.type=='text'" ref="editor1" v-model="item.value" :height="150"  :toolbar="toolbar" :menubar="menubar" :hasUpload="false" />
-            <el-upload
-              v-if="item.type=='bigImg'"
-              :data="dataObj"
-              :multiple="false"
-              class="uploader"
-              action="http://upload-z2.qiniup.com"
-              :show-file-list="false"
-              :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'bigImg',index, 'value')}"
-              :on-remove="(file)=>{return handleContentRemove(file,'bigImg',index)}"
-              :before-upload="beforeUpload">
-              <img v-if="item.value" :src="item.value" class="uploader-img big-img">
-              <i v-else class="el-icon-plus uploader-icon"></i>
-            </el-upload>
-            <div v-if="item.type=='smallImg'">
-              <el-upload
-                ref="upload2"
-                :data="dataObj"
-                multiple
-                :limit="9"
-                list-type="picture-card"
-                :file-list="smallImgFileList[index]"
-                action="http://upload-z2.qiniup.com"
-                :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'smallImg',index, 'value')}"
-                :on-remove="(file)=>{return handleContentRemove(file,'smallImg',index)}"
-                :before-upload="beforeUpload"
-                :on-change="(file,fileList)=>{return handleChangeSmallImg(file,fileList,index)}"
-                :on-exceed="handleExceedSmallImg">
-                <i class="el-icon-plus"></i>
-                <div slot="tip" class="el-upload__tip">（最多9张）</div>
-              </el-upload>
+            <div class="bigImg" v-if="item.type=='bigImg'">
+              <div class="img-preview">
+                <div v-if="typeof(item.value)==='string'" class="img-preview-item">
+                  <span class="action">
+                    <span class="delete" @click="deleteImg(index)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                  <img :src="item.value"  style="max-width: 100%;">
+                </div>
+                <div v-else class="img-preview-item" v-for="(it,idx) in item.value" :key="idx">
+                  <span class="action">
+                    <span class="delete" @click="deleteImg(index, idx)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                  <img :src="it"  style="max-width: 100%;">
+                </div>
+              </div>
+              <div class="editor-container">
+                <dropzone class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" />
+              </div>
+            </div>
+            
+            <div class="smallImg" v-if="item.type=='smallImg'">
+              <div>{{ item.value.length }}/9</div>
+              <div class="img-preview">
+                <div class="img-preview-item" v-for="(it,idx) in item.value" :key="idx">
+                  <span class="action">
+                    <span class="delete" @click="deleteImg(index, idx)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                  <img :src="it"  style="max-width: 100%;">
+                </div>
+              </div>
+              <div class="editor-container"">
+                <dropzone class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :maxFiles="9 - activity.content[index].value.length" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" @dropzone-error="dropzoneE" @dropzone-fileAdded="dropzoneA"/>
+              </div>
             </div>
             <div v-if="item.type=='video'">
               <el-upload
@@ -140,16 +149,17 @@
             </div>
           </div>
           <div style="margin-top: 20px;">
-            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(item, index)"></el-button>
+            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(
+            index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-up" :disabled="(index == 1 && activity.content[0].type == 'label') || (index == 0)" @click.prevent="upConItem(item, index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-down" :disabled="(item.type == 'label') || (index == activity.content.length -1)" @click.prevent="downConItem(item, index)"></el-button>
           </div>
         </div>
         <div style="margin-bottom: 20px;">
           <el-button type="primary" plain size="mini" @click.prevent="addCon('text', '')">+添加文字</el-button>
-          <el-button type="primary" plain size="mini" @click.prevent="addCon('bigImg', '')">+添加大图</el-button>
+          <el-button type="primary" plain size="mini" @click.prevent="addCon('bigImg', [])">+添加大图</el-button>
           <el-button type="primary" plain size="mini" @click.prevent="addCon('smallImg', [])">+添加小图</el-button>
-          <el-button type="primary" plain size="mini" @click.prevent="addCon('video', [])">+添加视频</el-button>
+          <el-button type="primary" plain size="mini" @click.prevent="addCon('video', '')">+添加视频</el-button>
           <el-button type="primary" plain v-if="activity.content[0].type !== 'label'" size="mini" @click.prevent="addCon('label', [])">+添加标签</el-button>
         </div>
       </el-form-item>
@@ -177,6 +187,7 @@
 
 <script>
 import { getToken } from '@/api/qiniu'
+import Dropzone from '@/components/Dropzone'
 import maps from 'qqmap'
 import Tinymce from '@/components/Tinymce'
 
@@ -184,7 +195,7 @@ const key = 'UUSBZ-O7S3K-US5JP-AY4LI-KQA7K-O2B6S'
 
 export default {
 	name: 'BaseApply',
-	components: { Tinymce },
+	components: { Tinymce, Dropzone },
 	props: {
 		activity: {
 		  type: Object,
@@ -209,7 +220,6 @@ export default {
       },
       /* dataObj: { token: '' }, */
       coverFileList: [],
-      smallImgFileList: [],
       map: null,
       geocoder: null,
       mapDialogTableVisible: false,
@@ -228,6 +238,31 @@ export default {
     console.log('mounted..')
   },
   methods: {
+    dropzoneS(file, res, index) {
+      // console.log(file)
+      let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      // this.bigImgFileList[index].push(url)
+      this.activity.content[index].value.push(url)
+      this.$message({ message: 'Upload success', type: 'success' })
+    },
+    dropzoneR(file) {
+      // console.log(file)
+    },
+    dropzoneE(file, error, xhr) {
+      // console.log(file)
+      this.$message.error(error)
+      console.log(xhr)
+    },
+    dropzoneA(file) {
+      // console.log(file)
+    },
+    deleteImg(index, idx) {
+      if(idx) {
+        this.activity.content[index].value.splice(idx, 1)
+      } else {
+        this.activity.content[index].value = []
+      }
+    },
   	fetchToken() {
       const _self = this
       getToken().then(response => {
@@ -241,25 +276,10 @@ export default {
         let m = {name: '', uid: index, url: item, status: 'success'}
         this.coverFileList.push(m)
       })
-      this.smallImgFileList = []
-      this.activity.content.forEach((item, index) => {
-        if (item.type === 'smallImg') {
-          let ns = []
-          item.value.forEach((it, idx) => {
-            let n = {name: '', uid: idx, url: it, status: 'success'}
-            ns.push(n)
-          })
-          this.smallImgFileList.push(ns)
-        } else {
-          this.smallImgFileList.push([])
-        }
-      })
     },
     handleSuccess(res, file) {
       this.activity.cover.push('https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key)
-    },
-    handleSuccess_smallImg(res, file) {
-
+      this.coverFileList.push({name: file.name, uid: file.uid, url: 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key, status: 'success'})
     },
     handleRemove(file, fileList) {
       let url = ''
@@ -281,17 +301,62 @@ export default {
       }
       return isLt2M
     },
-    handleChangeSmallImg(file, fileList, index) {
-      this.smallImgFileList[index] = fileList
-    },
     handleChangeCover(file, fileList) {
-      this.coverFileList = fileList
+      // this.coverFileList = fileList
     },
     handleExceedCover(files, fileList) {
       this.$message.warning(`最多传5张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
     },
     handleExceedSmallImg(files, fileList) {
       this.$message.warning(`最多传9张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
+    },
+    removeConItem(index) {
+      if(this.activity.content.length === 1) {
+        this.$message.warning('活动详情不能为空，请添加其他类型再删除当前的内容')
+      } else {
+        this.activity.content.splice(index,1)
+      }
+    },
+    upConItem(item, index) {
+      let oldIndex = index
+      let newIndex = index - 1
+      this.activity.content.splice(oldIndex, 1)
+      this.activity.content.splice(newIndex, 0, item)
+    },
+    downConItem(item, index) {
+      let oldIndex = index
+      let newIndex = index + 1
+      this.activity.content.splice(oldIndex, 1)
+      this.activity.content.splice(newIndex, 0, item)
+    },
+    addCon(type, v) {
+      if (type === 'label') {
+        if (this.activity.content[0].type !== 'label') {
+          this.activity.content.unshift({
+            type: type,
+            value: v
+          })
+        }
+      } else {
+        this.activity.content.push({
+          type: type,
+          value: v
+        })
+      }
+		},
+    beforeUpload(file) {
+      // const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!')
+      }
+      return isLt2M
+    },
+    handleContentUploadSuccess(res, file, fileList, type, index, field) {
+      this.activity.content[index][field] = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    },
+    handleContentRemove(file, type, index) {
+      this.activity.content.splice(index,1)
     },
     initMap() {
       let that = this
@@ -371,84 +436,6 @@ export default {
     getLocation() {
       this.mapDialogTableVisible = true
       this.initMap()
-    },
-    removeConItem(item, index) {
-    	this.activity.content.splice(index,1)
-    },
-    upConItem(item, index) {
-      let oldIndex = index
-      let newIndex = index - 1
-      this.activity.content.splice(oldIndex, 1)
-      this.activity.content.splice(newIndex, 0, item)
-      let oldSmallImgFileItem = this.smallImgFileList[oldIndex]
-      this.smallImgFileList.splice(oldIndex, 1)
-      this.smallImgFileList.splice(newIndex, 0, oldSmallImgFileItem)
-    },
-    downConItem(item, index) {
-      let oldIndex = index
-      let newIndex = index + 1
-      this.activity.content.splice(oldIndex, 1)
-      this.activity.content.splice(newIndex, 0, item)
-      let oldSmallImgFileItem = this.smallImgFileList[oldIndex]
-      this.smallImgFileList.splice(oldIndex, 1)
-      this.smallImgFileList.splice(newIndex, 0, oldSmallImgFileItem)
-    },
-    addCon(type, v) {
-      if (type === 'smallImg') {
-        this.activity.content.push({
-          type: type,
-          value: v
-        })
-      } else if (type === 'label') {
-        if (this.activity.content[0].type !== 'label') {
-          this.activity.content.unshift({
-            type: type,
-            value: v
-          })
-        }
-      } else {
-        this.activity.content.push({
-          type: type,
-          value: v
-        })
-      }
-		},
-    beforeUpload(file) {
-      // const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
-      }
-      return isLt2M
-    },
-    handleContentUploadSuccess(res, file, type, index, field) {
-      if (index > -1) {
-        if (type === 'bigImg') {
-        this.activity.content[index][field] = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
-        } else if (type === 'smallImg') {
-          this.activity.content[index][field].push('https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key)
-        } else {
-          this.activity.content[index][field] = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
-        }
-      }
-    },
-    handleContentRemove(file, type, index) {
-      if (index > -1) {
-        if (type === 'smallImg') {
-          let url = ''
-          if(file.response) {
-            url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + file.response.key
-          } else {
-            url = file.url
-          }
-          let idx = this.activity.content[index].value.indexOf(url)
-          if (idx > -1) {
-            this.activity.content[index].value.splice(idx, 1)
-          }
-        } else {
-          this.activity.content.splice(index,1)
-        }
-      }
     }
   }
 }
@@ -473,8 +460,50 @@ export default {
     max-width: 300px;
     display: block;
   }
-  .uploader-img.big-img {
-    max-width: 600px;
+  .img-preview-item {
+    position: relative;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .img-preview-item:hover {
+    border: 1px solid #ddd;
+  }
+  .img-preview-item .action {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,.5);
+    color: white;
+    font-size: 20px;
+  }
+  .img-preview-item:hover .action {
+    display: block;
+    text-align: center;
+  }
+  .img-preview-item:hover .action::after {
+    display: inline-block;
+    content: "";
+    height: 100%;
+    vertical-align: middle;
+  }
+  .img-preview-item .action .delete {
+    display: inline-block;
+    position: static;
+    font-size: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  .smallImg .img-preview-item {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    margin-right: 10px;
   }
 </style>
 
@@ -488,5 +517,20 @@ export default {
   }
   .hiddenDown {
     display: none
+  }
+  .myVueDropzone.dropzone {
+    height: 180px;
+    overflow: hidden;
+  }
+  .myVueDropzone.dropzone.dz-started .dz-message {
+    display: block !important;
+  }
+  .myVueDropzone.dropzone .dz-preview.dz-image-preview {
+      display: none !important;
+  }
+  .myVueDropzone.dropzone .dz-preview {
+    min-height: 0;
+    height: 0;
+    margin: 0;
   }
 </style>
