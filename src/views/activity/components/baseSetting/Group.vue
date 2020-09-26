@@ -176,7 +176,6 @@ export default {
 	mounted() {
   },
   methods: {
-
     dropzoneS(file, res, index) {
       // console.log(file)
       let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
@@ -241,7 +240,7 @@ export default {
       return isLt2M
     },
     handleChangeCover(file, fileList) {
-      // this.coverFileList = fileList
+      this.coverFileList = fileList
     },
     handleExceedCover(files, fileList) {
       this.$message.warning(`最多传5张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
