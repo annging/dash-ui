@@ -181,7 +181,7 @@ export default {
         console.log(number)
         console.log(this.activity.content[index].value.length)
         if (this.activity.content[index].value.length === number) {
-          this.$message.warning('这里最多上传' + number + '张图片！')
+          this.$message.warning('最多上传' + number + '张图片')
           return
         }
       }
