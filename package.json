@@ -1,6 +1,6 @@
 {
   "name": "tuantuanstation-dash",
-  "version": "0.1.15",
+  "version": "1.0.0",
   "description": "团团站后台管理中心",
   "author": "团团站",
   "scripts": {
@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "0.18.1",
     "core-js": "3.6.5",
+    "dropzone": "^5.7.2",
     "echarts": "^4.8.0",
     "element-ui": "2.13.2",
     "js-cookie": "2.2.0",

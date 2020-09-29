@@ -5,7 +5,7 @@ const userSource = 'tuantuanclient'
 // /api/v1/wx/qrcode/{source}/getImgUrl 获取小程序码图片地址
 export function getImgUrl(data) {
   return request({
-    url: 'https://www.tuantuanzhan.cn/api/v1/wx/qrcode/' + userSource +'/getImgUrl',
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/wx/qrcode/' + userSource +'/getImgUrl',
     method: 'post',
     data
   })

@@ -74,7 +74,7 @@
                 </div>
               </div>
               <div class="editor-container">
-                <dropzone class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" />
+                <dropzone class="myVueDropzone" v-if="dataObj.token" :token="dataObj.token" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" />
               </div>
             </div>
             
@@ -91,7 +91,7 @@
                 </div>
               </div>
               <div class="editor-container"">
-                <dropzone class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :maxFiles="9 - activity.content[index].value.length" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" @dropzone-error="dropzoneE" @dropzone-fileAdded="dropzoneA"/>
+                <dropzone class="myVueDropzone" v-if="dataObj.token" :token="dataObj.token" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index, 9)" @dropzone-error="dropzoneE" @dropzone-fileAdded="dropzoneA"/>
               </div>
             </div>
             <div v-if="item.type=='video'">
@@ -176,12 +176,20 @@ export default {
 	mounted() {
   },
   methods: {
-    dropzoneS(file, res, index) {
+    dropzoneS(file, res, index, number) {
+      if (number) {
+        console.log(number)
+        console.log(this.activity.content[index].value.length)
+        if (this.activity.content[index].value.length === number) {
+          this.$message.warning('这里最多上传' + number + '张图片！')
+          return
+        }
+      }
       // console.log(file)
       let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
       // this.bigImgFileList[index].push(url)
       this.activity.content[index].value.push(url)
-      this.$message({ message: 'Upload success', type: 'success' })
+      this.$message({ message: '上传成功', type: 'success' })
     },
     dropzoneR(file) {
       // console.log(file)

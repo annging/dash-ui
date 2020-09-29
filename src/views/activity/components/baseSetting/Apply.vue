@@ -111,7 +111,7 @@
                 </div>
               </div>
               <div class="editor-container">
-                <dropzone class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" />
+                <dropzone v-if="dataObj.token" class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" />
               </div>
             </div>
             
@@ -128,7 +128,7 @@
                 </div>
               </div>
               <div class="editor-container"">
-                <dropzone class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :maxFiles="9 - activity.content[index].value.length" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" @dropzone-error="dropzoneE" @dropzone-fileAdded="dropzoneA"/>
+                <dropzone v-if="dataObj.token" class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index, 9)" @dropzone-error="dropzoneE"/>
               </div>
             </div>
             <div v-if="item.type=='video'">
@@ -164,7 +164,7 @@
         </div>
       </el-form-item>
       <el-form-item label="活动规则">
-        <Tinymce  ref="editor2" v-model="activity.activityRule" :height="200"  :toolbar="toolbar" :menubar="menubar" :hasUpload="false" />
+        <Tinymce ref="editor2" v-model="activity.activityRule" :height="200"  :toolbar="toolbar" :menubar="menubar" :hasUpload="false" />
       </el-form-item>
 		</el-form>
 		<el-dialog 
@@ -218,7 +218,7 @@ export default {
       contentTypes: {'bigImg': '大图', 'smallImg': '小图', 'text': '文字', 'video': '视频', 'label': '标签'},
       rules: {
       },
-      /* dataObj: { token: '' }, */
+      /*dataObj: { token: '' },*/
       coverFileList: [],
       map: null,
       geocoder: null,
@@ -238,12 +238,20 @@ export default {
     console.log('mounted..')
   },
   methods: {
-    dropzoneS(file, res, index) {
+    dropzoneS(file, res, index, number) {
+      if (number) {
+        console.log(number)
+        console.log(this.activity.content[index].value.length)
+        if (this.activity.content[index].value.length === number) {
+          this.$message.warning('这里最多上传' + number + '张图片！')
+          return
+        }
+      }
       // console.log(file)
       let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
       // this.bigImgFileList[index].push(url)
       this.activity.content[index].value.push(url)
-      this.$message({ message: 'Upload success', type: 'success' })
+      this.$message({ message: '上传成功', type: 'success' })
     },
     dropzoneR(file) {
       // console.log(file)
@@ -253,8 +261,7 @@ export default {
       this.$message.error(error)
       console.log(xhr)
     },
-    dropzoneA(file) {
-      // console.log(file)
+    dropzoneA(file, index, number) {
     },
     deleteImg(index, idx) {
       if(idx) {

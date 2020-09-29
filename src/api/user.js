@@ -139,7 +139,7 @@ export function getInfo(token) {
 // /api/v1/user/{userId} 根据用户id查询用户信息
 export function getUserInfo(userId) {
   return request({
-    url: 'https://tuantuanzhan.cn/api/v1/user/' + userId,
+    url: process.env.VUE_APP_XIAOCHENGXU_API +  '/api/v1/user/' + userId,
     method: 'get',
     headers: {
       loginToken: 'adminLoginToken'

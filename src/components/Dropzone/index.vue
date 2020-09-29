@@ -8,6 +8,7 @@
 import Dropzone from 'dropzone'
 import 'dropzone/dist/dropzone.css'
 import { getToken } from '@/api/qiniu';
+
 Dropzone.autoDiscover = false
 export default {
   props: {
@@ -66,6 +67,10 @@ export default {
     couldPaste: {
       type: Boolean,
       default: false
+    },
+    token: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -135,12 +140,14 @@ export default {
         //   done();
         // })
         // done()
-        getToken().then(response => {
+        file.token = this.token;
+        done();
+        /*getToken().then(response => {
           file.token = response.data;
           //   file.key = response.data.qiniu_key;
           //   file.url = response.data.qiniu_url;
           done();
-        })
+        })*/
       },
       sending: (file, xhr, formData) => {
         formData.append('token', file.token);

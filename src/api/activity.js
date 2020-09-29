@@ -211,7 +211,7 @@ export function getActivityOptions(query, data) {
 // /api/v1/activity/config/require/column 获取全部常用字段
 export function getRequirecolumns() {
   return request({
-    url: 'https://tuantuanzhan.cn/api/v1/activity/config/require/column',
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/activity/config/require/column',
     method: 'get'
   })
 }
@@ -219,7 +219,7 @@ export function getRequirecolumns() {
 // /api/v1/activity/common/create 创建活动, data里返回的是活动id
 export function createActivity(data) {
   return request({
-    url: 'https://tuantuanzhan.cn/api/v1/activity/common/create',
+    url: process.env.VUE_APP_XIAOCHENGXU_API +  '/api/v1/activity/common/create',
     method: 'post',
     data: data,
     headers: {
@@ -231,7 +231,7 @@ export function createActivity(data) {
 // /api/v1/activity/common/update  更新活动
 export function updateActivity(data) {
   return request({
-    url: 'https://tuantuanzhan.cn/api/v1/activity/common/update',
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/activity/common/update',
     method: 'post',
     data: data,
     headers: {
@@ -243,7 +243,7 @@ export function updateActivity(data) {
 // /api/v1/activity/common/deleteActivityById/{activityId} 根据活动id删除活动信息
 export function deleteActivityById(activityId) {
   return request({
-    url: 'https://tuantuanzhan.cn/api/v1/activity/common/deleteActivityById/' + activityId,
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/activity/common/deleteActivityById/' + activityId,
     method: 'delete',
     headers: {
       loginToken: 'adminLoginToken'
