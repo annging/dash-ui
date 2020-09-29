@@ -172,11 +172,13 @@
                   <span :class="merchantListFilter.authStatus == 5 ? 'active' : ''"  @click="filterMerchant(5)">待领取商家</span>
                   <span :class="merchantListFilter.authStatus == 5 ? '' : 'active'"  @click.prevent="filterMerchant('')">已入驻商家</span>
                 </div>
-                <el-option v-for="item in merchantList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
+                <div v-loading="merchantListLoading">
+                <el-option v-if="merchantList.length > 0" v-for="item in merchantList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
                   <span class="label-id">{{ item.id }}</span>-
                   <span class="label-title">{{ item.name }}</span>
                 </el-option>
                 <pagination v-show="merchantTotal>0" :total="merchantTotal" :page.sync="merchantListQuery.current" :limit.sync="merchantListQuery.size" @pagination="getMerchantList" />
+                </div>
               </el-select>
             </el-form-item>
             <el-form-item label="活动类型" prop="type">
@@ -244,7 +246,8 @@ export default {
       },
       merchantListFilter: {
         authStatus: 5
-      }
+      },
+      merchantListLoading: true
     }
   },
   watch: {
@@ -288,9 +291,11 @@ export default {
       })
     },
     getMerchantList() {
+      this.merchantListLoading = true
       fetchList(this.merchantListQuery, this.merchantListFilter).then(response => {
         this.merchantList = response.data.records
         this.merchantTotal = response.data.total
+        this.merchantListLoading = false
       })
     },
     handleFilter() {
@@ -493,6 +498,9 @@ export default {
     }
     .el-select-dropdown__item {
       border-bottom: 1px solid #f5f5f5;
+    }
+    .el-loading-spinner {
+      top: 200px;
     }
   }
 </style>

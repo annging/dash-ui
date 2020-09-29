@@ -139,6 +139,7 @@ export default {
 				activityStartTime: '',
 				activityEndTime: '',
 				merchantId: 0,
+				createUserId: 0,
 				type: 0,
 				address: { province: '', city: '', distinct: '', detail: '', tips: '' },
 				content: [{type:'text',value:''}],
@@ -348,6 +349,7 @@ export default {
 			fetchMerchant(id).then(response => {
 		  	if (response.data) {
 		  		this.merchant = response.data
+		  		this.activity.createUserId = response.data.createUserId
 		  	} else {
 		  		this.$message({
             type: 'error',
