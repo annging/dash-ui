@@ -2,7 +2,7 @@
 	<div class="main-content">
 	  <div class="left-container">
 	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		    <el-menu-item index="1" :route="{path:'/logs/index'}">会员等级</el-menu-item>
+		    <el-menu-item index="1" :route="{path:'/platform/level/index'}">会员等级</el-menu-item>
 	    </el-menu>
 		  <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加会员等级</el-button>
