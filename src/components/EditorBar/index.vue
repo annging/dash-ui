@@ -105,7 +105,7 @@ export default {
           // 图片上传成功，插入图片的回调
           console.log()
          // 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
-          insertImg('http://ttz-user-file.qiniu.tuantuanzhan.cn/' + result.key)
+          insertImg('https://ttz-user-file.qiniu.tuantuanzhan.cn/' + result.key)
         }
       }
       this.editor.customConfig.onchange = (html) => {

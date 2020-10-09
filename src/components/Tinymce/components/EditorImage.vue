@@ -90,7 +90,7 @@ export default {
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
           //this.listObj[objKeyArr[i]].url = response.files.file
-          this.listObj[objKeyArr[i]].url = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + response.key;
+          this.listObj[objKeyArr[i]].url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + response.key;
           this.listObj[objKeyArr[i]].hasSuccess = true
           return
         }
