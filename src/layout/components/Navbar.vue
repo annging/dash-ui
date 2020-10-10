@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       notices: {},
-      websock: null,
+      websock: null
     }
   },
   created() {
@@ -62,7 +62,13 @@ export default {
   },
   methods: {
     initWebSocket(){ //初始化weosocket
-      const wsuri = "ws://47.107.137.16:8090/socket"
+      let url = 'ws://47.107.137.16:8090'
+      if (process.env.NODE_ENV === 'production') {
+        url = 'ws://47.107.137.16:8090'
+      } else {
+        // url = 'ws://47.114.59.178:9999/prod-api'
+      }
+      const wsuri = url + "/socket"
       if('WebSocket' in window){
         this.websock = new WebSocket(wsuri)
       }else{
