@@ -25,7 +25,7 @@ export function fetchMusicList(query, data) {
 // /api/v1/activity/config/bgmusic 获取全部背景音乐
 export function bgmusic(query) {
   return request({
-    url: 'http://47.114.59.178:5511/api/v1/activity/config/bgmusic',
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/activity/config/bgmusic',
     method: 'get',
     params: query
   })
