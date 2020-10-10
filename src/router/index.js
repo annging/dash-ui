@@ -423,6 +423,46 @@ export const constantRoutes = [
     ]
   }, // 用户管理
 
+  /*{
+    path: '/content',
+    component: Layout,
+    redirect: '/content/index',
+    name: 'contentManage',
+    meta: { title: '内容管理', icon: 'platform' },
+    children: [
+      {
+        path: 'mSchool',
+        name: ' mSchool',
+        redirect: '/content/mSchool/index',
+        component: () => import('@/views/content/mSchool'),
+        meta: { title: '商家学院'},
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/content/mSchool/index'),
+            name: 'mSchoolArticleList',
+            meta: { title: '文章列表' },
+            hidden: true
+          },
+          {
+            path: 'create',
+            component: () => import('@/views/content/mSchool/create'),
+            name: 'createMSchoolArticle',
+            meta: { title: '创建文章', activeMenu: '/content/mSchool' },
+            hidden: true
+          },
+          {
+            path: 'edit/:id(\\d+)',
+            name: 'editMSchoolArticle',
+            component: () => import('@/views/content/mSchool/edit'),
+            meta: { title: '编辑文章', activeMenu: '/content/mSchool/' },
+            hidden: true,
+          },
+        ]
+      },
+    ]
+  },*/ // 内容管理
+
   {
     path: '/order',
     component: Layout,
