@@ -39,13 +39,13 @@
           <el-table-column
             label="标题">
             <template slot-scope="{row}">
-              <span>{{ row.name }}</span>
+              <span>入职内训：如何快速的把新兵变成特征兵，让新兵迅速上手</span>
             </template>
           </el-table-column>
           <el-table-column
             label="简介">
             <template slot-scope="{row}">
-              <span>{{ row.storeNo }}</span>
+              <span>haha</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -57,7 +57,7 @@
           <el-table-column
             label="修改时间">
             <template slot-scope="{row}">
-              <span>{{ row.semiAnnual }}</span>
+              <span></span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="110">
@@ -82,18 +82,17 @@
 </template>
 
 <script>
-import { getSystemLogs } from '@/api/platform'
+import { fetchArticleList } from '@/api/mSchool'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
   components: { Pagination },
   data() {
     return {
-      list: [{ id: 1, name: '标准会员', storeNo: '1', staffNo: '5', monthFee: '0', semiAnnual: '0', annual: '0' }, { id: 2, name: ' VIP会员', storeNo: '5', staffNo: '25', monthFee: '299.00', semiAnnual: '999.00', annual: '1499.00' }],
+      list: [],
       total: 0,
       listLoading: false,
       listQuery: {
-        searchStr: '',
         current: 1,
         size: 20
       },
@@ -107,7 +106,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getSystemLogs(this.listQuery, this.listFilter).then(response => {
+      fetchArticleList(this.listQuery, this.listFilter).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
@@ -129,7 +128,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        /*deleteScheme(row.id).then(res => {
+        /*deleteArticle(row.id).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',

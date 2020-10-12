@@ -1,8 +1,9 @@
 <template>
 <div class="main-content">
   <div class="left-container">
-    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/content/mSchool/create'}">添加文章</el-menu-item>
+    <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
+      <el-menu-item index="1" :route="{path:'/content/mSchool/index'}">文章列表</el-menu-item>
+      <el-menu-item index="2" :route="{path:'/content/mSchool/create'}">添加文章</el-menu-item>
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="articleForm" label-width="100px" size="small">
@@ -30,22 +31,9 @@
             <img width="100%" :src="articleForm.cover" alt="">
           </el-dialog>
         </el-form-item>
-        <el-form-item label="标签">
-           <el-select
-            v-model="articleForm.label"
-            popper-class="hiddenDown"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            placeholder="请输入方案标签"
-            style="width: 600px">
-            <el-option
-              v-for="item in labelOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
+        <el-form-item label="导师" prop="">
+          <el-select v-model="articleForm.teacherId" placeholder="请选择导师" style="width: 100%" popper-class="paginationSelect" >
+            <el-option :key="1" label="导师1" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item label="内容">
@@ -67,50 +55,31 @@
 </template>
 
 <script>
-import { addActivityScheme } from '@/api/activity'
+import { addArticle } from '@/api/mSchool'
 import { getToken } from '@/api/qiniu'
 import Tinymce from '@/components/Tinymce'
 
 export default {
-  name: 'CreateScheme',
+  name: 'CreateArticle',
   components: { Tinymce },
   data() {
     return {
       articleForm: {
         title: '',
         cover: '',
-        label: '',
+        teacherId: '',
         content: '',
         weight: ''
       },
-      activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }],
-      industrys: { 1: '教育/培训' ,  2: '丽人/美发' ,  3: '亲子/乐园', 4: '运动健身', 5: '休闲/玩乐', 6: '美容/SPA', 7: '嬌纱/摄影', 8: '家居/装修', 9: '生活服务', 10: '餐饮美食', 11: '母婴', 12: '洗车', 13: '服装' },
-      vipLevels: [{ key: 0, label: '标准会员' }, { key: 1, label: '体验会员' }, { key: 2, label: 'VIP会员' }],
       rules: {
         title: [
-          { required: true, message: '请输入方案标题', trigger: 'blur' },
+          { required: true, message: '请输入标题', trigger: 'blur' },
           { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
-        ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
-        ],
-        type: [
-          { required: true, message: '请选择一个活动类型', trigger: 'change' }
-        ],
-        industry: [
-          { required: true, message: '请选择一个行业', trigger: 'change' }
-        ],
-        desc: [
-          { required: true, message: '请填写方案介绍', trigger: 'blur' }
         ],
         cover: [
           { required: true, message: '请上传封面图', trigger: 'change' }
         ]
       },
-      dialogImageUrl: '',
-      dialogVisible: false,
-      dialogVisible1: false,
-      labelOptions: [],
       dataObj: { token: '' }
     }
   },
@@ -120,7 +89,7 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!')
-      addActivityScheme(this.articleForm).then(res => {
+      addArticle(this.articleForm).then(res => {
         if (res.code * 1 == 200) {
           this.$message({
             message: '创建成功',
