@@ -35,6 +35,7 @@
     			<div style="padding: 16px;">
     				<base-apply-setting :activity=activity :dataObj=dataObj  v-if="type==1"/><!-- 报名 -->
     				<base-group-setting :activity=activity :dataObj=dataObj v-if="type==6"/><!-- 拼团 -->
+    				<base-cut-setting :activity=activity :dataObj=dataObj v-if="type==4"/><!-- 砍价 -->
     				<base-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     			</div>
     		</el-scrollbar>
@@ -44,6 +45,7 @@
     			<div style="padding: 16px;">
     				<type-apply-setting :activity=activity :merchantId=merchantId v-if="type==1"/><!-- 报名 -->
     				<type-group-setting :activity=activity :merchantId=merchantId v-if="type==6"/><!-- 拼团 -->
+    				<type-cut-setting :activity=activity :merchantId=merchantId v-if="type==4"/><!-- 砍价 -->
     				<type-discount-setting :activity=activity :merchantId=merchantId v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     				<vote-setting v-model="activity"  v-if="activity.type == 'vote'"/>
     			</div>
@@ -54,6 +56,7 @@
     			<div style="padding: 16px;">
     				<advanced-apply-setting :activity=activity v-if="type==1"/><!-- 报名 -->
     				<advanced-group-setting :activity=activity v-if="type==6"/><!-- 拼团 -->
+    				<advanced-cut-setting :activity=activity v-if="type==4"/><!-- 砍价 -->
     				<advanced-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
     				<vote-more-setting  v-if="activity.type == 'vote'"/>
     			</div>
@@ -72,14 +75,17 @@ import { parseTime } from '@/utils'
 
 import BaseApplySetting from './baseSetting/Apply'
 import BaseGroupSetting from './baseSetting/Group'
+import BaseCutSetting from './baseSetting/CutPrice'
 import BaseDiscountSetting from './baseSetting/Discount'
 
 import TypeApplySetting from './typeSetting/Apply'
 import TypeGroupSetting from './typeSetting/Group'
+import TypeCutSetting from './typeSetting/CutPrice'
 import TypeDiscountSetting from './typeSetting/Discount'
 
 import AdvancedApplySetting from './advancedSetting/Apply'
 import AdvancedGroupSetting from './advancedSetting/Group'
+import AdvancedCutSetting from './advancedSetting/CutPrice'
 import AdvancedDiscountSetting from './advancedSetting/Discount'
 import VoteSetting from './VoteSetting'
 import VoteMoreSetting from './VoteMoreSetting'
@@ -89,12 +95,15 @@ export default {
 	components: {
 		BaseApplySetting,
 		BaseGroupSetting,
+		BaseCutSetting,
 		BaseDiscountSetting,
 		TypeApplySetting,
 		TypeGroupSetting,
+		TypeCutSetting,
 		TypeDiscountSetting,
 		AdvancedApplySetting,
 		AdvancedGroupSetting,
+		AdvancedCutSetting,
 		AdvancedDiscountSetting,
 		VoteSetting,
 		VoteMoreSetting
@@ -176,6 +185,7 @@ export default {
 			activityRule: {
 				0: '',
 				1: "<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>",
+				4: "<p>1.点击我要砍价，报名成功后并邀请好友帮砍，砍至底价（心理预期价位）后可直接付款购买;</p><br/><p>2.本次活动以先到先得原则，先完成砍价获得电子券的才有资格获得商品;</p><br/><p>3.砍价完成后凭电子券与商家兑换商品; 若为预付款商品，则需付完剩余款项方可兑换商品;</p><br/><p>4.本次活动不可赠送或转让，以砍价活动信息为准;</p><br/><p>5.活动最终解释权归发布者所有，与团团站平台无关。</p>",
 				6: '<p>1. 开团成为团长，并邀请好友参团，在拼团有效时间内凑齐成团人数，即可拼团成功；也可直接参与其它团长的团;</p><br/><p>2. 拼团有效时间内未凑齐成团人数，即拼团失败。系统自动取消订单并全额退款，支付金额将会原路退回付款账户；</p><br/><p>3. 拼团有效时间为24小时，即拼团允许邀请好友参团的时间，可在拼团详情页查看倒计时；</p><br/><p>4.拼团成功后，可在【电子券】中，查看自己的拼团订单;</p><br/><p>5.活动最终解释权归发布者所有，与团团站平台无关。</p>',
 				10: '',
 				11: '',
@@ -195,6 +205,20 @@ export default {
 					needCheck:false,
 					registerCost:'0',
 					registerNum:''
+				},
+				4: {
+					productNum: 0,
+					originPrice:'',
+					basePrice: '',
+					advancePay:'',
+					totalTimes: '',
+					quotaPrePerson: '',
+					timeLimit: '',
+					buttonText:'',
+					fullPay:true,
+					leaveMsg:false,
+					listShowType:0,
+					showPhone: false
 				},
 				6: {
 					advancePay:'',
@@ -286,6 +310,19 @@ export default {
 					registerWord:'',
 					showCommission:false,
 					supportedActivityDistribution:false,
+					virtual: false,
+					virtualViewCount: '',
+					virtualPersonCount:''
+				},
+				4: {
+					buyOnlyBasePrice: false,
+					bgMusicName:'', // string 背景音乐名称
+					bgMusicUrl:'', // string 背景音乐地址
+					cutBySelf: false, // 自己砍价(开启后自己可以参与砍价,关闭则不允许)
+					needPassword: false, // 参与砍价需要输入口令
+					password: '', // 砍价口令
+					registerOnlyAcceptWord: '', // 参与是否需输入口令(提示参与者如何获取口令,比如关注某公众号获取)
+					recommendTtz:true, // boolean 推荐团团站
 					virtual: false,
 					virtualViewCount: '',
 					virtualPersonCount:''
