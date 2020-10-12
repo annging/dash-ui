@@ -423,7 +423,7 @@ export const constantRoutes = [
     ]
   }, // 用户管理
 
-  /*{
+  {
     path: '/content',
     component: Layout,
     redirect: '/content/index',
@@ -461,7 +461,7 @@ export const constantRoutes = [
         ]
       },
     ]
-  },*/ // 内容管理
+  }, // 内容管理
 
   {
     path: '/order',

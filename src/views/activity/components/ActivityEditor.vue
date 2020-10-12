@@ -35,7 +35,7 @@
     			<div style="padding: 16px;">
     				<base-apply-setting :activity=activity :dataObj=dataObj  v-if="type==1"/><!-- 报名 -->
     				<base-group-setting :activity=activity :dataObj=dataObj v-if="type==6"/><!-- 拼团 -->
-    				<!--<base-cut-setting :activity=activity :dataObj=dataObj v-if="type==4"/>--><!-- 砍价 -->
+    				<base-cut-setting :activity=activity :dataObj=dataObj v-if="type==4"/><!-- 砍价 -->
     				<base-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     			</div>
     		</el-scrollbar>
@@ -45,7 +45,7 @@
     			<div style="padding: 16px;">
     				<type-apply-setting :activity=activity :merchantId=merchantId v-if="type==1"/><!-- 报名 -->
     				<type-group-setting :activity=activity :merchantId=merchantId v-if="type==6"/><!-- 拼团 -->
-    				<!--<type-cut-setting :activity=activity :merchantId=merchantId v-if="type==4"/>--><!-- 砍价 -->
+    				<type-cut-setting :activity=activity :merchantId=merchantId v-if="type==4"/><!-- 砍价 -->
     				<type-discount-setting :activity=activity :merchantId=merchantId v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     				<vote-setting v-model="activity"  v-if="activity.type == 'vote'"/>
     			</div>
@@ -56,7 +56,7 @@
     			<div style="padding: 16px;">
     				<advanced-apply-setting :activity=activity v-if="type==1"/><!-- 报名 -->
     				<advanced-group-setting :activity=activity v-if="type==6"/><!-- 拼团 -->
-    				<!--<advanced-cut-setting :activity=activity v-if="type==4"/>--><!-- 砍价 -->
+    				<advanced-cut-setting :activity=activity v-if="type==4"/><!-- 砍价 -->
     				<advanced-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
     				<vote-more-setting  v-if="activity.type == 'vote'"/>
     			</div>

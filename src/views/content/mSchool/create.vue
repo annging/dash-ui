@@ -24,12 +24,6 @@
             <img v-if="articleForm.cover" :src="articleForm.cover" class="avatar">
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-dialog
-            :visible.sync="dialogVisible"
-            :modal-append-to-body="false"
-            :append-to-body="true">
-            <img width="100%" :src="articleForm.cover" alt="">
-          </el-dialog>
         </el-form-item>
         <el-form-item label="导师" prop="">
           <el-select v-model="articleForm.teacherId" placeholder="请选择导师" style="width: 100%" popper-class="paginationSelect" >
