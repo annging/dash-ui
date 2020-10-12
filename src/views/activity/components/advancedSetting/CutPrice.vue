@@ -61,7 +61,7 @@
 	      </el-form-item>
 	      <el-form-item label="参与砍价需输入口令">
 	        <el-switch
-	          v-model="activity.advancedSetting.needPassword"
+	          v-model="activity.advancedSetting.registerOnlyAcceptWord"
 	          active-color="#13ce66"
 	          :active-value="true"
 	          :inactive-value="false">
