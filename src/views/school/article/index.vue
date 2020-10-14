@@ -2,7 +2,7 @@
 	<div class="main-content">
 	  <div class="left-container">
 	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		    <el-menu-item index="1" :route="{path:'/content/mSchool/index'}">文章列表</el-menu-item>
+		    <el-menu-item index="1" :route="{path:'/school/article/index'}">文章列表</el-menu-item>
 	    </el-menu>
 		  <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加文章</el-button>
@@ -66,6 +66,10 @@
                 size="mini"
                 type="text"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button
+                size="mini"
+                type="text"
+                @click="handleRec(scope.$index, scope.row)">推荐</el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -117,10 +121,10 @@ export default {
       this.getList()
     },
     goCreate() {
-      this.$router.push({ path: '/content/mSchool/create' })
+      this.$router.push({ path: '/school/article/create' })
     },
     handleEdit(index, row) {
-      this.$router.push({ path: '/content/mSchool/edit/' + row.id });
+      this.$router.push({ path: '/school/article/edit/' + row.id });
     },
     handleDelete(index, row) {
       this.$confirm('确认删除文章?', '提示', {
@@ -150,6 +154,9 @@ export default {
         })       
       })
     },
+    handleRec(index, row) {
+      console.log(2)
+    }
   }
 }
 </script>

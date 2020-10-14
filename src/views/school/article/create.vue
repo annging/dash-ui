@@ -2,8 +2,8 @@
 <div class="main-content">
   <div class="left-container">
     <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/content/mSchool/index'}">文章列表</el-menu-item>
-      <el-menu-item index="2" :route="{path:'/content/mSchool/create'}">添加文章</el-menu-item>
+      <el-menu-item index="1" :route="{path:'/school/article/index'}">文章列表</el-menu-item>
+      <el-menu-item index="2" :route="{path:'/school/article/create'}">添加文章</el-menu-item>
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="articleForm" label-width="100px" size="small">
