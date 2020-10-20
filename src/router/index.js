@@ -428,7 +428,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/school/index',
     name: 'schoolManage',
-    meta: { title: '商家学院', icon: 'platform' },
+    meta: { title: '商家学院', icon: 'school' },
     children: [
       {
         path: 'article',
@@ -462,7 +462,7 @@ export const constantRoutes = [
       },
       {
         path: 'teacher',
-        name: ' teacher',
+        name: 'teacher',
         redirect: '/school/teacher/index',
         component: () => import('@/views/school/teacher'),
         meta: { title: '导师管理'},

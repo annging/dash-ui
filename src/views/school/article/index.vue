@@ -31,42 +31,50 @@
           </el-table-column>
           <el-table-column
               label="封面"
-              width="120">
+              width="80">
               <template slot-scope="{row}">
-                <img src="" style="width: 100px;height: 60px;">
+                <img :src="row.cover" style="width: 60px;height: 60px;">
               </template>
             </el-table-column>
           <el-table-column
             label="标题">
             <template slot-scope="{row}">
-              <span>入职内训：如何快速的把新兵变成特征兵，让新兵迅速上手</span>
+              <span>{{ row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="简介">
             <template slot-scope="{row}">
-              <span>haha</span>
+              <span>{{ row.brief }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="创建时间">
+            label="导师">
             <template slot-scope="{row}">
-              <span></span>
+              <span>{{ row.tutor.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="修改时间">
+            label="创建时间"
+            width="150">
             <template slot-scope="{row}">
-              <span></span>
+              <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="110">
+          <el-table-column
+            label="修改时间"
+            width="150">
+            <template slot-scope="{row}">
+              <span>{{ row.updatedAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="125">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="text"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
+              <el-button
                 size="mini"
                 type="text"
                 @click="handleRec(scope.$index, scope.row)">推荐</el-button>
@@ -78,7 +86,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.offset" :limit.sync="listQuery.limit" @pagination="getList" />
       </el-row>
     </div>
     <!--<div class="secondary-sidebar"></div>-->
@@ -86,7 +94,7 @@
 </template>
 
 <script>
-import { fetchArticleList } from '@/api/mSchool'
+import { fetchArticleList, deleteArticle } from '@/api/school'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -97,27 +105,25 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        current: 1,
-        size: 20
-      },
-      listFilter: {
+        offset: 0,
+        limit: 20
       }
     }
   },
   created() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      fetchArticleList(this.listQuery, this.listFilter).then(response => {
+      fetchArticleList(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.offset = 0
       this.getList()
     },
     goCreate() {
@@ -132,7 +138,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        /*deleteArticle(row.id).then(res => {
+        deleteArticle(row.id).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
@@ -145,8 +151,7 @@ export default {
               message: res.msg
             });
           }
-        })*/
-        alert("TODO delete")
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -155,7 +160,7 @@ export default {
       })
     },
     handleRec(index, row) {
-      console.log(2)
+      alert('还没')
     }
   }
 }

@@ -6,11 +6,8 @@
       <el-menu-item index="2" :route="{path:'/school/teacher/create'}">添加导师</el-menu-item>
     </el-menu>
     <el-row>
-      <el-form ref="form" :rules="rules" :model="Form" label-width="100px" size="small">
-        <el-form-item label="姓名">
-          <el-input v-model="Form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="头像">
+      <el-form ref="form" :rules="rules" :model="tutorForm" label-width="100px" size="small">
+        <el-form-item label="头像" prop="icon">
           <el-upload
             :data="dataObj"
             :multiple="false"
@@ -21,13 +18,16 @@
             :on-preview="handlePicturePreview"
             :on-remove="handleRemove"
             :before-upload="beforeUpload">
-            <img v-if="Form.cover" :src="Form.cover" class="avatar">
-            <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <img v-if="tutorForm.icon" :src="tutorForm.icon" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="tutorForm.name"></el-input>
         </el-form-item>
         <el-form-item label="标签">
            <el-select
-            v-model="Form.label"
+            v-model="tutorForm.tags"
             popper-class="hiddenDown"
             multiple
             filterable
@@ -35,16 +35,11 @@
             default-first-option
             placeholder="请输入标签"
             style="width: 600px">
-            <el-option
-              v-for="item in labelOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
           </el-select>
+          <div class="tips" style="font-size: 13px; color: #999">回车确认添加标签，可添加多个</div>
         </el-form-item>
         <el-form-item label="描述">
-          <Tinymce ref="editor1" v-model="Form.content" :height="300" :toolbar="['']" menubar="false" :hasUpload="false" />
+          <Tinymce ref="editor1" v-model="tutorForm.des" :height="100" :toolbar="['']" menubar="false" :hasUpload="false" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即添加</el-button>
@@ -58,7 +53,7 @@
 </template>
 
 <script>
-import { add } from '@/api/teacher'
+import { addOrUpdateTutor } from '@/api/school'
 import { getToken } from '@/api/qiniu'
 import Tinymce from '@/components/Tinymce'
 
@@ -67,21 +62,19 @@ export default {
   components: { Tinymce },
   data() {
     return {
-      Form: {
-        title: '',
-        cover: '',
-        teacherId: '',
-        content: '',
-        weight: '',
-        labelOptions: []
+      tutorForm: {
+        name: '',
+        icon: '',
+        des: '',
+        tags: ''
       },
       rules: {
-        title: [
-          { required: true, message: '请输入标题', trigger: 'blur' },
+        name: [
+          { required: true, message: '请输入导师名称', trigger: 'blur' },
           { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
         ],
-        cover: [
-          { required: true, message: '请上传封面图', trigger: 'change' }
+        icon: [
+          { required: true, message: '请上传导师头像', trigger: 'change' }
         ]
       },
       dataObj: { token: '' }
@@ -93,14 +86,16 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!')
-      add(this.Form).then(res => {
+      let _tutorForm = this.tutorForm
+      _tutorForm.tags = JSON.stringify(_tutorForm.tags)
+      addOrUpdateTutor(_tutorForm).then(res => {
         if (res.code * 1 == 200) {
           this.$message({
             message: '创建成功',
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push({ path: '/content/mSchool/index' });
+            this.$router.push({ path: '/school/teacher/index' });
           }, 1.5 * 1000)
         } else {
           this.$message({
@@ -114,7 +109,7 @@ export default {
       const isJPG = file.type === 'image/jpeg'
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传图片大小不能超过 2MB!')
       }
       return isLt2M
     },
@@ -135,16 +130,13 @@ export default {
       console.log(file, fileList)
     },
     handleSuccess(res, file) {
-      this.Form.cover = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      this.tutorForm.icon = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview() {
-      this.dialogVisible = true;
+      console.log();
     },
     handleRemove1(file, fileList) {
       console.log(file, fileList)
-    },
-    handlePicturePreview1() {
-      this.dialogVisible1 = true
     }
   }
 }

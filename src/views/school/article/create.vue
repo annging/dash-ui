@@ -7,10 +7,10 @@
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="articleForm" label-width="100px" size="small">
-        <el-form-item label="标题">
+        <el-form-item label="标题" prop="title">
           <el-input v-model="articleForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="封面图">
+        <el-form-item label="封面图" prop="cover">
           <el-upload
             :data="dataObj"
             :multiple="false"
@@ -25,13 +25,27 @@
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="导师" prop="">
-          <el-select v-model="articleForm.teacherId" placeholder="请选择导师" style="width: 100%" popper-class="paginationSelect" >
-            <el-option :key="1" label="导师1" :value="1" />
+        <el-form-item label="导师" prop="tutorId">
+          <el-select v-model="articleForm.tutorId" placeholder="请选择导师" style="width: 100%" popper-class="paginationSelect" >
+            <div v-loading="tutorListLoading">
+              <el-option v-if="tutorList.length > 0" v-for="item in tutorList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
+                <span class="label-id">{{ item.id }}</span>-
+                <span class="label-title">{{ item.name }}</span>
+              </el-option>
+              <pagination v-show="tutorTotal>0" :total="tutorTotal" :page.sync="tutorListQuery.offset" :limit.sync="tutorListQuery.limit" @pagination="getTutorList" />
+              </div>
           </el-select>
         </el-form-item>
-        <el-form-item label="内容">
+        <el-form-item label="内容" prop="content">
           <Tinymce ref="editor1" v-model="articleForm.content" :height="300" menubar="false" />
+        </el-form-item>
+        <el-form-item label="简介" prop="brief">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 6}"
+            placeholder="简介"
+            v-model="articleForm.brief">
+          </el-input>
         </el-form-item>
         <el-form-item label="权重">
           <el-input v-model="articleForm.weight"></el-input>
@@ -49,48 +63,61 @@
 </template>
 
 <script>
-import { addArticle } from '@/api/mSchool'
+import { addOrUpdateArticle, fetchTutorList } from '@/api/school'
 import { getToken } from '@/api/qiniu'
 import Tinymce from '@/components/Tinymce'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
   name: 'CreateArticle',
-  components: { Tinymce },
+  components: { Tinymce, Pagination },
   data() {
     return {
       articleForm: {
         title: '',
         cover: '',
-        teacherId: '',
+        tutorId: '',
+        brief: '',
         content: '',
-        weight: ''
+        weight: 0
       },
       rules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+          { min: 3, max: 50, message: '长度在 3 到 100 个字符', trigger: 'blur' }
         ],
         cover: [
           { required: true, message: '请上传封面图', trigger: 'change' }
+        ],
+        tutorId: [
+          { required: true, message: '请选择导师', trigger: 'change' }
         ]
       },
-      dataObj: { token: '' }
+      dataObj: { token: '' },
+      tutorList: [],
+      tutorTotal: 0,
+      tutorListQuery: {
+        offset: 0,
+        limit: 10
+      },
+      tutorListLoading: true
     }
   },
   created() {
     this.fetchToken()
+    this.getTutorList()
   },
   methods: {
     onSubmit() {
       console.log('submit!')
-      addArticle(this.articleForm).then(res => {
+      addOrUpdateArticle(this.articleForm).then(res => {
         if (res.code * 1 == 200) {
           this.$message({
             message: '创建成功',
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push({ path: '/content/mSchool/index' });
+            this.$router.push({ path: '/school/article/index' });
           }, 1.5 * 1000)
         } else {
           this.$message({
@@ -107,6 +134,14 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isLt2M
+    },
+    getTutorList() {
+      this.tutorListLoading = true
+      fetchTutorList(this.tutorListQuery).then(response => {
+        this.tutorList = response.data.records
+        this.tutorTotal = response.data.total
+        this.tutorListLoading = false
+      })
     },
     fetchToken() {
       const _self = this
@@ -217,3 +252,4 @@ export default {
     display: none
   }
 </style>
+

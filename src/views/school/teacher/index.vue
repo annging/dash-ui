@@ -31,33 +31,35 @@
           </el-table-column>
           <el-table-column
               label="头像"
-              width="120">
+              width="80">
               <template slot-scope="{row}">
-                <img src="" style="width: 100px;height: 60px;">
+                <img :src="row.icon" style="width: 60px;height: 60px;">
               </template>
             </el-table-column>
           <el-table-column
             label="姓名">
             <template slot-scope="{row}">
-              <span>aa</span>
+              <span >{{ row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="简介">
             <template slot-scope="{row}">
-              <span>haha</span>
+              <div v-html="row.des"></div>
             </template>
           </el-table-column>
           <el-table-column
-            label="创建时间">
+            label="修改时间"
+            width="150">
             <template slot-scope="{row}">
-              <span></span>
+              <span>{{ row.updatedAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="修改时间">
+            label="创建时间"
+            width="150">
             <template slot-scope="{row}">
-              <span></span>
+              <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="110">
@@ -66,10 +68,6 @@
                 size="mini"
                 type="text"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button
-                size="mini"
-                type="text"
-                @click="handleRec(scope.$index, scope.row)">推荐</el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -78,7 +76,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.offset" :limit.sync="listQuery.limit" @pagination="getList" />
       </el-row>
     </div>
     <!--<div class="secondary-sidebar"></div>-->
@@ -86,7 +84,7 @@
 </template>
 
 <script>
-import { fetchArticleList } from '@/api/mSchool'
+import { fetchTutorList, deleteTutor } from '@/api/school'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -97,27 +95,25 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        current: 1,
-        size: 20
-      },
-      listFilter: {
+        offset: 0,
+        limit: 20
       }
     }
   },
   created() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      fetchArticleList(this.listQuery, this.listFilter).then(response => {
+      fetchTutorList(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.offset = 0
       this.getList()
     },
     goCreate() {
@@ -132,7 +128,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        /*deleteArticle(row.id).then(res => {
+        deleteTutor(row.id).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
@@ -145,8 +141,7 @@ export default {
               message: res.msg
             });
           }
-        })*/
-        alert("TODO delete")
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
