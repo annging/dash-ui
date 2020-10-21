@@ -134,7 +134,7 @@ export function dataAnalysis(query) {
 // /api/v1/activity/common/getByMerchantId/{merchantId} 查询商家主页活动
 export function getActivityByMerchantId(id) {
   return request({
-    url: '/api/v1/activity/common/getByMerchantId/' + id,
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/activity/common/getByMerchantId/' + id,
     method: 'get',
     headers: {
       loginToken: 'adminLoginToken'
