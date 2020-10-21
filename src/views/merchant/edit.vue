@@ -35,12 +35,13 @@
           </el-dialog>-->
         </el-form-item>
         <el-form-item label="品牌简介" >
-          <el-input
+          <!--<el-input
             type="textarea"
             :autosize="{ minRows: 2, maxRows: 6}"
             placeholder="品牌简介"
             v-model="merchantForm.intro">
-          </el-input>
+          </el-input>-->
+          <Tinymce ref="editor1" v-model="merchantForm.intro" :height="150"  :toolbar="['']" menubar="false" :hasUpload="false" />
         </el-form-item>
         <el-form-item label="品牌相册" prop="introImgs">
           <div>{{ merchantForm.introImgs.length }}/9</div>
@@ -228,6 +229,7 @@
 import { updateMerchant, fetchMerchant } from '@/api/merchant'
 import { getToken, uploadQiniu } from '@/api/qiniu'
 import maps from 'qqmap'
+import Tinymce from '@/components/Tinymce'
 
 const defaultMerchantForm = {
     id: 0,
@@ -250,7 +252,7 @@ const key = 'UUSBZ-O7S3K-US5JP-AY4LI-KQA7K-O2B6S'
 
 export default {
   name: 'MerchantEdit',
-  components: { },
+  components: { Tinymce },
   data() {
     var checkPhone = (rule, value, callback) => {
       let valueTemp = JSON.parse(JSON.stringify(value))
