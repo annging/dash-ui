@@ -73,9 +73,6 @@
                   <img :src="it"  style="max-width: 100%;">
                 </div>
               </div>
-              <div class="editor-container">
-                <dropzone class="myVueDropzone" v-if="dataObj.token" :token="dataObj.token" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index)" />
-              </div>
             </div>
             
             <div class="smallImg" v-if="item.type=='smallImg'">
@@ -90,8 +87,8 @@
                   <img :src="it"  style="max-width: 100%;">
                 </div>
               </div>
-              <div class="editor-container"">
-                <dropzone class="myVueDropzone" v-if="dataObj.token" :token="dataObj.token" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index, 9)" @dropzone-error="dropzoneE" @dropzone-fileAdded="dropzoneA"/>
+              <div class="editor-container" v-if="item.value.length < 9">
+                <dropzone v-if="dataObj.token" class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneS(file, res, index, 9)" @dropzone-error="dropzoneE"/>
               </div>
             </div>
             <div v-if="item.type=='video'">
@@ -117,6 +114,9 @@
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-up" :disabled="(index == 1 && activity.content[0].type == 'label') || (index == 0)" @click.prevent="upConItem(item, index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-down" :disabled="(item.type == 'label') || (index == activity.content.length -1)" @click.prevent="downConItem(item, index)"></el-button>
           </div>
+        </div>
+        <div class="action" style="height: 0;overflow: hidden;">
+          <dropzone v-if="dataObj.token" class="myVueDropzone" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneR" @dropzone-success="(file, res) => dropzoneSBig(file, res)" id="uploadBigImg" />
         </div>
         <div style="margin-bottom: 20px;">
           <el-button type="primary" plain size="mini" @click.prevent="addCon('text', '')">+添加文字</el-button>
@@ -190,6 +190,15 @@ export default {
       // this.bigImgFileList[index].push(url)
       this.activity.content[index].value.push(url)
       this.$message({ message: '上传成功', type: 'success' })
+    },
+    dropzoneSBig(file, res) {
+      let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      let v = []
+      v.push(url)
+      this.activity.content.push({
+        type: 'bigImg',
+        value: v
+      })
     },
     dropzoneR(file) {
       // console.log(file)
@@ -283,6 +292,8 @@ export default {
             value: v
           })
         }
+      } else if (type === 'bigImg') {
+        document.getElementById("uploadBigImg").click();
       } else {
         this.activity.content.push({
           type: type,
