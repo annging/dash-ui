@@ -3,6 +3,7 @@
   <div class="left-container">
     <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
       <el-menu-item index="1" :route="{path:'/school/article/index'}">文章列表</el-menu-item>
+      <el-menu-item index="3" :route="{path:'/school/article/rec'}">推荐文章</el-menu-item>
       <el-menu-item index="2" :route="{path:'/school/article/edit/' + id}">编辑文章</el-menu-item>
     </el-menu>
     <el-row>
@@ -47,6 +48,14 @@
             v-model="articleForm.brief">
           </el-input>
         </el-form-item>
+        <el-form-item label="是否推荐">
+          <el-switch
+            v-model="articleForm.isRecommend"
+            active-color="#13ce66"
+            :active-value="true"
+            :inactive-value="false">
+          </el-switch>
+        </el-form-item>
         <el-form-item label="权重" prop="weight">
           <el-input v-model="articleForm.weight"></el-input>
           <div class="tips" style="font-size: 13px; color: #999">数值越大，排序越靠前</div>
@@ -81,7 +90,8 @@ export default {
         tutorId: '',
         brief: '',
         content: '',
-        weight: ''
+        weight: '',
+        isRecommend: false
       },
       rules: {
         title: [

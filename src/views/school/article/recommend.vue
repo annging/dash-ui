@@ -1,13 +1,13 @@
 <template>
 	<div class="main-content">
 	  <div class="left-container">
-	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
+	    <el-menu default-active="3" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		    <el-menu-item index="1" :route="{path:'/school/article/index'}">文章列表</el-menu-item>
         <el-menu-item index="3" :route="{path:'/school/article/rec'}">推荐文章</el-menu-item>
 	    </el-menu>
-		  <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
+		  <!--<el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加文章</el-button>
-      </el-row>
+      </el-row>-->
       <el-row class="list">
         <el-table
           v-loading="listLoading"
@@ -56,14 +56,6 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="推荐?"
-            width="60">
-            <template slot-scope="{row}">
-              <el-tag type="success" size="mini" v-if="row.isRecommend > 0">推荐</el-tag>
-              <el-tag type="info" size="mini" v-else>否</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column
             label="创建时间"
             width="150">
             <template slot-scope="{row}">
@@ -77,27 +69,17 @@
               <span>{{ row.updatedAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150">
+          <el-table-column label="操作" width="125">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="text"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button
-                v-if="scope.row.isRecommend"
-                size="mini"
-                type="text"
-                @click="handleRec(scope.$index, scope.row, false)">取消推荐</el-button>
-                <el-button
-                v-else
-                size="mini"
-                type="text"
-                @click="handleRec(scope.$index, scope.row, true)">推荐</el-button>
-              <el-button
                 size="mini"
                 type="text"
                 style="color: #F56C6C"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                @click="handleDelete(scope.$index, scope.row)">取消推荐</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -121,7 +103,8 @@ export default {
       listLoading: false,
       listQuery: {
         offset: 0,
-        limit: 20
+        limit: 20,
+        recommend: true
       }
     }
   },
@@ -148,12 +131,12 @@ export default {
       this.$router.push({ path: '/school/article/edit/' + row.id });
     },
     handleDelete(index, row) {
-      this.$confirm('确认删除文章?', '提示', {
+      this.$confirm('确认取消设置该文章为推荐文章?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteArticle(row.id).then(res => {
+        addOrUpdateArticle({id:row.id, isRecommend: false}).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
@@ -175,20 +158,7 @@ export default {
       })
     },
     handleRec(index, row, isRec) {
-      addOrUpdateArticle({id: row.id, isRecommend: isRec}).then(res => {
-        if (res.code * 1 === 200 ) {
-          this.$message({
-            type: 'success',
-            message: '操作成功!'
-          })
-          this.list[index].isRecommend = isRec
-        } else {
-          this.$message({
-            type: 'error',
-            message: res.msg
-          });
-        }
-      })
+      alert('还没')
     }
   }
 }

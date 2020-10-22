@@ -445,6 +445,13 @@ export const constantRoutes = [
             hidden: true
           },
           {
+            path: 'rec',
+            component: () => import('@/views/school/article/recommend'),
+            name: 'articleList',
+            meta: { title: '推荐文章', activeMenu: '/school/article' },
+            hidden: true
+          },
+          {
             path: 'create',
             component: () => import('@/views/school/article/create'),
             name: 'createArticle',
