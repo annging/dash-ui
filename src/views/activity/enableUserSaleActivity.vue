@@ -97,19 +97,17 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="推荐到首页?"
+            label="一级佣金"
             width="90">
             <template slot-scope="{row}">
-              <el-tag type="success" size="mini" v-if="row.specialActivity && row.specialActivity.isRecommend > 0">推荐</el-tag>
-              <el-tag type="info" size="mini" v-else>否</el-tag>
+              <span>{{ row.userSaleSetting.levelOne }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="优秀案例?"
-            width="80">
+            label="二级佣金"
+            width="90">
             <template slot-scope="{row}">
-              <el-tag type="success" size="mini" v-if="row.specialActivity && row.specialActivity.isGood > 0">优秀</el-tag>
-              <el-tag type="info" size="mini" v-else>否</el-tag>
+              <span>{{ row.userSaleSetting.levelTwo }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="120">
@@ -279,6 +277,9 @@ export default {
             }
             if (item.activitySetting) {
               item.activitySetting = JSON.parse(item.activitySetting)
+            }
+            if (item.userSaleSetting) {
+              item.userSaleSetting = JSON.parse(item.userSaleSetting)
             }
           })
         }
