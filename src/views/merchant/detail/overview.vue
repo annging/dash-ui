@@ -125,10 +125,15 @@ export default {
 	      	if (response.data) {
 	      		response.data.introImgs = JSON.parse(response.data.introImgs)
 	      		response.data.phone = JSON.parse(response.data.phone)
+	      		response.data.phone = this.adJustObjectArray(response.data.phone)
 	      		response.data.teamIntros = JSON.parse(response.data.teamIntros)
+	      		response.data.teamIntros = this.adJustObjectArray(response.data.teamIntros)
 	      		response.data.productIntros = JSON.parse(response.data.productIntros)
+	      		response.data.productIntros = this.adJustObjectArray(response.data.productIntros)
 	      		response.data.advantage = JSON.parse(response.data.advantage)
+	      		response.data.advantage = this.adJustObjectArray(response.data.advantage)
 	      		response.data.applyTry = JSON.parse(response.data.applyTry)
+	      		response.data.applyTry = this.adJustObjectArray(response.data.applyTry)
 	      		this.merchant = response.data
 		      }
 	      } else {
@@ -138,7 +143,26 @@ export default {
           })
 	      }
       })
-    }
+    },
+    adJustObjectArray(array) {
+      let arrayBoo = []
+      array.forEach((item, index) => {
+        arrayBoo[index] = 0
+        for( let key in item ){
+          if(item[key].trim()) {
+            arrayBoo[index] = arrayBoo[index] + 1
+          } else {
+            arrayBoo[index] = arrayBoo[index] + 0
+          }
+        }
+      })
+      arrayBoo.forEach((item, index) => {
+        if(item < 1) {
+          array.splice(index, 1)
+        }
+      })
+      return array
+    },
   }
 }
 </script>
