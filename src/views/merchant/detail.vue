@@ -10,7 +10,7 @@
                 <el-tag type="info"  size="mini" v-if="merchant.authStatus===2 && merchant.authType===1">个人认证</el-tag>
                 <el-tag type="info"  size="mini" v-if="merchant.authStatus===2 && merchant.authType===2">企业认证</el-tag>
               </div>
-              <div class="m-intro">{{ merchant.intro }}</div>
+              <div class="m-intro" v-html="merchant.intro"></div>
               <div class="m-other">
                 <span class="label">手机号:</span><span>{{ merchant.mobile }}</span> <br />
                 <span class="label">微信号:</span><span>{{ merchant.wechat }}</span> <br />
