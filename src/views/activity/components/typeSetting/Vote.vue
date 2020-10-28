@@ -32,9 +32,10 @@
           <div style="margin: 0 10px 0 0; width: 300px; position: relative;">
 					  <span class="con-prepend">投票图文详情,点击开始编辑</span>
 					  <div class="con-pre" @click="goVoteItemConEdit(index)">
-					  		<el-scrollbar class="content-inner">
+					  		<el-scrollbar class="content-inner" style="padding: 8px 12px 8px 8px;">
 					  			<span v-show="false">
-						        {{itemContent = Object.assign([],item.content.length>0?item.content:[{type:'text',value:''}]) }}
+                    {{ itemContent = typeof(item.content) === 'string' ? JSON.parse(item.content) :   Object.assign([], item.content) }}
+						        {{ itemContent = Object.assign([],itemContent ? itemContent : [{type:'text',value:''}]) }}
 						    	</span>
 					  			<div  v-if="itemContent" v-for="(itt, inn) in itemContent" :key="inn">
 					  				<div v-if="itt.type=='text'" v-html="itt.value"></div>
@@ -45,7 +46,7 @@
 				                </div>
 				              </div>
 					  				</div>
-					  				<div v-if="itt.type=='smallImg'" class="bigImg">
+					  				<div v-if="itt.type=='bigImg'" class="bigImg">
 					  					<div class="img-preview">
 				                <div class="img-preview-item" v-for="(ittt,iddx) in itt.value" :key="iddx">
 				                  <img :src="ittt"  style="max-width: 100%;">
@@ -66,6 +67,30 @@
           <el-button size="mini" v-if="index > 0" @click.prevent="removeVoteItem(item, index)">删除</el-button>
         </div>
         <el-button size="mini" @click.prevent="addVoteItem()">+添加</el-button>
+        <el-popover
+          placement="right"
+          width="450"
+          trigger="click"
+          style="margin-left: 20px;"
+          @hide="groupNameHide">
+          <div style="padding: 30px 30px 50px 30px;">
+            <div style="display: flex; align-items: flex-start; margin-top: 10px;">
+              <div style="margin-bottom: 5px;width: 100px">
+                id
+              </div>
+              <div style="margin-bottom: 5px;width: 250px">
+                分组名称
+              </div>
+            </div>
+            <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.groupNames" :key="index">
+              <el-input v-model="item.id" placeholder="id" style="margin-bottom: 5px;width: 100px; margin-right: 10px;"></el-input>
+              <el-input v-model="item.group" placeholder="分组名称" style="margin-bottom: 5px; width: 250px;margin-right: 10px;"></el-input>
+              <el-button type="danger" plain size="small" @click.prevent="removeGroupName(item, index)">删除</el-button>
+            </div>
+            <el-button style="margin-top: 30px;" size="mini" @click.prevent="addGroupName()">+添加分组</el-button>
+          </div>
+          <el-button size="mini" slot="reference">分组管理</el-button>
+        </el-popover>
       </el-form-item>
 			<el-form-item label="用户投票总次数" prop="">
       	<el-input type="number" v-model="activity.activitySetting.totalVoteNumLimit" maxlength="5" placeholder="不限制"></el-input>
@@ -129,7 +154,7 @@
       	<div  v-if="voteItemContent.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in voteItemContent" :key="index">
           <div style="margin: 0 10px 0 0; width: 610px;" v-if="item">
           	<el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
-          	<Tinymce v-if="item.type=='text'" ref="editor2" v-model="item.value" :height="150"  :toolbar="['']" menubar="false" :hasUpload="false" />
+          	<Tinymce v-if="voteItemContentVisible && item.type=='text'" :ref="'editor' + index" :id="'editor' + index" v-model="item.value" :height="150"  :toolbar="['']" menubar="false" :hasUpload="false"/>
             <div class="bigImg" v-if="item.type=='bigImg'">
               <div class="img-preview">
                 <div v-if="typeof(item.value)==='string'" class="img-preview-item">
@@ -269,19 +294,51 @@ export default {
     addVoteItem() {
     	let _num = this.activity.activitySetting.defaultVote.length + 1
     	_num = _num * 1 < 10 ? `00${_num}` : _num * 1 < 100 ?`0${_num}`: val;
-    	this.activity.activitySetting.defaultVote.push(({num:_num,name:'',cover:'',title:'',ticketNum:'',content:'',isimg:true}))
+    	this.activity.activitySetting.defaultVote.push(({num:_num,name:'',cover:'',title:'',ticketNum:'',content:'[]',isimg:true}))
     },
     removeVoteItem(item, index) {
     	this.activity.activitySetting.defaultVote.splice(index, 1)
     },
     goVoteItemConEdit(index) {
     	this.voteItemIndex = index
+      if( typeof this.activity.activitySetting.defaultVote[index].content === 'string') {
     	this.voteItemContent = JSON.parse(this.activity.activitySetting.defaultVote[index].content)
+      } else {
+        this.voteItemContent = JSON.parse(JSON.stringify(this.activity.activitySetting.defaultVote[index].content))
+      }
     	this.voteItemContentVisible = true
     },
     voteItemContentSave() {
 			this.voteItemContentVisible = false
 			this.activity.activitySetting.defaultVote[this.voteItemIndex].content = JSON.stringify(this.voteItemContent)
+    },
+    removeGroupName(item, index) {
+      this.activity.activitySetting.groupNames.splice(index, 1)
+    },
+    addGroupName() {
+      this.activity.activitySetting.groupNames.push({'id':'','group': ''})
+    },
+    adJustObjectArray(array) {
+      let arrayBoo = []
+      array.forEach((item, index) => {
+        arrayBoo[index] = 0
+        for( let key in item ){
+          if((item[key] + '').trim()) {
+            arrayBoo[index] = arrayBoo[index] + 1
+          } else {
+            arrayBoo[index] = arrayBoo[index] + 0
+          }
+        }
+      })
+      arrayBoo.forEach((item, index) => {
+        if(item < 1) {
+          array.splice(index, 1)
+        }
+      })
+      return array
+    },
+    groupNameHide() {
+      this.activity.activitySetting.groupNames = this.adJustObjectArray(this.activity.activitySetting.groupNames)
     },
     dropzoneSVoteItem(file, res, index, number) {
       if (number) {
@@ -506,6 +563,10 @@ export default {
     line-height: 178px;
     text-align: center;
   }
+
+  .el-icon-plus{
+    line-height: 150px;
+  }
 	.img-preview-item {
     position: relative;
     margin-bottom: 10px;
@@ -546,8 +607,8 @@ export default {
   }
   .smallImg .img-preview-item {
     display: inline-block;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     overflow: hidden;
     margin-right: 10px;
   }

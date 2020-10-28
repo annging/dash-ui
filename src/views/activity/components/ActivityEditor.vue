@@ -463,6 +463,9 @@ export default {
 			if (_activityVO.activitySetting.groups) {
 				_activityVO.activitySetting.groups = this.adJustObjectArray(_activityVO.activitySetting.groups)
 			}
+			if (_activityVO.activitySetting.defaultVote) {
+				_activityVO.activitySetting.defaultVote = this.adJustObjectArray(_activityVO.activitySetting.defaultVote)
+			}
       _activityVO.activitySetting = JSON.stringify(_activityVO.activitySetting)
       _activityVO.address = JSON.stringify(_activityVO.address)
       _activityVO.content = JSON.stringify(_activityVO.content)
@@ -533,7 +536,7 @@ export default {
       array.forEach((item, index) => {
         arrayBoo[index] = 0
         for( let key in item ){
-          if(item[key].trim()) {
+          if((item[key] + '').trim()) {
             arrayBoo[index] = arrayBoo[index] + 1
           } else {
             arrayBoo[index] = arrayBoo[index] + 0
@@ -547,6 +550,23 @@ export default {
       })
       return array
     },
+    adJustArray(array) {
+      let arrayBoo = []
+      array.forEach((item, index) => {
+        arrayBoo[index] = 0
+        if(item.trim()) {
+          arrayBoo[index] = arrayBoo[index] + 1
+        } else {
+          arrayBoo[index] = arrayBoo[index] + 0
+        }
+      })
+      arrayBoo.forEach((item, index) => {
+        if(item < 1) {
+          array.splice(index, 1)
+        }
+      })
+      return array
+    }
 	}
 }
 </script>
