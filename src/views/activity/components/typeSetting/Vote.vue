@@ -11,15 +11,15 @@
             :show-file-list="false"
             :on-success="(res,file)=>{return handleDataSuccess(res,file, index)}"
             :before-upload="beforeUpload"
-            style="margin-right: 15px">
-            <img v-if="item.cover" :src="item.cover" class="avatar" style="width: 120px; height: 150px;">
-            <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 120px; height: 150px; line-height: 150px;"></i>
+            style="margin-right: 15px;">
+            <img v-if="item.cover" :src="item.cover" class="avatar" style="width: 120px; max-height: 150px;">
+            <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 120px; height: 150px;"></i>
           </el-upload>
-          <div style="margin: 0 10px 0 0; width: 610px;">
-          	<el-input v-model="item.num" style="margin-bottom: 5px;" placeholder="编号" class="custon-prepend-150"><template slot="prepend">编号</template></el-input>
-          	<el-input v-model="item.ticketNum" style="margin-bottom: 5px;" placeholder="初始投票数" class="custon-prepend-150"><template slot="prepend">初始投票数</template></el-input>
-            <el-input v-model="item.name" style="margin-bottom: 5px;" placeholder="名称" class="custon-prepend-150"><template slot="prepend">名称</template></el-input>
-            <el-select v-model="item.group" placeholder="请选择" class="custon-prepend-150">
+          <div style="margin: 0 10px 0 0; width: 350px;">
+          	<el-input v-model="item.num" style="margin-bottom: 5px;" placeholder="编号" class="custon-prepend-120"><template slot="prepend">编号</template></el-input>
+          	<el-input v-model="item.ticketNum" style="margin-bottom: 5px;" placeholder="初始投票数" class="custon-prepend-120"><template slot="prepend">初始投票数</template></el-input>
+            <el-input v-model="item.name" style="margin-bottom: 5px;" placeholder="名称" class="custon-prepend-120"><template slot="prepend">名称</template></el-input>
+            <el-select v-model="item.group" placeholder="请选择" class="custon-prepend-120">
 					    <el-option
 					      v-for="(it, idx) in activity.activitySetting.groupNames"
 					      :key="it.id"
@@ -28,13 +28,40 @@
 					    </el-option>
 					    <template slot="prefix">分组</template>
 					  </el-select>
-					  <div class="custon-prepend-150">
-					  	<span class="prepend">投票图文详情</span>
-					  	<div class="con-pre" @click="goVoteItemConEdit(index)">
-					  		
-					  	</div>
-					  	<el-input type="hidden" v-model="item.content" style="margin-bottom: 5px;" placeholder="投票图文详情"></el-input>
+          </div>
+          <div style="margin: 0 10px 0 0; width: 300px; position: relative;">
+					  <span class="con-prepend">投票图文详情,点击开始编辑</span>
+					  <div class="con-pre" @click="goVoteItemConEdit(index)">
+					  		<el-scrollbar class="content-inner">
+					  			<span v-show="false">
+						        {{itemContent = Object.assign([],item.content.length>0?item.content:[{type:'text',value:''}]) }}
+						    	</span>
+					  			<div  v-if="itemContent" v-for="(itt, inn) in itemContent" :key="inn">
+					  				<div v-if="itt.type=='text'" v-html="itt.value"></div>
+					  				<div v-if="itt.type=='smallImg'" class="smallImg">
+					  					<div class="img-preview">
+				                <div class="img-preview-item" v-for="(ittt,iddx) in itt.value" :key="iddx">
+				                  <img :src="ittt"  style="max-width: 100%;">
+				                </div>
+				              </div>
+					  				</div>
+					  				<div v-if="itt.type=='smallImg'" class="bigImg">
+					  					<div class="img-preview">
+				                <div class="img-preview-item" v-for="(ittt,iddx) in itt.value" :key="iddx">
+				                  <img :src="ittt"  style="max-width: 100%;">
+				                </div>
+				              </div>
+					  				</div>
+					  				<div v-if="itt.type=='video'" class="video">
+					  					<video controls width="500">
+												<source :src="itt.value">
+							          Sorry, your browser doesn't support embedded videos.
+							        </video>
+					  				</div>
+					  			</div>
+					  		</el-scrollbar>
 					  </div>
+					  <!--<el-input v-model="item.content" style="margin-bottom: 5px;" placeholder="投票图文详情"></el-input>-->
           </div>
           <el-button size="mini" v-if="index > 0" @click.prevent="removeVoteItem(item, index)">删除</el-button>
         </div>
@@ -250,7 +277,6 @@ export default {
     goVoteItemConEdit(index) {
     	this.voteItemIndex = index
     	this.voteItemContent = JSON.parse(this.activity.activitySetting.defaultVote[index].content)
-    	console.log(this.voteItemContent)
     	this.voteItemContentVisible = true
     },
     voteItemContentSave() {
@@ -466,6 +492,9 @@ export default {
 </script>
 
 <style type="scss" scoped>
+	.uploader .el-upload {
+		line-height: 1;
+	}
 	.avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
@@ -522,17 +551,24 @@ export default {
     overflow: hidden;
     margin-right: 10px;
   }
+  .content-inner {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
 </style>
 <style>
-.custon-prepend-150 .el-input-group__prepend{
-	width: 150px;
+.custon-prepend-120 .el-input-group__prepend{
+	width: 120px;
 }
-.custon-prepend-150.el-select {
+.custon-prepend-120.el-select {
 	display: block;
 	height: 32px;
 	margin-bottom: 5px;
 }
-.custon-prepend-150 .el-input__prefix {
+.custon-prepend-120 .el-input__prefix {
 	background-color: #F5F7FA;
   color: #909399;
   vertical-align: middle;
@@ -543,45 +579,44 @@ export default {
   text-align: left;
   padding: 0 20px;
   white-space: nowrap;
-	width: 150px;
+	width: 120px;
 	height: 32px;
 }
-.custon-prepend-150 .el-input--prefix .el-input__inner {
+.custon-prepend-120 .el-input--prefix .el-input__inner {
 	position: absolute;
-  margin-left: 150px;
+  margin-left: 120px;
   border-radius: 0 4px 4px 0;
   padding-left: 15px;
-  width: 460px;
+  width: 230px;
 }
-.custon-prepend-150 .el-input__suffix {
+.custon-prepend-120 .el-input__suffix {
+	height: 32px;
 }
-.custon-prepend-150 {
+.custon-prepend-120 {
 	position: relative;
 	margin-bottom: 5px;
 }
-.custon-prepend-150 .prepend {
-	display: inline-block;
+.con-prepend {
+	display: block;
 	background-color: #F5F7FA;
   color: #909399;
   vertical-align: middle;
   border: 1px solid #DCDFE6;
-  border-right-width: 0;
-  border-radius: 4px 0 0 4px;
-  left: 0;
   text-align: left;
   padding: 0 20px;
   white-space: nowrap;
-	width: 150px;
-	height: 200px;
+  height: 32px;
+  line-height: 32px;
 }
-.custon-prepend-150 .con-pre {
+.con-pre {
 	position: absolute;
 	right: 0;
-	top: 0;
-	width: 460px;
-	height: 200px;
+	top: 32px;
+	width: 300px;
+	height: 120px;
 	border: 1px solid #DCDFE6;
-	border-radius: 0 4px 4px 0;
+	border-top-width: 0;
+	border-radius: 0 0 4px 4px;
 	cursor: pointer;
 }
 	
