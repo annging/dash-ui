@@ -236,7 +236,7 @@ export default {
           { required: true, message: '请选择一个活动类型', trigger: 'blur' }
         ]
       },
-      merchantActivityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖', disabled: true }, { key: 3, label: '海报', disabled: true }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀', disabled: true }, { key: 6, label: '拼团' }, { key: 7, label: '投票', disabled: true }, { key: 8, label: '预约', disabled: true }, { key: 9, label: '助力', disabled: true }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }, { key: -1, label: '团购', disabled: true }],
+      merchantActivityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖', disabled: true }, { key: 3, label: '海报', disabled: true }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀', disabled: true }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约', disabled: true }, { key: 9, label: '助力', disabled: true }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }, { key: -1, label: '团购', disabled: true }],
       merchantList: [],
       merchantTotal: 0,
       merchantListQuery: {

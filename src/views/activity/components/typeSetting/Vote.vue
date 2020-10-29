@@ -34,7 +34,7 @@
 					  <div class="con-pre" @click="goVoteItemConEdit(index)">
 					  		<el-scrollbar class="content-inner" style="padding: 8px 12px 8px 8px;">
 					  			<span v-show="false">
-                    {{ itemContent = typeof(item.content) === 'string' ? JSON.parse(item.content) :   Object.assign([], item.content) }}
+                    {{ itemContent = typeof(item.content) === 'string' ? JSON.parse(item.content ? item.content : '[]') :   Object.assign([], item.content) }}
 						        {{ itemContent = Object.assign([],itemContent ? itemContent : [{type:'text',value:''}]) }}
 						    	</span>
 					  			<div  v-if="itemContent" v-for="(itt, inn) in itemContent" :key="inn">
