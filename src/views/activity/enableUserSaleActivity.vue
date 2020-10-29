@@ -97,19 +97,17 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="推荐到首页?"
+            label="一级佣金"
             width="90">
             <template slot-scope="{row}">
-              <el-tag type="success" size="mini" v-if="row.specialActivity && row.specialActivity.isRecommend > 0">推荐</el-tag>
-              <el-tag type="info" size="mini" v-else>否</el-tag>
+              <span>{{ row.userSaleSetting.levelOne }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="优秀案例?"
-            width="80">
+            label="二级佣金"
+            width="90">
             <template slot-scope="{row}">
-              <el-tag type="success" size="mini" v-if="row.specialActivity && row.specialActivity.isGood > 0">优秀</el-tag>
-              <el-tag type="info" size="mini" v-else>否</el-tag>
+              <span>{{ row.userSaleSetting.levelTwo }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="120">
@@ -127,30 +125,6 @@
                 type="text"
                 style="color: #F56C6C"
                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                <br />
-              <el-button
-                size="mini"
-                type="text"
-                style="color: #F56C6C"
-                v-if="scope.row.specialActivity && scope.row.specialActivity.isRecommend > 0"
-                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend', 0)">取消推荐到首页</el-button>
-              <el-button
-                size="mini"
-                type="text"
-                v-else
-                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend', 1)">推荐到首页</el-button>
-                <br />
-                <el-button
-                size="mini"
-                type="text"
-                style="color: #F56C6C"
-                v-if="scope.row.specialActivity && scope.row.specialActivity.isGood > 0"
-                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood', 0)">取消设为优秀案例</el-button>
-                <el-button
-                size="mini"
-                type="text"
-                v-else
-                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isGood', 1)">设为优秀案例</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -279,6 +253,9 @@ export default {
             }
             if (item.activitySetting) {
               item.activitySetting = JSON.parse(item.activitySetting)
+            }
+            if (item.userSaleSetting) {
+              item.userSaleSetting = JSON.parse(item.userSaleSetting)
             }
           })
         }

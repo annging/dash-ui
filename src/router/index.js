@@ -423,45 +423,82 @@ export const constantRoutes = [
     ]
   }, // 用户管理
 
-  /*{
-    path: '/content',
+  {
+    path: '/school',
     component: Layout,
-    redirect: '/content/index',
-    name: 'contentManage',
-    meta: { title: '内容管理', icon: 'platform' },
+    redirect: '/school/index',
+    name: 'schoolManage',
+    meta: { title: '商家学院', icon: 'school' },
     children: [
       {
-        path: 'mSchool',
-        name: ' mSchool',
-        redirect: '/content/mSchool/index',
-        component: () => import('@/views/content/mSchool'),
-        meta: { title: '商家学院'},
+        path: 'article',
+        name: 'article',
+        redirect: '/school/article/index',
+        component: () => import('@/views/school/article'),
+        meta: { title: '文章管理'},
         children: [
           {
             path: 'index',
-            component: () => import('@/views/content/mSchool/index'),
-            name: 'mSchoolArticleList',
-            meta: { title: '文章列表' },
+            component: () => import('@/views/school/article/index'),
+            name: 'articleList',
+            meta: { title: '文章列表', activeMenu: '/school/article' },
+            hidden: true
+          },
+          {
+            path: 'rec',
+            component: () => import('@/views/school/article/recommend'),
+            name: 'articleList',
+            meta: { title: '推荐文章', activeMenu: '/school/article' },
             hidden: true
           },
           {
             path: 'create',
-            component: () => import('@/views/content/mSchool/create'),
-            name: 'createMSchoolArticle',
-            meta: { title: '创建文章', activeMenu: '/content/mSchool' },
+            component: () => import('@/views/school/article/create'),
+            name: 'createArticle',
+            meta: { title: '创建文章', activeMenu: '/school/article' },
             hidden: true
           },
           {
             path: 'edit/:id(\\d+)',
-            name: 'editMSchoolArticle',
-            component: () => import('@/views/content/mSchool/edit'),
-            meta: { title: '编辑文章', activeMenu: '/content/mSchool/' },
+            name: 'editArticle',
+            component: () => import('@/views/school/article/edit'),
+            meta: { title: '编辑文章', activeMenu: '/school/article/' },
+            hidden: true,
+          },
+        ]
+      },
+      {
+        path: 'teacher',
+        name: 'teacher',
+        redirect: '/school/teacher/index',
+        component: () => import('@/views/school/teacher'),
+        meta: { title: '导师管理'},
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/school/teacher/index'),
+            name: 'TeacherList',
+            meta: { title: '导师列表', activeMenu: '/school/teacher'},
+            hidden: true
+          },
+          {
+            path: 'create',
+            component: () => import('@/views/school/teacher/create'),
+            name: 'createTeacher',
+            meta: { title: '新增导师', activeMenu: '/school/teacher' },
+            hidden: true
+          },
+          {
+            path: 'edit/:id(\\d+)',
+            name: 'editTeacher',
+            component: () => import('@/views/school/teacher/edit'),
+            meta: { title: '编辑导师', activeMenu: '/school/teacher/' },
             hidden: true,
           },
         ]
       },
     ]
-  },*/ // 内容管理
+  }, // 内容管理
 
   {
     path: '/order',

@@ -2,7 +2,8 @@
 	<div class="main-content">
 	  <div class="left-container">
 	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		    <el-menu-item index="1" :route="{path:'/content/mSchool/index'}">文章列表</el-menu-item>
+		    <el-menu-item index="1" :route="{path:'/school/article/index'}">文章列表</el-menu-item>
+        <el-menu-item index="3" :route="{path:'/school/article/rec'}">推荐文章</el-menu-item>
 	    </el-menu>
 		  <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加文章</el-button>
@@ -31,41 +32,67 @@
           </el-table-column>
           <el-table-column
               label="封面"
-              width="120">
+              width="80">
               <template slot-scope="{row}">
-                <img src="" style="width: 100px;height: 60px;">
+                <img :src="row.cover" style="width: 60px;height: 60px;">
               </template>
             </el-table-column>
           <el-table-column
             label="标题">
             <template slot-scope="{row}">
-              <span>入职内训：如何快速的把新兵变成特征兵，让新兵迅速上手</span>
+              <span>{{ row.title }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="简介">
             <template slot-scope="{row}">
-              <span>haha</span>
+              <span>{{ row.brief }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="创建时间">
+            label="导师">
             <template slot-scope="{row}">
-              <span></span>
+              <span>{{ row.tutor.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="修改时间">
+            label="推荐?"
+            width="60">
             <template slot-scope="{row}">
-              <span></span>
+              <el-tag type="success" size="mini" v-if="row.isRecommend > 0">推荐</el-tag>
+              <el-tag type="info" size="mini" v-else>否</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="110">
+          <el-table-column
+            label="创建时间"
+            width="150">
+            <template slot-scope="{row}">
+              <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="修改时间"
+            width="150">
+            <template slot-scope="{row}">
+              <span>{{ row.updatedAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="text"
                 @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button
+                v-if="scope.row.isRecommend"
+                size="mini"
+                type="text"
+                @click="handleRec(scope.$index, scope.row, false)">取消推荐</el-button>
+                <el-button
+                v-else
+                size="mini"
+                type="text"
+                @click="handleRec(scope.$index, scope.row, true)">推荐</el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -74,7 +101,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.offset" :limit.sync="listQuery.limit" @pagination="getList" />
       </el-row>
     </div>
     <!--<div class="secondary-sidebar"></div>-->
@@ -82,7 +109,7 @@
 </template>
 
 <script>
-import { fetchArticleList } from '@/api/mSchool'
+import { fetchArticleList, deleteArticle, addOrUpdateArticle } from '@/api/school'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -93,34 +120,32 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        current: 1,
-        size: 20
-      },
-      listFilter: {
+        offset: 0,
+        limit: 20
       }
     }
   },
   created() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      fetchArticleList(this.listQuery, this.listFilter).then(response => {
+      fetchArticleList(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.offset = 0
       this.getList()
     },
     goCreate() {
-      this.$router.push({ path: '/content/mSchool/create' })
+      this.$router.push({ path: '/school/article/create' })
     },
     handleEdit(index, row) {
-      this.$router.push({ path: '/content/mSchool/edit/' + row.id });
+      this.$router.push({ path: '/school/article/edit/' + row.id });
     },
     handleDelete(index, row) {
       this.$confirm('确认删除文章?', '提示', {
@@ -128,7 +153,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        /*deleteArticle(row.id).then(res => {
+        deleteArticle(row.id).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
@@ -141,8 +166,7 @@ export default {
               message: res.msg
             });
           }
-        })*/
-        alert("TODO delete")
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -150,6 +174,22 @@ export default {
         })       
       })
     },
+    handleRec(index, row, isRec) {
+      addOrUpdateArticle({id: row.id, isRecommend: isRec}).then(res => {
+        if (res.code * 1 === 200 ) {
+          this.$message({
+            type: 'success',
+            message: '操作成功!'
+          })
+          this.list[index].isRecommend = isRec
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.msg
+          });
+        }
+      })
+    }
   }
 }
 </script>
