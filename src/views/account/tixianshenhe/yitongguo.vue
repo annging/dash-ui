@@ -37,7 +37,14 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="申请用户">
+              label="商家">
+              <template slot-scope="{row}">
+                <router-link v-if="row.merchant" target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + row.merchant.id + '/overview'">{{ row.merchant.name }}</router-link>
+                <span v-else></span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="用户">
               <template slot-scope="{row}">
                 <span>{{ row.user ? row.user.nickName : '-' }}</span>
               </template>
