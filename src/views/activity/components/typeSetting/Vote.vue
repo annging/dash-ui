@@ -189,7 +189,7 @@
                 </div>
               </div>
               <div class="editor-container" v-if="item.value.length < 9">
-                <dropzone v-if="dataObj.token" class="myVueDropzone" :id="'myVueDropzone-'+index" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneRVoteItem" @dropzone-success="(file, res) => dropzoneSVoteItem(file, res, index, 9)" @dropzone-error="dropzoneEVoteItem"/>
+                <dropzone v-if="dataObj.token" class="myVueDropzone" :id="'myVueDropzone-dialog-'+index" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneRVoteItem" @dropzone-success="(file, res) => dropzoneSVoteItem(file, res, index, 9)" @dropzone-error="dropzoneEVoteItem"/>
               </div>
             </div>
             <div v-if="item.type=='video'">
@@ -302,7 +302,7 @@ export default {
     goVoteItemConEdit(index) {
     	this.voteItemIndex = index
       if( typeof this.activity.activitySetting.defaultVote[index].content === 'string') {
-    	this.voteItemContent = JSON.parse(this.activity.activitySetting.defaultVote[index].content)
+    	this.voteItemContent = JSON.parse(this.activity.activitySetting.defaultVote[index].content ? this.activity.activitySetting.defaultVote[index].content : '[]')
       } else {
         this.voteItemContent = JSON.parse(JSON.stringify(this.activity.activitySetting.defaultVote[index].content))
       }
