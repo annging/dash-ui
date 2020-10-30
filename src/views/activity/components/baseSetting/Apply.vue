@@ -134,7 +134,7 @@
                 :multiple="false"
                 class="uploader"
                 action="http://upload-z2.qiniup.com"
-                :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'video',index, 'value')}"
+                :on-success="(res,file)=>{return handleContentUploadSuccess(res,file,'', 'video',index, 'value')}"
                 :on-remove="(file)=>{return handleContentRemove(file,'video',index)}">
                 <video v-if="item.value.length > 0" controls width="500" class="avatar2">
                 <source :src="item.value">
