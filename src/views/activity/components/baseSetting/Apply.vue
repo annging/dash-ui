@@ -75,7 +75,7 @@
         <el-input v-model="activity.address.tips"></el-input>
       </el-form-item>
       <el-form-item label="活动详情">
-      	<div  v-if="activity.content.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="typeof(item.value) === 'string' ? item.value + index : item.value[0] + index">
+      	<div  v-if="activity.content.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="item.id">
           <div style="margin: 0 10px 0 0; width: 610px;" v-if="item">
           	<el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
             <div v-if="item.type=='label'">
@@ -189,6 +189,7 @@ import { getToken } from '@/api/qiniu'
 import Dropzone from '@/components/Dropzone'
 import maps from 'qqmap'
 import Tinymce from '@/components/Tinymce'
+import uuidv1 from 'uuid/v1'
 
 const key = 'UUSBZ-O7S3K-US5JP-AY4LI-KQA7K-O2B6S'
 
@@ -252,12 +253,14 @@ export default {
       this.$message({ message: '上传成功', type: 'success' })
     },
     dropzoneSBig(file, res) {
+      let iid = uuidv1()
       let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
       let v = []
       v.push(url)
       this.activity.content.push({
         type: 'bigImg',
-        value: v
+        value: v,
+        id: iid
       })
     },
     dropzoneR(file) {
@@ -344,11 +347,13 @@ export default {
       this.activity.content.splice(newIndex, 0, item)
     },
     addCon(type, v) {
+      let iid = uuidv1()
       if (type === 'label') {
         if (this.activity.content[0].type !== 'label') {
           this.activity.content.unshift({
             type: type,
-            value: v
+            value: v,
+            id: iid
           })
         }
       } else if (type === 'bigImg') {
@@ -356,7 +361,8 @@ export default {
       } else {
         this.activity.content.push({
           type: type,
-          value: v
+          value: v,
+          id: iid
         })
       }
 		},
