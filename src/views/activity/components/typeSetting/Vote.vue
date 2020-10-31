@@ -315,10 +315,11 @@ export default {
     	this.voteItemContentVisible = true
     },
     voteItemContentSave() {
+      let that = this
 			this.voteItemContentVisible = false
       this.voteItemContent.forEach(function(item, index){
         let newItem = {'type': item.type, 'value': item.value}
-        this.voteItemContent[index] = Object.assign({}, newItem)
+        that.voteItemContent[index] = Object.assign({}, newItem)
       })
 			this.activity.activitySetting.defaultVote[this.voteItemIndex].content = JSON.stringify(this.voteItemContent)
     },
