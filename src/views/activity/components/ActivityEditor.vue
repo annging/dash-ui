@@ -90,6 +90,8 @@ import AdvancedDiscountSetting from './advancedSetting/Discount'
 import VoteSetting from './VoteSetting'
 import VoteMoreSetting from './VoteMoreSetting'
 
+import uuidv1 from 'uuid/v1'
+
 export default {
 	name: 'ActivityEditor',
 	components: {
@@ -368,6 +370,12 @@ export default {
           response.data.activitySetting = JSON.parse(response.data.activitySetting)
           response.data.address = JSON.parse(response.data.address)
           response.data.content = JSON.parse(response.data.content)
+          // 给content每个item唯一标识，提交时删掉
+          response.data.content.forEach(function(item, index){
+           let iid = uuidv1()
+           let newItem = Object.assign({}, item, {'id': iid})
+           response.data.content[index] = newItem
+          })
           response.data.requireColumns = JSON.parse(response.data.requireColumns)
           response.data.storeIds = JSON.parse(response.data.storeIds)
           response.data.advancedSetting = JSON.parse(response.data.advancedSetting)
@@ -433,6 +441,10 @@ export default {
 			}
       _activityVO.activitySetting = JSON.stringify(_activityVO.activitySetting)
       _activityVO.address = JSON.stringify(_activityVO.address)
+      _activityVO.content.forEach(function(item, index){
+        let newItem = {'type': item.type, 'value': item.value}
+        _activityVO.content[index] = newItem
+      })
       _activityVO.content = JSON.stringify(_activityVO.content)
       _activityVO.requireColumns = JSON.stringify(_activityVO.requireColumns)
       _activityVO.storeIds = JSON.stringify(_activityVO.storeIds)
