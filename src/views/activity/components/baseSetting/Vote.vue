@@ -109,8 +109,7 @@
             </div>
           </div>
           <div style="margin-top: 20px;">
-            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(
-            index)"></el-button>
+            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-up" :disabled="(index == 1 && activity.content[0].type == 'label') || (index == 0)" @click.prevent="upConItem(item, index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-down" :disabled="(item.type == 'label') || (index == activity.content.length -1)" @click.prevent="downConItem(item, index)"></el-button>
           </div>
@@ -263,11 +262,11 @@ export default {
     handleExceedSmallImg(files, fileList) {
       this.$message.warning(`最多传9张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
     },
-    removeConItem(index) {
+    removeConItem(ind) {
       if(this.activity.content.length === 1) {
         this.$message.warning('活动详情不能为空，请添加其他类型再删除当前的内容')
       } else {
-        this.activity.content.splice(index,1)
+        this.activity.content.splice(ind, 1)
       }
     },
     upConItem(item, index) {
