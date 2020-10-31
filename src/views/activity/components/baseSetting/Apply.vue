@@ -75,7 +75,7 @@
         <el-input v-model="activity.address.tips"></el-input>
       </el-form-item>
       <el-form-item label="活动详情">
-      	<div  v-if="activity.content.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="index">
+      	<div  v-if="activity.content.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="typeof(item.value) === 'string' ? item.value + index : item.value[0] + index">
           <div style="margin: 0 10px 0 0; width: 610px;" v-if="item">
           	<el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
             <div v-if="item.type=='label'">
