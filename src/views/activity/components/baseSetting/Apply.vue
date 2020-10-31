@@ -146,8 +146,7 @@
             </div>
           </div>
           <div style="margin-top: 20px;">
-            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(
-            index)"></el-button>
+            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-up" :disabled="(index == 1 && activity.content[0].type == 'label') || (index == 0)" @click.prevent="upConItem(item, index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-down" :disabled="(item.type == 'label') || (index == activity.content.length -1)" @click.prevent="downConItem(item, index)"></el-button>
           </div>

@@ -262,11 +262,11 @@ export default {
     handleExceedSmallImg(files, fileList) {
       this.$message.warning(`最多传9张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
     },
-    removeConItem(ind) {
+    removeConItem(index) {
       if(this.activity.content.length === 1) {
         this.$message.warning('活动详情不能为空，请添加其他类型再删除当前的内容')
       } else {
-        this.activity.content.splice(ind, 1)
+        this.activity.content.splice(index, 1)
       }
     },
     upConItem(item, index) {
