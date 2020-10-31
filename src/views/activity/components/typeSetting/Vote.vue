@@ -2,7 +2,7 @@
 	<div>
 		<el-form ref="second" :rules="rules" :model="activity" label-width="150px" size="small">
 			      <el-form-item label="投票设置">
-        <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.defaultVote" :key="index">
+        <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.defaultVote" :key="item.num+index">
         	<el-upload
             :data="dataObj"
             :multiple="false"
@@ -151,7 +151,7 @@
       :modal-append-to-body="false"
       :append-to-body="true">
 
-      	<div  v-if="voteItemContent.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in voteItemContent" :key="index">
+      	<div  v-if="voteItemContent.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in voteItemContent" :key="item.id">
           <div style="margin: 0 10px 0 0; width: 610px;" v-if="item">
           	<el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
           	<Tinymce v-if="voteItemContentVisible && item.type=='text'" :ref="'editor' + index" :id="'editor' + index" v-model="item.value" :height="150"  :toolbar="['']" menubar="false" :hasUpload="false"/>
@@ -237,6 +237,7 @@
 import { getStores } from '@/api/merchant'
 import Dropzone from '@/components/Dropzone'
 import Tinymce from '@/components/Tinymce'
+import uuidv1 from 'uuid/v1'
 
 export default {
 	name: 'TypeVote',
@@ -306,10 +307,19 @@ export default {
       } else {
         this.voteItemContent = JSON.parse(JSON.stringify(this.activity.activitySetting.defaultVote[index].content))
       }
+      this.voteItemContent.forEach(function(item, index){
+        let iid = uuidv1()
+        let newItem = Object.assign({}, item, {'id': iid})
+        this.voteItemContent[index] = Object.assign({}, newItem)
+      })
     	this.voteItemContentVisible = true
     },
     voteItemContentSave() {
 			this.voteItemContentVisible = false
+      this.voteItemContent.forEach(function(item, index){
+        let newItem = {'type': item.type, 'value': item.value}
+        this.voteItemContent[index] = Object.assign({}, newItem)
+      })
 			this.activity.activitySetting.defaultVote[this.voteItemIndex].content = JSON.stringify(this.voteItemContent)
     },
     removeGroupName(item, index) {
@@ -355,12 +365,14 @@ export default {
       this.$message({ message: '上传成功', type: 'success' })
     },
     dropzoneSBigVoteItem(file, res) {
+      let iid = uuidv1()
       let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
       let v = []
       v.push(url)
       this.voteItemContent.push({
         type: 'bigImg',
-        value: v
+        value: v,
+        id: iid
       })
     },
     dropzoneRVoteItem(file) {
@@ -403,11 +415,13 @@ export default {
       this.voteItemContent.splice(newIndex, 0, item)
     },
     addConVoteItem(type, v) {
+      let iid = uuidv1()
       if (type === 'label') {
         if (this.voteItemContent[0].type !== 'label') {
           this.voteItemContent.unshift({
             type: type,
-            value: v
+            value: v,
+            id: iid
           })
         }
       } else if (type === 'bigImg') {
@@ -415,7 +429,8 @@ export default {
       } else {
         this.voteItemContent.push({
           type: type,
-          value: v
+          value: v,
+          id: iid
         })
       }
 		},
