@@ -38,7 +38,7 @@
 		    </el-date-picker>
       </el-form-item>
       <el-form-item label="活动详情">
-        <div  v-if="activity.content.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="index">
+        <div  v-if="activity.content.length > 0" style="display: flex; align-items: flex-start; margin-bottom: 15px;" v-for="(item, index) in activity.content" :key="typeof(item.value) === 'string' ? item.value + index : item.value[0] + index">
           <div style="margin: 0 10px 0 0; width: 610px;" v-if="item">
             <el-divider content-position="left">{{ contentTypes[item.type] }}</el-divider>
             <div v-if="item.type=='label'">
@@ -109,7 +109,11 @@
             </div>
           </div>
           <div style="margin-top: 20px;">
+<<<<<<< HEAD
             <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(item, index)"></el-button>
+=======
+            <el-button type="danger" plain circle size="mini" icon="el-icon-delete" @click.prevent="removeConItem(index)"></el-button>
+>>>>>>> maintenance
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-up" :disabled="(index == 1 && activity.content[0].type == 'label') || (index == 0)" @click.prevent="upConItem(item, index)"></el-button>
             <el-button type="primary" plain circle size="mini" icon="el-icon-arrow-down" :disabled="(item.type == 'label') || (index == activity.content.length -1)" @click.prevent="downConItem(item, index)"></el-button>
           </div>
