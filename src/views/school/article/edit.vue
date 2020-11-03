@@ -26,7 +26,13 @@
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="导师" prop="tutorId">
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="articleForm.type" placeholder="类型" style="width: 100%" @change="typeChange">
+             <el-option v-for="item in typeName" :key="item.key" :label="item.label" :value="item.key">
+              </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="导师" prop="tutorId" v-if="articleForm.type*1 === 1">
           <el-select v-model="articleForm.tutorId" placeholder="请选择导师" style="width: 100%" popper-class="paginationSelect" >
             <div v-loading="tutorListLoading">
               <el-option v-if="tutorList.length > 0" v-for="item in tutorList" :key="item.id" :label="item.id + '-'  + item.name" :value="item.id">
@@ -37,8 +43,11 @@
               </div>
           </el-select>
         </el-form-item>
-        <el-form-item label="内容" prop="content">
+        <el-form-item label="内容" prop="content" v-if="articleForm.type*1 === 1">
           <Tinymce ref="editor1" v-model="articleForm.content" :height="300" menubar="false" />
+        </el-form-item>
+        <el-form-item label="链接" prop="content" v-if="articleForm.type*1 === 2" >
+          <el-input v-model="articleForm.content" placeholder="链接"></el-input>
         </el-form-item>
         <el-form-item label="简介" prop="brief">
           <el-input
@@ -89,6 +98,7 @@ export default {
         cover: '',
         tutorId: '',
         brief: '',
+        type: 1,
         content: '',
         weight: '',
         isRecommend: false
@@ -102,7 +112,7 @@ export default {
           { required: true, message: '请上传封面图', trigger: 'change' }
         ],
         tutorId: [
-          { required: true, message: '请选择导师', trigger: 'change' }
+          { required: false, message: '请选择导师', trigger: 'change' }
         ]
       },
       dataObj: { token: '' },
@@ -112,7 +122,11 @@ export default {
         offset: 0,
         limit: 10
       },
-      tutorListLoading: true
+      tutorListLoading: true,
+      typeName: [
+        { key: 1, label: '文章' },
+        { key: 2, label: '链接' }
+      ]
     }
   },
   created() {
@@ -147,6 +161,13 @@ export default {
           })
         }
       })
+    },
+    typeChange() {
+      setTimeout(this.changeFunction, 200)
+    },
+    changeFunction() {
+      this.$set(this.articleForm, `content`, '')
+      this.$set(this.articleForm, `tutorId`, '')
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'

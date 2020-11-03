@@ -301,6 +301,7 @@ export default {
     	this.activity.activitySetting.defaultVote.splice(index, 1)
     },
     goVoteItemConEdit(index) {
+      let that = this
     	this.voteItemIndex = index
       if( typeof this.activity.activitySetting.defaultVote[index].content === 'string') {
     	this.voteItemContent = JSON.parse(this.activity.activitySetting.defaultVote[index].content ? this.activity.activitySetting.defaultVote[index].content : '[]')
@@ -310,7 +311,7 @@ export default {
       this.voteItemContent.forEach(function(item, index){
         let iid = uuidv1()
         let newItem = Object.assign({}, item, {'id': iid})
-        this.voteItemContent[index] = Object.assign({}, newItem)
+        that.voteItemContent[index] = Object.assign({}, newItem)
       })
     	this.voteItemContentVisible = true
     },

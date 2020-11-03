@@ -52,7 +52,14 @@
           <el-table-column
             label="导师">
             <template slot-scope="{row}">
-              <span>{{ row.tutor.name }}</span>
+              <span v-if="row.tutor">{{ row.tutor.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="类型"
+            width="50">
+            <template slot-scope="{row}">
+              <span >{{ typeName[row.type * 1] }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -105,6 +112,10 @@ export default {
         offset: 0,
         limit: 20,
         recommend: true
+      },
+      typeName: {
+        1: '文章',
+        2: '链接'
       }
     }
   },
