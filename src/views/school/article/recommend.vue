@@ -52,7 +52,7 @@
           <el-table-column
             label="导师">
             <template slot-scope="{row}">
-              <span>{{ row.tutor.name }}</span>
+              <span v-if="row.tutor">{{ row.tutor.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
