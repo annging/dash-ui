@@ -59,7 +59,7 @@
             label="类型"
             width="50">
             <template slot-scope="{row}">
-              <span >{{ typeName[row.type * 1] }}</span>
+              <span v-if="row.type">{{ typeName[row.type * 1] }}</span>
             </template>
           </el-table-column>
           <el-table-column
