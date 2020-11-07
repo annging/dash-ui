@@ -39,7 +39,7 @@ export default {
       type: '',
       activity: Object.assign({}, defaultActivity),
       qrcodeImgUrl: '',
-      typePage: { 1: 'pages/activeDetail/activeDetail', 2: '', 3: '', 4: 'pages/bargain/bargainDetail', 5: '', 6: 'pages/group/groupDetail', 7: 'pages/vote/voteDetail', 8: '', 9: '' } // 活动类型 1 报名,2 抽奖,3 海报,4 砍价,5 秒杀,6 拼团,7 投票,8 预约,9 助力,10 优惠券(代金券),11 优惠券(折扣券),12 优惠券(兑换券),13 优惠券(体验券)
+      typePage: { 1: 'pages/activeDetail/activeDetail', 2: '', 3: '', 4: 'pages/bargain/bargainDetail', 5: 'pages/seckill/seckillDetail', 6: 'pages/group/groupDetail', 7: 'pages/vote/voteDetail', 8: '', 9: '', '-1': 'pages/grpPurchase/grpPurchaseDetail' } // 活动类型 1 报名,2 抽奖,3 海报,4 砍价,5 秒杀,6 拼团,7 投票,8 预约,9 助力,10 优惠券(代金券),11 优惠券(折扣券),12 优惠券(兑换券),13 优惠券(体验券)
     }
   },
   computed: {

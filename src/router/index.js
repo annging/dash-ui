@@ -194,10 +194,10 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'detail/:id(\\d+)/:type(\\d+)',
+        path: 'detail/:id(\\d+)/:type',
         name: 'detail',
         component: () => import('@/views/activity/detail/index'),
-        redirect: '/activity/detail/:id(\\d+)/:type(\\d+)/overview',
+        redirect: '/activity/detail/:id(\\d+)/:type/overview',
         meta: { title: '活动详细数据', icon: 'activity', activeMenu: '/activity/list' },
         hidden: true,
         children: [
