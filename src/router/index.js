@@ -117,6 +117,38 @@ export const constantRoutes = [
           },
         ]
       },
+      {
+        path: 'mer',
+        name: ' mer',
+        redirect: '/platform/mer/index',
+        component: () => import('@/views/platform/mer'),
+        meta: { title: '商家端', activeMenu: '/platform/mer'},
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/platform/mer/index'),
+            name: 'activityset',
+            meta: { title: '活动设置' },
+            hidden: true
+          }
+        ]
+      },
+      {
+        path: 'user',
+        name: ' userSet',
+        redirect: '/platform/user/index',
+        component: () => import('@/views/platform/user'),
+        meta: { title: '用户端'},
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/platform/user/index'),
+            name: 'fenxiao',
+            meta: { title: '我要赚钱列表', activeMenu: '/platform/user' },
+            hidden: true
+          }
+        ]
+      },
     ]
   }, // 平台管理
 
@@ -561,6 +593,31 @@ export const constantRoutes = [
       }
     ]
   }, // 账户中心
+
+  {
+    path: '/mine',
+    component: Layout,
+    redirect: '/mine/index',
+    name: 'mine',
+    meta: { title: '我的', icon: 'qianbao' },
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        name: 'minInfo',
+        component: () => import('@/views/mine/index'),
+        meta: { title: '我的账号' },
+        hidden: false
+      },
+      {
+        path: 'reset',
+        name: 'reset',
+        component: () => import('@/views/mine/reset'),
+        meta: { title: '重置密码' },
+        hidden: false
+      }
+    ]
+  },
 
   /*{
     path: '/notice',

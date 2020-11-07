@@ -98,6 +98,22 @@ const actions = {
     })
   },
 
+  // user resetPassword
+  reset ({ commit }, info) {
+    const { password } = info
+    return new Promise((resolve, reject) => {
+      /*reset({ pwd: password }).then(response => {
+        removeToken() // must remove  token  first
+        removeUserInfo()
+        resetRouter()
+        commit('RESET_STATE')
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })*/
+    })
+  },
+
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
