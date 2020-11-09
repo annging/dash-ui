@@ -2,35 +2,11 @@
 <div class="main-content">
   <div class="left-container">
     <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/activity/fangan/create/'}">添加方案</el-menu-item>
+      <el-menu-item index="1" :route="{path:'/fangan/create/'}">添加方案</el-menu-item>
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="schemeForm" label-width="100px" size="small">
-        <el-form-item label="方案标题">
-          <el-input v-model="schemeForm.title"></el-input>
-        </el-form-item>
-        <el-form-item label="封面图">
-          <el-upload
-            :data="dataObj"
-            :multiple="false"
-            class="avatar-uploader"
-            action="http://upload-z2.qiniup.com"
-            :show-file-list="false"
-            :on-success="handleSuccess"
-            :on-preview="handlePicturePreview"
-            :on-remove="handleRemove"
-            :before-upload="beforeUpload">
-            <img v-if="schemeForm.imgUrl" :src="schemeForm.imgUrl" class="avatar">
-            <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-          <el-dialog
-            :visible.sync="dialogVisible"
-            :modal-append-to-body="false"
-            :append-to-body="true">
-            <img width="100%" :src="schemeForm.imgUrl" alt="">
-          </el-dialog>
-        </el-form-item>
-        <el-form-item label="banner图片">
+        <el-form-item label="封面">
           <el-upload
             :data="dataObj"
             :multiple="false"
@@ -51,6 +27,9 @@
             <img width="100%" :src="schemeForm.bannerImg" alt="">
           </el-dialog>
         </el-form-item>
+        <el-form-item label="标题">
+          <el-input v-model="schemeForm.title" placeholder="方案标题"></el-input>
+        </el-form-item>
         <el-form-item label="标签">
            <el-select
             v-model="schemeForm.label"
@@ -68,25 +47,39 @@
               :value="item.value">
             </el-option>
           </el-select>
+          <div class="tips" style="font-size: 13px; color: #999">回车确认输入</div>
         </el-form-item>
-        <el-form-item label="方案介绍">
-          <Tinymce ref="editor1" v-model="schemeForm.explain" :height="300" />
-        </el-form-item>
-
-        <el-form-item label="功能亮点">
-          <Tinymce ref="editor2" v-model="schemeForm.lightSpot" :height="300" />
-        </el-form-item>
-        <el-form-item label="营销玩法">
-          <Tinymce ref="editor3" v-model="schemeForm.gameplay" :height="300" />
-        </el-form-item>
-        <el-form-item label="活动类型">
-          <el-select v-model="schemeForm.type" placeholder="请选择活动类型" >
-            <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
+        <el-form-item label="行业">
+          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable allow-create>
+            <el-option v-for="(value, key, index) in industryTypeName" :key="value" :label="value" :value="key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="活动行业">
-          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable allow-create>
-            <el-option v-for="(value, key, index) in industrys" :key="value" :label="value" :value="value" />
+        <el-form-item label="介绍">
+          <Tinymce ref="editor1" v-model="schemeForm.explain" :height="240" :toolbar="['']" menubar="false" :hasUpload="true" />
+        </el-form-item>
+
+        <el-form-item label="活动海报">
+          <Tinymce ref="editor2" v-model="schemeForm.acticityPost" :height="240" :toolbar="['']" menubar="false" :hasUpload="true"/>
+        </el-form-item>
+        <el-form-item label="活动">
+          <el-select v-model="schemeForm.acticityId" placeholder="请选择活动" style="width: 100%"  popper-class="paginationSelect">
+            
+            <div >
+              <el-option
+              v-if="activityList.length > 0"
+              v-for="item in activityList" :key="item.id" :label="item.id + '-'  + item.title" :value="item.id">
+                <span class="label-id">{{ item.id }}</span>-
+                <span class="label-title">{{ item.title }}</span>
+                <span v-if="item.merchant"> - ({{ item.merchant.name }})</span>
+              </el-option>
+              <pagination v-show="activityTotal>0" :total="activityTotal" :page.sync="activityListQuery.current" :limit.sync="activityListQuery.size" @pagination="getActivitys"
+              :autoScroll="false" />
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="活动顾问">
+          <el-select v-model="schemeForm.serviesId" placeholder="请选择" filterable allow-create>
+            <el-option :key="1" label="顾问1" :value="1" />
           </el-select>
         </el-form-item>
         <el-form-item label="会员门槛">
@@ -124,19 +117,18 @@
 </template>
 
 <script>
-import { addActivityScheme } from '@/api/activity'
+import { addActivityScheme, getActivitys } from '@/api/activity'
 import { getToken } from '@/api/qiniu'
 import Tinymce from '@/components/Tinymce'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const defaultForm = {
     title: '', //方案标题
-    imgUrl: '',
     bannerImg: '',
-    type: '',
     industry: '',
     explain: '',
-    lightSpot: '',
-    gameplay: '',
+    activityPost: '',
+    activityId: '',
     browse: 0,
     receive: 0,
     vipLevel: '',
@@ -148,12 +140,15 @@ const defaultForm = {
 
 export default {
   name: 'CreateScheme',
-  components: { Tinymce },
+  components: { Tinymce, Pagination },
   data() {
     return {
       schemeForm: Object.assign({}, defaultForm),
       activityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖' }, { key: 3, label: '海报' }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约' }, { key: 9, label: '助力' }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }, { key: -1, label: '团购' }],
       industrys: { 1: '教育/培训' ,  2: '丽人/美发' ,  3: '亲子/乐园', 4: '运动健身', 5: '休闲/玩乐', 6: '美容/SPA', 7: '嬌纱/摄影', 8: '家居/装修', 9: '生活服务', 10: '餐饮美食', 11: '母婴', 12: '洗车', 13: '服装' },
+      industryTypeName: {
+        1: '教育培训', 2: '餐饮美食', 3: '美容SPA', 4: '生活娱乐', 5: '运动健身', 6: '知识付费', 7: '电商团购'
+      },
       vipLevels: [{ key: 0, label: '标准会员' }, { key: 1, label: '体验会员' }, { key: 2, label: 'VIP会员' }],
       rules: {
         title: [
@@ -180,11 +175,22 @@ export default {
       dialogVisible: false,
       dialogVisible1: false,
       labelOptions: [],
-      dataObj: { token: '' }
+      dataObj: { token: '' },
+      activityListQuery: {
+        current: 1,
+        size: 20
+      },
+      activityListFilter: {
+        title: '',
+        type: ''
+      },
+      activityList: [],
+      activityTotal: 0
     }
   },
   created() {
     this.fetchToken()
+    this.getActivitys()
   },
   methods: {
     onSubmit() {
@@ -196,7 +202,7 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push({ path: '/activity/fangan/index' });
+            this.$router.push({ path: '/fangan/index' });
           }, 1.5 * 1000)
         } else {
           this.$message({
@@ -205,6 +211,26 @@ export default {
           })
         }
       })
+    },
+    getActivitys() {
+      getActivitys(this.activityListQuery, this.activityListFilter).then(response => {
+        if (response.data.records.length > 0) {
+          response.data.records.forEach(item => {
+            if (item.cover && item.cover !== 'string') {
+              item.cover = JSON.parse(item.cover)
+            }
+            if (item.activitySetting) {
+              item.activitySetting = JSON.parse(item.activitySetting)
+            }
+          })
+        }
+        this.activityList = response.data.records
+        this.activityTotal = response.data.total
+      })
+    },
+    handleActivityFilter() {
+      this.activityListQuery.current = 1
+      this.getActivitys()
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'
@@ -311,6 +337,25 @@ export default {
     width: 350px;
     height: 200px;
     display: block;
+  }
+</style>
+
+<style type="scss" scoped>
+  .paginationSelect {
+    .el-select-dropdown__wrap {
+      max-height: 500px;
+      height: 500px;
+    }
+    .el-select-dropdown__list {
+      padding-top: 30px;
+    }
+    .el-select-dropdown__item {
+      border-bottom: 1px solid #f5f5f5;
+    }
+  }
+  .label-item {
+    display: inline-block;
+    line-height: 32px;
   }
 </style>
 

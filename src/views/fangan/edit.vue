@@ -2,7 +2,7 @@
   <div class="main-content">
     <div class="left-container">
       <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item index="1" :route="{path:'/activity/fangan/edit/' + id }">编辑方案</el-menu-item>
+        <el-menu-item index="1" :route="{path:'/fangan/edit/' + id }">编辑方案</el-menu-item>
       </el-menu>
       <el-row>
         <el-form ref="form" :rules="rules" :model="schemeForm" label-width="100px" size="small">
@@ -210,7 +210,7 @@ export default {
             type: 'success'
           })
           setTimeout(() => {
-            this.$router.push({ path: '/activity/fangan/index' })
+            this.$router.push({ path: '/fangan/index' })
           }, 1.5 * 1000)
         } else {
           this.$message({
@@ -261,7 +261,7 @@ export default {
       this.dialogVisible1 = true
     },
     cancel() {
-      this.$router.push({ path: '/activity/fangan/index' })
+      this.$router.push({ path: '/fangan/index' })
     }
   }
 }

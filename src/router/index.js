@@ -117,7 +117,7 @@ export const constantRoutes = [
           },
         ]
       },
-      {
+      /*{
         path: 'mer',
         name: ' mer',
         redirect: '/platform/mer/index',
@@ -148,7 +148,7 @@ export const constantRoutes = [
             hidden: true
           }
         ]
-      },
+      },*/
     ]
   }, // 平台管理
 
@@ -237,49 +237,80 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'fangan',
-        name: 'fangan',
-        redirect: '/fangan/index',
-        component: () => import('@/views/activity/fangan'),
-        meta: { title: '方案'},
-        children: [
-          {
-            path: 'index',
-            component: () => import('@/views/activity/fangan/index'),
-            name: '方案',
-            meta: { title: '方案管理' }
-          },
-          {
-            path: 'create',
-            component: () => import('@/views/activity/fangan/create'),
-            name: 'createFangan',
-            meta: { title: '创建方案', activeMenu: '/activity/fangan/index' },
-            hidden: true
-          },
-          {
-            path: 'edit/:id(\\d+)',
-            name: 'editFangan',
-            component: () => import('@/views/activity/fangan/edit'),
-            meta: { title: '编辑方案', activeMenu: '/activity/fangan/index' },
-            hidden: true,
-          },
-          {
-            path: 'recommend',
-            component: () => import('@/views/activity/fangan/recommend'),
-            name: '推荐方案列表',
-            meta: { title: '推荐方案列表', activeMenu: '/activity/fangan/index'},
-            hidden: true
-          },
-        ]
-      },
-      {
         path: 'activityOptions',
         name: 'activityOptions',
         component: () => import('@/views/activity/activityOptions'),
         meta: { title: '活动反馈/举报' }
+      },
+      {
+        path: 'counselor',
+        name: 'counselor',
+        redirect: '/activity/counselor/index',
+        component: () => import('@/views/activity/counselor'),
+        meta: { title: '活动顾问'},
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/activity/counselor/index'),
+            name: 'counselorList',
+            meta: { title: '顾问列表', activeMenu: '/activity/counselor'},
+            hidden: true
+          },
+          {
+            path: 'create',
+            component: () => import('@/views/activity/counselor/create'),
+            name: 'createCounselor',
+            meta: { title: '新增顾问', activeMenu: '/activity/counselor' },
+            hidden: true
+          },
+          {
+            path: 'edit/:id(\\d+)',
+            name: 'editCounselor',
+            component: () => import('@/views/activity/counselor/edit'),
+            meta: { title: '编辑顾问', activeMenu: '/activity/counselor' },
+            hidden: true,
+          }
+        ]
       }
     ]
   }, // 活动管理
+
+  {
+    path: '/fangan',
+    name: 'fangan',
+    redirect: '/fangan/index',
+    component: Layout,
+    meta: { title: '方案管理', icon: 'fangan' },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/fangan/index'),
+        name: '方案',
+        meta: { title: '方案管理' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/fangan/create'),
+        name: 'createFangan',
+        meta: { title: '创建方案', activeMenu: '/fangan/index' },
+        hidden: true
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        name: 'editFangan',
+        component: () => import('@/views/fangan/edit'),
+        meta: { title: '编辑方案', activeMenu: '/fangan/index' },
+        hidden: true,
+      },
+      {
+        path: 'recommend',
+        component: () => import('@/views/fangan/recommend'),
+        name: '推荐方案列表',
+        meta: { title: '推荐方案列表', activeMenu: '/fangan/index'},
+        hidden: true
+      },
+    ]
+  },
 
   {
     path: '/merchant',
