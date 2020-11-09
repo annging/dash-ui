@@ -237,12 +237,6 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'activityOptions',
-        name: 'activityOptions',
-        component: () => import('@/views/activity/activityOptions'),
-        meta: { title: '活动反馈/举报' }
-      },
-      {
         path: 'counselor',
         name: 'counselor',
         redirect: '/activity/counselor/index',
@@ -271,6 +265,12 @@ export const constantRoutes = [
             hidden: true,
           }
         ]
+      },
+      {
+        path: 'activityOptions',
+        name: 'activityOptions',
+        component: () => import('@/views/activity/activityOptions'),
+        meta: { title: '活动反馈/举报' }
       }
     ]
   }, // 活动管理

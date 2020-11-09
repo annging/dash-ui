@@ -49,17 +49,29 @@
           </el-select>
           <div class="tips" style="font-size: 13px; color: #999">回车确认输入</div>
         </el-form-item>
-        <el-form-item label="行业">
-          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable allow-create>
-            <el-option v-for="(value, key, index) in industryTypeName" :key="value" :label="value" :value="key" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="介绍">
           <Tinymce ref="editor1" v-model="schemeForm.explain" :height="240" :toolbar="['']" menubar="false" :hasUpload="true" />
         </el-form-item>
-
         <el-form-item label="活动海报">
-          <Tinymce ref="editor2" v-model="schemeForm.acticityPost" :height="240" :toolbar="['']" menubar="false" :hasUpload="true"/>
+          <el-upload
+            :data="dataObj"
+            :multiple="false"
+            class="avatar-uploader2"
+            action="http://upload-z2.qiniup.com"
+            :show-file-list="false"
+            :on-success="handleSuccess2"
+            :on-preview="handlePicturePreview2"
+            :on-remove="handleRemove2"
+            :before-upload="beforeUpload">
+            <img v-if="schemeForm.activityPost" :src="schemeForm.activityPost" class="avatar2">
+            <i  v-else class="el-icon-plus avatar-uploader-icon1"></i>
+          </el-upload>
+          <el-dialog
+            :visible.sync="dialogVisible2"
+            :modal-append-to-body="false"
+            :append-to-body="true">
+            <img width="100%" :src="schemeForm.activityPost" alt="">
+          </el-dialog>
         </el-form-item>
         <el-form-item label="活动">
           <el-select v-model="schemeForm.acticityId" placeholder="请选择活动" style="width: 100%"  popper-class="paginationSelect">
@@ -82,16 +94,24 @@
             <el-option :key="1" label="顾问1" :value="1" />
           </el-select>
         </el-form-item>
+        <el-form-item label="活动类型">
+          <el-select v-model="schemeForm.type" placeholder="请选择活动类型">
+            <el-option v-for="item in activityTypes" :key="item.key" :label="item.label" :value="item.key" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="行业">
+          <el-select v-model="schemeForm.industry" placeholder="请选择行业" filterable allow-create>
+            <el-option v-for="(value, key, index) in industryTypeName" :key="value" :label="value" :value="key" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="会员门槛">
           <el-select v-model="schemeForm.vipLevel" placeholder="请选择会员等级">
             <el-option v-for="item in vipLevels" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="虚拟浏览量">
+        <el-form-item label="虚拟领取量">
           <el-input v-model="schemeForm.browse"></el-input>
-        </el-form-item>
-        <el-form-item label="虚拟参与量">
-          <el-input v-model="schemeForm.receive"></el-input>
         </el-form-item>
         <el-form-item label="权重">
           <el-input v-model="schemeForm.weight"></el-input>
@@ -126,6 +146,7 @@ const defaultForm = {
     title: '', //方案标题
     bannerImg: '',
     industry: '',
+    type: '',
     explain: '',
     activityPost: '',
     activityId: '',
@@ -174,6 +195,7 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       dialogVisible1: false,
+      dialogVisible2: false,
       labelOptions: [],
       dataObj: { token: '' },
       activityListQuery: {
@@ -270,6 +292,15 @@ export default {
     },
     handlePicturePreview1() {
       this.dialogVisible1 = true
+    },
+    handleRemove2(file, fileList) {
+      console.log(file, fileList)
+    },
+    handleSuccess2(res, file) {
+      this.schemeForm.activityPost = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    },
+    handlePicturePreview2() {
+      this.dialogVisible2 = true
     }
   }
 }
@@ -338,6 +369,11 @@ export default {
     height: 200px;
     display: block;
   }
+  .avatar2 {
+    max-width: 500px;
+    max-height: 600px;
+    display: block;
+  }
 </style>
 
 <style type="scss" scoped>
@@ -361,6 +397,13 @@ export default {
 
 <style>
   .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader2 .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
