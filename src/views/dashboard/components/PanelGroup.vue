@@ -175,7 +175,7 @@ export default {
       }
 
       .card-panel-num {
-        font-size: 20px;
+        font-size: 16px;
       }
       .count-money:before {
           content: '￥';
