@@ -2,11 +2,11 @@
 <div class="main-content">
   <div class="left-container">
     <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/activity/counselor/index'}">列表</el-menu-item>
-      <el-menu-item index="2" :route="{path:'/activity/counselor/create'}">添加顾问</el-menu-item>
+      <el-menu-item index="1" :route="{path:'/fangan/counselor/index'}">列表</el-menu-item>
+      <el-menu-item index="2" :route="{path:'/fangan/counselor/create'}">添加顾问</el-menu-item>
     </el-menu>
     <el-row>
-      <el-form ref="form" :rules="rules" :model="tutorForm" label-width="100px" size="small">
+      <el-form ref="form" :rules="rules" :model="counselorForm" label-width="100px" size="small">
         <el-form-item label="头像" prop="icon">
           <el-upload
             :data="dataObj"
@@ -18,15 +18,15 @@
             :on-preview="handlePicturePreview"
             :on-remove="handleRemove"
             :before-upload="beforeUpload">
-            <img v-if="tutorForm.icon" :src="tutorForm.icon" class="avatar">
+            <img v-if="counselorForm.icon" :src="counselorForm.icon" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="tutorForm.name"></el-input>
+          <el-input v-model="counselorForm.name"></el-input>
         </el-form-item>
         <el-form-item label="微信号" prop="name">
-          <el-input v-model="tutorForm.wx"></el-input>
+          <el-input v-model="counselorForm.wx"></el-input>
         </el-form-item>
         <el-form-item label="二维码" prop="img">
           <el-upload
@@ -39,9 +39,12 @@
             :on-preview="handlePicturePreview"
             :on-remove="handleRemove"
             :before-upload="beforeUpload">
-            <img v-if="tutorForm.img" :src="tutorForm.img" class="avatar">
+            <img v-if="counselorForm.img" :src="counselorForm.img" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
+        </el-form-item>
+        <el-form-item label="问候语" prop="wel">
+          <el-input v-model="counselorForm.wel" maxlength="" type="textarea" :rows="2" placeholder="问候语"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">立即添加</el-button>
@@ -60,15 +63,16 @@ import { getToken } from '@/api/qiniu'
 import Tinymce from '@/components/Tinymce'
 
 export default {
-  name: 'CreateTeacher',
+  name: 'CreateCon',
   components: { Tinymce },
   data() {
     return {
-      tutorForm: {
+      counselorForm: {
         name: '',
         icon: '',
         img: '',
-        wx: ''
+        wx: '',
+        wel: ''
       },
       rules: {
         name: [
@@ -88,9 +92,9 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!')
-      /*let _tutorForm = this.tutorForm
-      _tutorForm.tags = JSON.stringify(_tutorForm.tags)
-      addOrUpdateTutor(_tutorForm).then(res => {
+      /*let _counselorForm = this.counselorForm
+      _counselorForm.tags = JSON.stringify(_counselorForm.tags)
+      addOrUpdateTutor(_counselorForm).then(res => {
         if (res.code * 1 == 200) {
           this.$message({
             message: '创建成功',
@@ -132,7 +136,7 @@ export default {
       console.log(file, fileList)
     },
     handleSuccess(res, file) {
-      this.tutorForm.icon = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      this.counselorForm.icon = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview() {
       console.log();

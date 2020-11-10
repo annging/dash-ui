@@ -86,3 +86,13 @@ export function getSystemLogs(query, data) {
     }]
   })
 }
+
+
+// /system/config/activity/save  活动虚拟信息配置
+export function configActivity(query) {
+  return request({
+    url: '/system/config/activity/save',
+    method: 'post',
+    params: query
+  })
+}

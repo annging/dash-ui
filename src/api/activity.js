@@ -250,3 +250,11 @@ export function deleteActivityById(activityId) {
     }
   })
 }
+
+// /system/activity/getJoinCount 活动参与厂家数
+export function getJoinCount() {
+  return request({
+    url: '/system/activity/getJoinCount',
+    method: 'get'
+  })
+}

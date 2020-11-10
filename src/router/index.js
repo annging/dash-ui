@@ -117,7 +117,7 @@ export const constantRoutes = [
           },
         ]
       },
-      /*{
+      {
         path: 'mer',
         name: ' mer',
         redirect: '/platform/mer/index',
@@ -133,7 +133,7 @@ export const constantRoutes = [
           }
         ]
       },
-      {
+      /*{
         path: 'user',
         name: ' userSet',
         redirect: '/platform/user/index',
@@ -237,36 +237,6 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'counselor',
-        name: 'counselor',
-        redirect: '/activity/counselor/index',
-        component: () => import('@/views/activity/counselor'),
-        meta: { title: '活动顾问'},
-        children: [
-          {
-            path: 'index',
-            component: () => import('@/views/activity/counselor/index'),
-            name: 'counselorList',
-            meta: { title: '顾问列表', activeMenu: '/activity/counselor'},
-            hidden: true
-          },
-          {
-            path: 'create',
-            component: () => import('@/views/activity/counselor/create'),
-            name: 'createCounselor',
-            meta: { title: '新增顾问', activeMenu: '/activity/counselor' },
-            hidden: true
-          },
-          {
-            path: 'edit/:id(\\d+)',
-            name: 'editCounselor',
-            component: () => import('@/views/activity/counselor/edit'),
-            meta: { title: '编辑顾问', activeMenu: '/activity/counselor' },
-            hidden: true,
-          }
-        ]
-      },
-      {
         path: 'activityOptions',
         name: 'activityOptions',
         component: () => import('@/views/activity/activityOptions'),
@@ -308,6 +278,36 @@ export const constantRoutes = [
         name: '推荐方案列表',
         meta: { title: '推荐方案列表', activeMenu: '/fangan/index'},
         hidden: true
+      },
+      {
+        path: 'counselor',
+        name: 'counselor',
+        redirect: '/fangan/counselor/index',
+        component: () => import('@/views/activity/counselor'),
+        meta: { title: '活动顾问'},
+        children: [
+          {
+            path: 'index',
+            component: () => import('@/views/activity/counselor/index'),
+            name: 'counselorList',
+            meta: { title: '顾问列表', activeMenu: '/fangan/counselor'},
+            hidden: true
+          },
+          {
+            path: 'create',
+            component: () => import('@/views/activity/counselor/create'),
+            name: 'createCounselor',
+            meta: { title: '新增顾问', activeMenu: '/fangan/counselor' },
+            hidden: true
+          },
+          {
+            path: 'edit/:id(\\d+)',
+            name: 'editCounselor',
+            component: () => import('@/views/activity/counselor/edit'),
+            meta: { title: '编辑顾问', activeMenu: '/fangan/counselor' },
+            hidden: true,
+          }
+        ]
       },
     ]
   },
@@ -504,28 +504,28 @@ export const constantRoutes = [
             path: 'index',
             component: () => import('@/views/school/article/index'),
             name: 'articleList',
-            meta: { title: '文章列表', activeMenu: '/school/article' },
+            meta: { title: '文章列表', activeMenu: '/school/article/index' },
             hidden: true
           },
           {
             path: 'rec',
             component: () => import('@/views/school/article/recommend'),
             name: 'articleList',
-            meta: { title: '推荐文章', activeMenu: '/school/article' },
+            meta: { title: '推荐文章', activeMenu: '/school/article/index' },
             hidden: true
           },
           {
             path: 'create',
             component: () => import('@/views/school/article/create'),
             name: 'createArticle',
-            meta: { title: '创建文章', activeMenu: '/school/article' },
+            meta: { title: '创建文章', activeMenu: '/school/article/index' },
             hidden: true
           },
           {
             path: 'edit/:id(\\d+)',
             name: 'editArticle',
             component: () => import('@/views/school/article/edit'),
-            meta: { title: '编辑文章', activeMenu: '/school/article/' },
+            meta: { title: '编辑文章', activeMenu: '/school/article/index' },
             hidden: true,
           },
         ]

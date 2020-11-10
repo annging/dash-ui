@@ -22,25 +22,25 @@
           <el-table-column
             label="活动类型">
             <template slot-scope="{row}">
-              <span>{{ row.name }}</span>
+              <span>{{ activityTypes[row.type] }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="真实使用量">
             <template slot-scope="{row}">
-              <span><el-input size="mini" v-model="row.num"></el-input></span>
+              <span><el-input size="mini" v-model="row.joinCount"></el-input></span>
             </template>
           </el-table-column>
           <el-table-column
             label="虚拟使用量">
             <template slot-scope="{row}">
-              <span><el-input size="mini" v-model="row.viturNum"></el-input></span>
+              <span><el-input size="mini" v-model="row.virtualJoinCount"></el-input></span>
             </template>
           </el-table-column>
           <el-table-column
             label="显示使用量(真实+虚拟)">
             <template slot-scope="{row}">
-              <span>{{ row.num * 1 + row.viturNum * 1 }}</span>
+              <span>{{ row.joinCount * 1 + row.virtualJoinCount * 1 }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -53,6 +53,8 @@
 </template>
 
 <script>
+import { getJoinCount } from '@/api/activity'
+import { configActivity } from '@/api/platform'
 
 export default {
   components: { },
@@ -70,15 +72,58 @@ export default {
         { 'name': '抽奖活动', num: '1', viturNum: '0' },
       ],
       listLoading: false,
-      loading: false
+      loading: false,
+      /*activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },*/
+      activityTypes: { 1: '报名', 2: '抽奖', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 9: '助力', 10: '优惠券', '-1': '商品团购' }
     }
   },
   created() {
+    // this.fetchData()
   },
+  /*computed:{
+    tableData: function () {
+      let that = this
+      return this.list.filter(function (item) {
+        return that.activityTypes[item.type]
+      })
+    }
+  },*/
+
   methods: {
+    fetchData() {
+      getJoinCount().then(response => {
+        this.list = response
+        response.forEach(item => {
+          
+        })
+      }).catch((res) => {
+        console.log(1)
+      }).then(() => {
+        console.log(2)
+      })
+    },
     handleChange() {
       console.log(this.list)
+      data ={
+        applyActivityCount: '', // 1报名
+        couponActivityCount: '', // 10优惠券
+        cutPriceActivityCount: '', // 4砍价
+        groupBuyActivityCount: '', // 6拼团
+        groupPurchasesActivityCount: '', // -1商品团购
+        helpActivityCount: '', // 9助力
+        lotteryActivityCount: '', // 2抽奖
+        seckillActivityCount: '', // 5秒杀
+        voteActivityCount: '' // 7投票
+      }
       this.loading = true
+      configActivity(data).then(response => {
+
+        }).catch((res) => {
+          console.log(1)
+          this.loading = false
+        }).then(() => {
+          this.loading = false
+        })
     }
   }
 }

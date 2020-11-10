@@ -74,7 +74,7 @@
           </el-dialog>
         </el-form-item>
         <el-form-item label="活动">
-          <el-select v-model="schemeForm.acticityId" placeholder="请选择活动" style="width: 100%"  popper-class="paginationSelect">
+          <el-select v-model="schemeForm.acticityId" placeholder="请选择活动" style="width: 100%"  popper-class="paginationSelect" @change="activityChange">
             
             <div >
               <el-option
@@ -301,6 +301,9 @@ export default {
     },
     handlePicturePreview2() {
       this.dialogVisible2 = true
+    },
+    activityChange() {
+      console.log(1)
     }
   }
 }

@@ -2,7 +2,7 @@
 	<div class="main-content">
 	  <div class="left-container">
 	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		    <el-menu-item index="1" :route="{path:'/activity/counselor/index'}">列表</el-menu-item>
+		    <el-menu-item index="1" :route="{path:'/fangan/counselor/index'}">列表</el-menu-item>
 	    </el-menu>
 		  <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
         <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加</el-button>
@@ -122,10 +122,10 @@ export default {
       this.getList()
     },
     goCreate() {
-      this.$router.push({ path: '/activity/counselor/create' })
+      this.$router.push({ path: '/fangan/counselor/create' })
     },
     handleEdit(index, row) {
-      /*this.$router.push({ path: '/activity/counselor/edit/' + row.id });*/
+      /*this.$router.push({ path: '/fangan/counselor/edit/' + row.id });*/
     },
     handleDelete(index, row) {
       this.$confirm('确认删除?', '提示', {

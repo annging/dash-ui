@@ -63,6 +63,13 @@
             </template>
           </el-table-column>
           <el-table-column
+            label="权重"
+            width="50">
+            <template slot-scope="{row}">
+              <span>{{ row.weight }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
             label="推荐?"
             width="60">
             <template slot-scope="{row}">

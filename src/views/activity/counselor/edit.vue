@@ -2,8 +2,8 @@
 <div class="main-content">
   <div class="left-container">
     <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
-      <el-menu-item index="1" :route="{path:'/activity/counselor/index'}">列表</el-menu-item>
-      <el-menu-item index="2" :route="{path:'/activity/counselor/edit/' + id}">编辑顾问</el-menu-item>
+      <el-menu-item index="1" :route="{path:'/fangan/counselor/index'}">列表</el-menu-item>
+      <el-menu-item index="2" :route="{path:'/fangan/counselor/edit/' + id}">编辑顾问</el-menu-item>
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="tutorForm" label-width="100px" size="small">
