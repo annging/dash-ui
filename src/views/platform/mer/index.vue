@@ -9,7 +9,7 @@
       <el-row class="list">
         <el-table
           v-loading="listLoading"
-          :data="list"
+          :data="tableData"
           border
           fit
           highlight-current-row
@@ -61,15 +61,6 @@ export default {
   data() {
     return {
       list: [
-        { 'name': '优惠券', num: '1', viturNum: '0' },
-        { 'name': '拼团活动', num: '1', viturNum: '0' },
-        { 'name': '报名活动', num: '1', viturNum: '0' },
-        { 'name': '投票活动', num: '555', viturNum: '0' },
-        { 'name': '砍价活动', num: '1', viturNum: '0' },
-        { 'name': '商品团购', num: '1', viturNum: '0' },
-        { 'name': '秒杀活动', num: '1', viturNum: '0' },
-        { 'name': '助力活动', num: '1', viturNum: '0' },
-        { 'name': '抽奖活动', num: '1', viturNum: '0' },
       ],
       listLoading: false,
       loading: false,
@@ -78,21 +69,21 @@ export default {
     }
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
-  /*computed:{
+  computed:{
     tableData: function () {
       let that = this
       return this.list.filter(function (item) {
         return that.activityTypes[item.type]
       })
     }
-  },*/
+  },
 
   methods: {
     fetchData() {
       getJoinCount().then(response => {
-        this.list = response
+        this.list = response.data
         response.forEach(item => {
           
         })
@@ -103,8 +94,7 @@ export default {
       })
     },
     handleChange() {
-      console.log(this.list)
-      data ={
+      let data ={
         applyActivityCount: '', // 1报名
         couponActivityCount: '', // 10优惠券
         cutPriceActivityCount: '', // 4砍价
@@ -115,6 +105,40 @@ export default {
         seckillActivityCount: '', // 5秒杀
         voteActivityCount: '' // 7投票
       }
+      this.tableData.forEach(item => {
+        switch (item.type) {
+          case 1:
+            data.applyActivityCount = item.virtualJoinCount
+            break
+          case 10:
+            data.couponActivityCount = item.virtualJoinCount
+            break
+          case 4:
+            data.cutPriceActivityCount = item.virtualJoinCount
+            break
+          case 6:
+            data.groupBuyActivityCount = item.virtualJoinCount
+            break
+          case -1:
+            data.groupPurchasesActivityCount = item.virtualJoinCount
+            break
+          case 9:
+            data.helpActivityCount = item.virtualJoinCount
+            break
+          case 2:
+            data.lotteryActivityCount = item.virtualJoinCount
+            break
+          case 5:
+            data.seckillActivityCount = item.virtualJoinCount
+            break
+          case 7:
+            data.voteActivityCount = item.virtualJoinCount
+            break
+          default:
+            console.log('1')
+        }
+      })
+      console.log(data)
       this.loading = true
       configActivity(data).then(response => {
 
