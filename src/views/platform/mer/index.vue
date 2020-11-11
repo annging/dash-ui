@@ -141,7 +141,10 @@ export default {
       console.log(data)
       this.loading = true
       configActivity(data).then(response => {
-
+          this.$message({
+            type: 'success',
+            message: response.msg
+          })
         }).catch((res) => {
           console.log(1)
           this.loading = false
