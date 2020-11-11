@@ -106,7 +106,7 @@ export default {
           addOrUpdateAdvisers(this.counselorForm).then(res => {
             if (res.code * 1 == 200) {
               this.$message({
-                message: '创建成功',
+                message: '编辑成功',
                 type: 'success'
               })
               setTimeout(() => {

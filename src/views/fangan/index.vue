@@ -21,9 +21,9 @@
             <el-option  label="全部类型" value="" />
             <el-option v-for="(value, key, index) in activityTypes" :key="key" :label="value" :value="key" />
           </el-select>
-          <el-select size="small" v-model="listFilter.industry" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部行业">
+          <el-select size="small" v-model="listFilter.industryType" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="全部行业">
             <el-option  label="全部行业" value="" />
-            <el-option v-for="(value, key, index) in industrys" :key="key" :label="value" :value="value" />
+            <el-option v-for="(value, key, index) in industryTypeName" :key="key" :label="value" :value="key" />
           </el-select>
           <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
               搜索
@@ -79,7 +79,8 @@
               label="行业"
               width="100">
               <template slot-scope="{row}">
-                <span>{{ industrys[row.industry] || row.industry }}</span>
+                <span v-if="row.industryType">{{ industryTypeName[row.industryType] }}</span>
+                <span v-else> {{ row.industry }} </span>
               </template>
             </el-table-column>
             <el-table-column
@@ -90,7 +91,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="领取"
+              label="真实领取量"
               width="100">
               <template slot-scope="{row}">
                 <span>{{ row.receive }}</span>
@@ -163,13 +164,16 @@ export default {
       listFilter: {
         title: '',
         type: '',
-        industry: ''
+        industryType: ''
       },
       clientHeight: '',
       maxHeight: 400,
       activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券',  '-1': '团购' },
-      industrys: { 1: '教育/培训' ,  2: '丽人/美发' ,  3: '亲子/乐园', 4: '运动健身', 5: '休闲/玩乐', 6: '美容/SPA', 7: '嬌纱/摄影', 8: '家居/装修', 9: '生活服务', 10: '餐饮美食', 11: '母婴', 12: '洗车', 13: '服装' }
-    };
+      /*industrys: { 1: '教育/培训' ,  2: '丽人/美发' ,  3: '亲子/乐园', 4: '运动健身', 5: '休闲/玩乐', 6: '美容/SPA', 7: '嬌纱/摄影', 8: '家居/装修', 9: '生活服务', 10: '餐饮美食', 11: '母婴', 12: '洗车', 13: '服装' },*/
+      industryTypeName: {
+        1: '教育培训', 2: '餐饮美食', 3: '美容SPA', 4: '生活娱乐', 5: '运动健身', 6: '知识付费', 7: '电商团购'
+      },
+    }
   },
   watch: {
       // 如果 `clientHeight` 发生改变，这个函数就会运行
