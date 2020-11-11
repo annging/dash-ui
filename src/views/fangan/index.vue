@@ -59,7 +59,7 @@
               label="封面"
               width="120">
               <template slot-scope="{row}">
-                <img :src="row.imgUrl" style="width: 100px;height: 60px;">
+                <img :src="row.bannerImg" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
