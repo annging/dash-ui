@@ -6,7 +6,7 @@
       <el-menu-item index="2" :route="{path:'/fangan/counselor/edit/' + id}">编辑顾问</el-menu-item>
     </el-menu>
     <el-row>
-      <el-form ref="form" :rules="rules" :model="tutorForm" label-width="100px" size="small">
+      <el-form ref="form" :rules="rules" :model="counselorForm" label-width="100px" size="small">
         <el-form-item label="头像" prop="icon">
           <el-upload
             :data="dataObj"
@@ -18,31 +18,33 @@
             :on-preview="handlePicturePreview"
             :on-remove="handleRemove"
             :before-upload="beforeUpload">
-            <img v-if="tutorForm.icon" :src="tutorForm.icon" class="avatar">
+            <img v-if="counselorForm.icon" :src="counselorForm.icon" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="tutorForm.name"></el-input>
+          <el-input v-model="counselorForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="标签">
-           <el-select
-            v-model="tutorForm.tags"
-            popper-class="hiddenDown"
-            multiple
-            filterable
-            allow-create
-            default-first-option
-            placeholder="回车确认添加标签，可添加多个"
-            style="width: 600px">
-          </el-select>
-          <div class="tips" style="font-size: 13px; color: #999">回车确认添加标签，可添加多个</div>
+        <el-form-item label="二维码" prop="qrCode">
+          <el-upload
+            :data="dataObj"
+            :multiple="false"
+            class="avatar-uploader"
+            action="http://upload-z2.qiniup.com"
+            :show-file-list="false"
+            :on-success="handleSuccess1"
+            :on-preview="handlePicturePreview1"
+            :on-remove="handleRemove1"
+            :before-upload="beforeUpload">
+            <img v-if="counselorForm.qrCode" :src="counselorForm.qrCode" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
-        <el-form-item label="描述">
-          <Tinymce ref="editor1" v-model="tutorForm.des" :height="100" :toolbar="['']" menubar="false" :hasUpload="false" />
+        <el-form-item label="问候语" prop="greeting">
+          <el-input v-model="counselorForm.greeting" maxlength="" type="textarea" :rows="2" placeholder="问候语"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button type="primary" @click.native.prevent="onSubmit">保存修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -53,33 +55,35 @@
 </template>
 
 <script>
-import { addOrUpdateTutor, getTutor } from '@/api/school'
+import { addOrUpdateAdvisers, getAdviser } from '@/api/activity'
 import { getToken } from '@/api/qiniu'
-import Tinymce from '@/components/Tinymce'
 
 export default {
-  name: 'EditTeacher',
-  components: { Tinymce },
+  name: 'EditAdviser',
   data() {
     return {
     	id: '',
-      tutorForm: {
-      	id: '',
+      counselorForm: {
+        id: '',
+        greeting: '',
         name: '',
         icon: '',
-        des: '',
-        tags: ''
+        qrCode: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入导师名称', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         icon: [
-          { required: true, message: '请上传导师头像', trigger: 'change' }
+          { required: true, message: '请上传头像', trigger: 'change' }
+        ],
+        qrCode: [
+          { required: true, message: '请上传二维码', trigger: 'change' }
         ]
       },
-      dataObj: { token: '' }
+      dataObj: { token: '' },
+      loading: false
     }
   },
   created() {
@@ -89,33 +93,41 @@ export default {
   },
   methods: {
   	fetchData() {
-      getTutor(this.id).then(response => {
-      	response.data.tags = JSON.parse(response.data.tags)
-      	Object.keys(this.tutorForm).forEach((key) => {
-	        this.tutorForm[key] = response.data[key]
+      getAdviser(this.id).then(response => {
+      	Object.keys(this.counselorForm).forEach((key) => {
+	        this.counselorForm[key] = response.data[key]
 	      })
       })
     },
     onSubmit() {
-      console.log('submit!')
-      let _tutorForm = Object.assign({}, this.tutorForm)
-      _tutorForm.tags = JSON.stringify(_tutorForm.tags)
-      addOrUpdateTutor(_tutorForm).then(res => {
-        if (res.code * 1 == 200) {
-          this.$message({
-            message: '编辑成功',
-            type: 'success'
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true
+          addOrUpdateAdvisers(this.counselorForm).then(res => {
+            if (res.code * 1 == 200) {
+              this.$message({
+                message: '创建成功',
+                type: 'success'
+              })
+              setTimeout(() => {
+                this.$router.push({ path: '/fangan/counselor/index' });
+              }, 1.5 * 1000)
+            } else {
+              this.$message({
+                message: res.msg,
+                type: 'error'
+              })
+            }
+            this.loading = false
           })
-          setTimeout(() => {
-            this.$router.push({ path: '/school/teacher/index' });
-          }, 1.5 * 1000)
         } else {
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
+          console.log('error submit!!')
+          return false
         }
       })
+      console.log('submit!')
+      //let _counselorForm = JSON.parse(JSON.stringify(this.counselorForm))
+      
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'
@@ -142,9 +154,15 @@ export default {
       console.log(file, fileList)
     },
     handleSuccess(res, file) {
-      this.tutorForm.icon = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      this.counselorForm.icon = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview() {
+      console.log();
+    },
+    handleSuccess1(res, file) {
+      this.counselorForm.qrCode = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    },
+    handlePicturePreview1() {
       console.log();
     },
     handleRemove1(file, fileList) {

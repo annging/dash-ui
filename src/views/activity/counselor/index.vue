@@ -43,14 +43,15 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="微信号">
+            label="问候语">
             <template slot-scope="{row}">
-              <div v-html="row.des"></div>
+              <span >{{ row.greeting }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="二维码">
             <template slot-scope="{row}">
+              <img :src="row.icon" style="width: 60px;height: 60px;">
             </template>
           </el-table-column>
           <el-table-column
@@ -89,7 +90,7 @@
 </template>
 
 <script>
-import { fetchTutorList, deleteTutor } from '@/api/school'
+import { fetchPageAdvisers, deleteAdviser } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -111,7 +112,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchTutorList(this.listQuery).then(response => {
+      fetchPageAdvisers(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
@@ -125,7 +126,7 @@ export default {
       this.$router.push({ path: '/fangan/counselor/create' })
     },
     handleEdit(index, row) {
-      /*this.$router.push({ path: '/fangan/counselor/edit/' + row.id });*/
+      this.$router.push({ path: '/fangan/counselor/edit/' + row.id });
     },
     handleDelete(index, row) {
       this.$confirm('确认删除?', '提示', {
@@ -133,7 +134,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        /*deleteTutor(row.id).then(res => {
+        deleteAdviser(row.id).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
@@ -146,7 +147,7 @@ export default {
               message: res.msg
             });
           }
-        })*/
+        })
       }).catch(() => {
         this.$message({
           type: 'info',

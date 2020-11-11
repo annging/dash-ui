@@ -25,29 +25,26 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="counselorForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="微信号" prop="name">
-          <el-input v-model="counselorForm.wx"></el-input>
-        </el-form-item>
-        <el-form-item label="二维码" prop="img">
+        <el-form-item label="二维码" prop="qrCode">
           <el-upload
             :data="dataObj"
             :multiple="false"
             class="avatar-uploader"
             action="http://upload-z2.qiniup.com"
             :show-file-list="false"
-            :on-success="handleSuccess"
-            :on-preview="handlePicturePreview"
-            :on-remove="handleRemove"
+            :on-success="handleSuccess1"
+            :on-preview="handlePicturePreview1"
+            :on-remove="handleRemove1"
             :before-upload="beforeUpload">
-            <img v-if="counselorForm.img" :src="counselorForm.img" class="avatar">
+            <img v-if="counselorForm.qrCode" :src="counselorForm.qrCode" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="问候语" prop="wel">
-          <el-input v-model="counselorForm.wel" maxlength="" type="textarea" :rows="2" placeholder="问候语"></el-input>
+        <el-form-item label="问候语" prop="greeting">
+          <el-input v-model="counselorForm.greeting" maxlength="" type="textarea" :rows="2" placeholder="问候语"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即添加</el-button>
+          <el-button type="primary" @click.native.prevent="onSubmit">立即添加</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -58,32 +55,34 @@
 </template>
 
 <script>
-import { addOrUpdateTutor } from '@/api/school'
+import { addOrUpdateAdvisers } from '@/api/activity'
 import { getToken } from '@/api/qiniu'
-import Tinymce from '@/components/Tinymce'
 
 export default {
-  name: 'CreateCon',
-  components: { Tinymce },
+  name: 'CreateAdviser',
+  components: {  },
   data() {
     return {
       counselorForm: {
+        greeting: '',
         name: '',
         icon: '',
-        img: '',
-        wx: '',
-        wel: ''
+        qrCode: ''
       },
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+          { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }
         ],
         icon: [
           { required: true, message: '请上传头像', trigger: 'change' }
+        ],
+        qrCode: [
+          { required: true, message: '请上传二维码', trigger: 'change' }
         ]
       },
-      dataObj: { token: '' }
+      dataObj: { token: '' },
+      loading: false
     }
   },
   created() {
@@ -91,25 +90,34 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log('submit!')
-      /*let _counselorForm = this.counselorForm
-      _counselorForm.tags = JSON.stringify(_counselorForm.tags)
-      addOrUpdateTutor(_counselorForm).then(res => {
-        if (res.code * 1 == 200) {
-          this.$message({
-            message: '创建成功',
-            type: 'success'
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.loading = true
+          addOrUpdateAdvisers(this.counselorForm).then(res => {
+            if (res.code * 1 == 200) {
+              this.$message({
+                message: '创建成功',
+                type: 'success'
+              })
+              setTimeout(() => {
+                this.$router.push({ path: '/fangan/counselor/index' });
+              }, 1.5 * 1000)
+            } else {
+              this.$message({
+                message: res.msg,
+                type: 'error'
+              })
+            }
+            this.loading = false
           })
-          setTimeout(() => {
-            this.$router.push({ path: '/school/teacher/index' });
-          }, 1.5 * 1000)
         } else {
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          })
+          console.log('error submit!!')
+          return false
         }
-      })*/
+      })
+      console.log('submit!')
+      //let _counselorForm = JSON.parse(JSON.stringify(this.counselorForm))
+      
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'
@@ -139,6 +147,12 @@ export default {
       this.counselorForm.icon = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview() {
+      console.log();
+    },
+    handleSuccess1(res, file) {
+      this.counselorForm.qrCode = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    },
+    handlePicturePreview1() {
       console.log();
     },
     handleRemove1(file, fileList) {
