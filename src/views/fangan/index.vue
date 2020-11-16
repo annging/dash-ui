@@ -69,13 +69,6 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="类型"
-              width="100">
-              <template slot-scope="{row}">
-                <span>{{ activityTypes[row.type] || row.type }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
               label="行业"
               width="100">
               <template slot-scope="{row}">
@@ -84,29 +77,43 @@
               </template>
             </el-table-column>
             <el-table-column
+              label="类型"
+              width="50">
+              <template slot-scope="{row}">
+                <span>{{ activityTypes[row.type] || row.type }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="活动"
+              width="80">
+              <template slot-scope="{row}">
+                <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/' + row.type + '/overview'">{{ row.activityId }}</router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="浏览"
-              width="100">
+              width="80">
               <template slot-scope="{row}">
                 <span>{{ row.browse }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="真实领取量"
-              width="100">
+              label="实领取量"
+              width="80">
               <template slot-scope="{row}">
                 <span>{{ row.receive }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="权重"
-              width="100">
+              width="60">
               <template slot-scope="{row}">
                 <span>{{ row.weight ? row.weight : 0 }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="是否推荐"
-              width="100">
+              width="80">
               <template slot-scope="{row}">
                 <el-tag type="success" size="mini" v-if="row.isRecommend">推荐</el-tag>
                 <el-tag type="info" size="mini" v-else>否</el-tag>

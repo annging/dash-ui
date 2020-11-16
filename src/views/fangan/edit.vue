@@ -73,23 +73,9 @@
             <img width="100%" :src="schemeForm.poster" alt="">
           </el-dialog>
         </el-form-item>
-        <el-form-item label="活动">
-          <el-select v-model="schemeForm.activityId" placeholder="请选择活动" style="width: 100%"  popper-class="paginationSelect h-600" @change="activityChange">
-            
-            <div >
-              <el-option
-              v-if="activityList.length > 0"
-              v-for="item in activityList" :key="item.id" :label="item.id + '-'  + activityTypesName[item.type] +  '-'  + item.title" :value="item.id">
-                <span class="label-id">{{ item.id }}</span>-
-
-                <span class="label-type">{{ activityTypesName[item.type] }}</span>-
-                <span class="label-title">{{ item.title }}</span>
-                <span v-if="item.merchant"> - ({{ item.merchant.name }})</span>
-              </el-option>
-              <pagination v-show="activityTotal>0" :total="activityTotal" :page.sync="activityListQuery.current" :limit.sync="activityListQuery.size" @pagination="getActivitys"
-              :autoScroll="false" />
-            </div>
-          </el-select>
+        <el-form-item label="活动ID">
+          <el-input v-model="schemeForm.activityId" placeholder="活动ID"></el-input>
+          <div class="tips" style="font-size: 13px; color: #999"><router-link target="_blank" style="color: #409EFF" :to="'/activity/list'">打开活动列表</router-link></div>
         </el-form-item>
         <el-form-item label="活动类型">
           <el-select v-model="schemeForm.type" placeholder="请选择活动类型">
@@ -104,7 +90,7 @@
                 <span class="label-avatar"><img :src="item.icon" style="width: 24px;height: 24px; vertical-align: middle;"></span>-
                 <span class="label-title">{{ item.name }}</span>
               </el-option>
-              <pagination v-show="adviserTotal>0" :total="adviserTotal" :page.sync="adviserListQuery.offset" :limit.sync="adviserListQuery.limit" @pagination="getAdvisers" />
+              <pagination v-show="adviserTotal>0" :total="adviserTotal" :page.sync="adviserListQuery.offset" :limit.sync="adviserListQuery.limit" @pagination="getAdvisers" :autoScroll="false" />
               </div>
           </el-select>
         </el-form-item>
@@ -138,7 +124,7 @@
           </el-switch>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">立即添加</el-button>
+          <el-button type="primary" @click="onSubmit">保存修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -241,7 +227,7 @@ export default {
     this.id = this.$route.params && this.$route.params.id
     this.fetchData()
     this.fetchToken()
-    this.getActivitys()
+    // this.getActivitys()
     this.getAdvisers()
   },
   methods: {
@@ -423,6 +409,11 @@ export default {
   .avatar1 {
     width: 350px;
     height: 200px;
+    display: block;
+  }
+  .avatar2 {
+    max-width: 500px;
+    max-height: 600px;
     display: block;
   }
 </style>

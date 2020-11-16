@@ -51,7 +51,7 @@
           <el-table-column
             label="二维码">
             <template slot-scope="{row}">
-              <img :src="row.icon" style="width: 60px;height: 60px;">
+              <img :src="row.qrCode" style="width: 60px;height: 60px;">
             </template>
           </el-table-column>
           <el-table-column

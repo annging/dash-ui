@@ -73,7 +73,7 @@
             <img width="100%" :src="schemeForm.poster" alt="">
           </el-dialog>
         </el-form-item>
-        <el-form-item label="活动">
+        <!--<el-form-item label="活动">
           <el-select v-model="schemeForm.activityId" placeholder="请选择活动" style="width: 100%"  popper-class="paginationSelect h-600" @change="activityChange">
             
             <div >
@@ -90,6 +90,10 @@
               :autoScroll="false" />
             </div>
           </el-select>
+        </el-form-item>-->
+        <el-form-item label="活动ID">
+          <el-input v-model="schemeForm.activityId" placeholder="活动ID"></el-input>
+          <div class="tips" style="font-size: 13px; color: #999"><router-link target="_blank" style="color: #409EFF" :to="'/activity/list'">打开活动列表</router-link></div>
         </el-form-item>
         <el-form-item label="活动类型">
           <el-select v-model="schemeForm.type" placeholder="请选择活动类型">
@@ -104,7 +108,7 @@
                 <span class="label-avatar"><img :src="item.icon" style="width: 24px;height: 24px; vertical-align: middle;"></span>-
                 <span class="label-title">{{ item.name }}</span>
               </el-option>
-              <pagination v-show="adviserTotal>0" :total="adviserTotal" :page.sync="adviserListQuery.offset" :limit.sync="adviserListQuery.limit" @pagination="getAdvisers" />
+              <pagination v-show="adviserTotal>0" :total="adviserTotal" :page.sync="adviserListQuery.offset" :limit.sync="adviserListQuery.limit" @pagination="getAdvisers" :autoScroll="false" />
               </div>
           </el-select>
         </el-form-item>
@@ -222,7 +226,7 @@ export default {
   },
   created() {
     this.fetchToken()
-    this.getActivitys()
+    // this.getActivitys()
     this.getAdvisers()
   },
   methods: {
