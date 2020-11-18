@@ -2,10 +2,10 @@
 	<div class="main-content">
 	  <div class="left-container">
 	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		    <el-menu-item index="1" :route="{path:'/platform/level/index'}">会员等级</el-menu-item>
+		    <el-menu-item index="1" :route="{path:'/fangan/counselor/index'}">列表</el-menu-item>
 	    </el-menu>
 		  <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
-        <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加会员等级</el-button>
+        <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加</el-button>
       </el-row>
       <el-row class="list">
         <el-table
@@ -30,39 +30,42 @@
             </template>
           </el-table-column>
           <el-table-column
+              label="头像"
+              width="80">
+              <template slot-scope="{row}">
+                <img :src="row.icon" style="width: 60px;height: 60px;">
+              </template>
+            </el-table-column>
+          <el-table-column
             label="名称">
             <template slot-scope="{row}">
-              <span>{{ row.name }}</span>
+              <span >{{ row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="店铺数量">
+            label="问候语">
             <template slot-scope="{row}">
-              <span>{{ row.storeNo }}</span>
+              <span >{{ row.greeting }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="员工数量">
+            label="二维码">
             <template slot-scope="{row}">
-              <span>{{ row.staffNo }}</span>
+              <img :src="row.qrCode" style="width: 60px;height: 60px;">
             </template>
           </el-table-column>
           <el-table-column
-            label="月付">
+            label="修改时间"
+            width="150">
             <template slot-scope="{row}">
-              <span>{{ row.monthFee }}</span>
+              <span>{{ row.updatedAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            label="半年付">
+            label="创建时间"
+            width="150">
             <template slot-scope="{row}">
-              <span>{{ row.semiAnnual }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="年付">
-            <template slot-scope="{row}">
-              <span>{{ row.annual }}</span>
+              <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="110">
@@ -79,7 +82,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.offset" :limit.sync="listQuery.limit" @pagination="getList" />
       </el-row>
     </div>
     <!--<div class="secondary-sidebar"></div>-->
@@ -87,54 +90,51 @@
 </template>
 
 <script>
-import { getSystemLogs } from '@/api/platform'
+import { fetchPageAdvisers, deleteAdviser } from '@/api/activity'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
   components: { Pagination },
   data() {
     return {
-      list: [{ id: 1, name: '免费会员', storeNo: '1', staffNo: '5', monthFee: '0', semiAnnual: '0', annual: '0' }, { id: 2, name: ' VIP会员', storeNo: '5', staffNo: '25', monthFee: '299.00', semiAnnual: '999.00', annual: '1499.00' }],
+      list: [],
       total: 0,
       listLoading: false,
       listQuery: {
-        searchStr: '',
-        current: 1,
-        size: 20
-      },
-      listFilter: {
+        offset: 0,
+        limit: 20
       }
     }
   },
   created() {
-    // this.getList()
+    this.getList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      getSystemLogs(this.listQuery, this.listFilter).then(response => {
+      fetchPageAdvisers(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.offset = 0
       this.getList()
     },
     goCreate() {
-      this.$router.push({ path: '/platform/level/create' })
+      this.$router.push({ path: '/fangan/counselor/create' })
     },
     handleEdit(index, row) {
-      this.$router.push({ path: '/platform/level/edit/' + row.id });
+      this.$router.push({ path: '/fangan/counselor/edit/' + row.id });
     },
     handleDelete(index, row) {
-      this.$confirm('确认删除该会员等级?', '提示', {
+      this.$confirm('确认删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        /*deleteScheme(row.id).then(res => {
+        deleteAdviser(row.id).then(res => {
           if (res.code * 1 === 200 ) {
             this.$message({
               type: 'success',
@@ -147,8 +147,7 @@ export default {
               message: res.msg
             });
           }
-        })*/
-        alert("TODO delete")
+        })
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -156,6 +155,9 @@ export default {
         })       
       })
     },
+    handleRec(index, row) {
+      console.log(2)
+    }
   }
 }
 </script>

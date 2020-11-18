@@ -250,3 +250,45 @@ export function deleteActivityById(activityId) {
     }
   })
 }
+
+// /system/activity/getJoinCount 活动参与厂家数
+export function getJoinCount() {
+  return request({
+    url: '/system/activity/getJoinCount',
+    method: 'get'
+  })
+}
+
+// /scheme/adviser/pageAdvisers  分页获取顾问
+export function fetchPageAdvisers(query) {
+  return request({
+    url: '/system/scheme/adviser/pageAdvisers',
+    method: 'get',
+    params: query
+  })
+}
+
+// /scheme/adviser/addOrUpdate   添加或者更新顾问
+export function addOrUpdateAdvisers(data) {
+  return request({
+    url: '/system/scheme/adviser/addOrUpdate',
+    method: 'post',
+    data
+  })
+}
+
+// /scheme/adviser/delete/{schemeAdviserId}  删除顾问
+export function deleteAdviser(adviserId) {
+  return request({
+    url: '/system/scheme/adviser/delete/' + adviserId,
+    method: 'get'
+  })
+}
+
+// /scheme/adviser/get/{adviserId}  获取顾问
+export function getAdviser(adviserId) {
+  return request({
+    url: '/system/scheme/adviser/get/' + adviserId,
+    method: 'get'
+  })
+}

@@ -2,8 +2,8 @@
   <div class="main-content">
     <div class="left-container">
       <el-menu default-active="2" class="" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item index="1" :route="{path:'/activity/fangan/index/'}">方案列表</el-menu-item>
-        <el-menu-item index="2" :route="{path:'/activity/fangan/recommend/'}">推荐方案列表</el-menu-item>
+        <el-menu-item index="1" :route="{path:'/fangan/index/'}">方案列表</el-menu-item>
+        <el-menu-item index="2" :route="{path:'/fangan/recommend/'}">推荐方案列表</el-menu-item>
       </el-menu>
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
         <el-input
@@ -41,7 +41,7 @@
               label="封面"
               width="120">
               <template slot-scope="{row}">
-                <img :src="row.imgUrl" style="width: 100px;height: 60px;">
+                <img :src="row.bannerImg" style="width: 100px;height: 60px;">
               </template>
             </el-table-column>
             <el-table-column
@@ -61,7 +61,7 @@
               label="行业"
               width="100">
               <template slot-scope="{row}">
-                <span>{{ industrys[row.industry] || row.industry }}</span>
+                <span v-if="row.industryType">{{ industryTypeName[row.industryType] }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -128,8 +128,10 @@ export default {
       clientHeight: '',
       maxHeight: 400,
       activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
-      industrys: { 1: '教育' ,  2: '体育' ,  3: '珠宝' }
-    };
+      industryTypeName: {
+        1: '教育培训', 2: '餐饮美食', 3: '美容SPA', 4: '生活娱乐', 5: '运动健身', 6: '知识付费', 7: '电商团购'
+      }
+    }
   },
   watch: {
       // 如果 `clientHeight` 发生改变，这个函数就会运行

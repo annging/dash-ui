@@ -4,7 +4,7 @@
 			<div class="container">
 				<nav class="mast-head-nav">
 					<ul class="nav-list">
-						<li class="nav-list__item"><a href="/" class="button-link">官网</a></li>
+						<li class="nav-list__item"><a href="https://tuantuanzhan.cn/" target="_blank" class="button-link">官网</a></li>
 					</ul>
 					<ul class="nav-list">
 					</ul>

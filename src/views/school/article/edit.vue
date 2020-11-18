@@ -57,6 +57,12 @@
             v-model="articleForm.brief">
           </el-input>
         </el-form-item>
+        <el-form-item label="真实浏览量" prop="viewCount">
+          <el-input type="number" v-model="articleForm.viewCount" placeholder="真实浏览量" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="虚拟浏览量" prop="virtulViewCount">
+          <el-input type="number" v-model="articleForm.virtulViewCount" placeholder="虚拟浏览量"></el-input>
+        </el-form-item>
         <el-form-item label="是否推荐">
           <el-switch
             v-model="articleForm.isRecommend"
@@ -101,7 +107,9 @@ export default {
         type: 1,
         content: '',
         weight: '',
-        isRecommend: false
+        isRecommend: false,
+        viewCount: 0,
+        virtulViewCount: 0
       },
       rules: {
         title: [
