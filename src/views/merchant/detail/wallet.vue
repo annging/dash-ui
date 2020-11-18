@@ -3,7 +3,7 @@
 		<panel-wallet :wallet=wallet />
 		<div>
 			<div class="title">
-	      <div class="left">明细(开发...)</div>
+	      <div class="left">明细(开发中...)</div>
 	      <div class="right">
 	      </div>
 	    </div>
