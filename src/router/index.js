@@ -378,6 +378,12 @@ export const constantRoutes = [
             component: () => import('@/views/merchant/detail/statistics'),
             name: '商家详情-数据统计',
             meta: { title: '商家详情', activeMenu: '/merchant/index' }
+          },
+          {
+            path: 'wallet',
+            component: () => import('@/views/merchant/detail/wallet'),
+            name: '商家详情-数据统计',
+            meta: { title: '商家账户', activeMenu: '/merchant/index' }
           }
         ]
       },
