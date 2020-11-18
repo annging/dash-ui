@@ -133,7 +133,7 @@ export const constantRoutes = [
           }
         ]
       },
-      /*{
+      {
         path: 'user',
         name: ' userSet',
         redirect: '/platform/user/index',
@@ -148,7 +148,7 @@ export const constantRoutes = [
             hidden: true
           }
         ]
-      },*/
+      }
     ]
   }, // 平台管理
 

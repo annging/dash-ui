@@ -1,30 +1,30 @@
 <template>
   <div>
     <div class="title">
-      <div class="left">活动成交率漏斗</div>
+      <div class="left">实际收支</div>
       <div class="right" style="display: none;">
         <svg-icon icon-class="filter" />
         <span>筛选</span>
       </div>
     </div>
     <el-row :gutter="20" class="panel-group" style="clear: both">
-      <el-col :xs="12" :sm="12" :lg="18" class="card-panel-col" style="background-color: #F2F6FC; padding: 30px 0; margin: 10px;">
-      <funnel-chart width="100%" :chartData=activityTurnoverRate />
+      <el-col :xs="24" :sm="24" :lg="18" class="card-panel-col" style="background-color: #F2F6FC; padding: 30px 0; margin: 10px;">
+      <pie-chart width="100%" :chartData=actualIncome />
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import FunnelChart from '@/components/Charts/FunnelChart'
+import PieChart from './components/PieChart'
 
 export default {
-  name: 'PanelActivityp',
+  name: 'PanelIncome',
   components: {
-    FunnelChart
+    PieChart
   },
   props: {
-    activityTurnoverRate: {
+    actualIncome: {
       type: Object,
         default: function() {
           return {}

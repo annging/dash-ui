@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="title">
-      <div class="left">活动数据统计</div>
-      <div class="right" style="display: none">
+      <div class="left">用户分析</div>
+      <div class="right" style="display: none;">
         <svg-icon icon-class="filter" />
         <span>筛选</span>
       </div>
@@ -12,9 +12,9 @@
         <div class="card-panel">
           <div class="card-panel-description">
             <div class="card-panel-text">
-              发布活动(场)
+              新客人数
             </div>
-            <div class="card-panel-num">{{ activityDataStatistics.activityStatistics }}</div>
+            <div class="card-panel-num">{{ userAnalysis.newUser }}</div>
           </div>
         </div>
       </el-col>
@@ -22,19 +22,9 @@
         <div class="card-panel">
           <div class="card-panel-description">
             <div class="card-panel-text">
-              浏览量(次数)
+              老客人数
             </div>
-            <div class="card-panel-num">{{ activityDataStatistics.pageView }}</div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              转发次数
-            </div>
-            <div class="card-panel-num">{{ activityDataStatistics.forwardingNumber }}</div>
+            <div class="card-panel-num">{{ userAnalysis.oldUser }}</div>
           </div>
         </div>
       </el-col>
@@ -45,18 +35,14 @@
 <script>
 
 export default {
-  name: 'PanelActivitys',
+  name: 'PanelUser',
   components: {
   },
   props: {
-    activityDataStatistics: {
+    userAnalysis: {
       type: Object,
         default: function() {
-          return {
-            activityStatistics: '-',
-            pageView: '-',
-            forwardingNumber: '-'
-          }
+          return {}
         }
     }
   },
