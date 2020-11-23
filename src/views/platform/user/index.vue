@@ -112,16 +112,16 @@
               <el-button
                 size="mini"
                 type="text"
-                @click="handleView(scope.$index, scope.row)">查看</el-button>
+                @click="handleSetWeight(scope.$index, scope.row)">权重</el-button>
               <el-button
                 size="mini"
                 type="text"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                @click="handleUpDown(scope.$index, scope.row)">上架</el-button>
               <el-button
                 size="mini"
                 type="text"
                 style="color: #F56C6C"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                @click="handleUpDown(scope.$index, scope.row)">下架</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -236,6 +236,12 @@ export default {
     handleFilter() {
       this.listQuery.current = 1
       this.getList()
+    },
+    handleSetWeight(index, row) {
+      console.log(1)
+    },
+    handleUpDown(index, row) {
+      console.log(2)
     },
     handleView(index, row) {
       this.$router.push({
