@@ -28,7 +28,7 @@
           <el-table-column
             label="真实使用量">
             <template slot-scope="{row}">
-              <span><el-input size="mini" v-model="row.joinCount"></el-input></span>
+              <span><el-input size="mini" v-model="row.joinCount" :disabled="true"></el-input></span>
             </template>
           </el-table-column>
           <el-table-column
