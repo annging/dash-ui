@@ -7,12 +7,19 @@
           <div class="a-info">
             <div class="a-title">{{ activity.title }}</div>
             <div class="a-intro">{{ activity.desc }}</div>
+            <div class="a-meta"><span class="label">类型:</span>{{ activityTypes[activity.type] }}</div>
+            <div><span class="label">时间:</span>{{ activity.startTime | moment("YYYY-MM-DD HH:mm:ss") }} 至 {{ activity.endTime | moment("YYYY-MM-DD HH:mm:ss") }}</div>
+            <div v-if="activity.createUserId">
+              <span class="label">创建者:</span><router-link  target="_blank" style="color: #409EFF" :to="'/user/detail/' + activity.createUserId">{{ activity.createUserId }}</router-link>
+            </div>
+            <div><span class="label">商家: </span>
+              <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId + '/overview'">{{ activity.merchantId }}</router-link></div>
           </div>
         </el-col>
       </el-row>
-      <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px; display: none">
+      <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px;">
         <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/overview'">概览</el-menu-item>
-        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/statistics'" style="display: none">统计数据</el-menu-item>
+        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/statistics'" style="">统计数据</el-menu-item>
       </el-menu>
       <router-view />
     </div>
@@ -39,7 +46,8 @@ export default {
       type: '',
       activity: Object.assign({}, defaultActivity),
       qrcodeImgUrl: '',
-      typePage: { 1: 'pages/activeDetail/activeDetail', 2: '', 3: '', 4: 'pages/bargain/bargainDetail', 5: 'pages/seckill/seckillDetail', 6: 'pages/group/groupDetail', 7: 'pages/vote/voteDetail', 8: '', 9: '', '-1': 'pages/grpPurchase/grpPurchaseDetail' } // 活动类型 1 报名,2 抽奖,3 海报,4 砍价,5 秒杀,6 拼团,7 投票,8 预约,9 助力,10 优惠券(代金券),11 优惠券(折扣券),12 优惠券(兑换券),13 优惠券(体验券)
+      typePage: { 1: 'pages/activeDetail/activeDetail', 2: '', 3: '', 4: 'pages/bargain/bargainDetail', 5: 'pages/seckill/seckillDetail', 6: 'pages/group/groupDetail', 7: 'pages/vote/voteDetail', 8: '', 9: '', '-1': 'pages/grpPurchase/grpPurchaseDetail' }, // 活动类型 1 报名,2 抽奖,3 海报,4 砍价,5 秒杀,6 拼团,7 投票,8 预约,9 助力,10 优惠券(代金券),11 优惠券(折扣券),12 优惠券(兑换券),13 优惠券(体验券)
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
     }
   },
   computed: {
@@ -139,10 +147,13 @@ export default {
     border-color: #dddfe1;
     .a-logo {
       width: 300px;
+      height: 220px;
       border-radius: 4px;
       overflow: hidden;
+      text-align: center;
       img {
         width: 100%;
+        margin: 0 -100%;
       }
     }
     .a-info {
@@ -161,6 +172,13 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+      }
+      > div {
+        padding: 5px 0;
+      }
+      .label {
+        display: inline-block;
+        width: 50px;
       }
     }
     .left {
