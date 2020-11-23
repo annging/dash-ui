@@ -25,6 +25,7 @@
           <el-menu-item :index="'/merchant/detail/' + id + '/activitys'" >活动</el-menu-item>
           <el-menu-item :index="'/merchant/detail/' + id + '/statistics'">数据分析</el-menu-item>
           <el-menu-item :index="'/merchant/detail/' + id + '/wallet'">钱包</el-menu-item>
+          <el-menu-item :index="'/merchant/detail/' + id + '/order'">订单</el-menu-item>
         </el-menu>
         <router-view />
 	    </div>
