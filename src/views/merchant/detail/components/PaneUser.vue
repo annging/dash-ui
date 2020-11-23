@@ -8,7 +8,9 @@
       </div>
     </div>
     <el-row :gutter="20" class="panel-group" style="clear: both">
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <pie-chart :className="chart3" width="100%" :chartData=userAnalysis />
+
+      <!--<el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-description">
             <div class="card-panel-text">
@@ -27,18 +29,18 @@
             <div class="card-panel-num">{{ userAnalysis.oldUser }}</div>
           </div>
         </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="18" class="card-panel-col" style="background-color: #F2F6FC; padding: 30px 0; margin: 10px;">
-      </el-col>
+      </el-col>-->
     </el-row>
   </div>
 </template>
 
 <script>
+import PieChart from './components/PieChart3'
 
 export default {
   name: 'PanelUser',
   components: {
+    PieChart
   },
   props: {
     userAnalysis: {

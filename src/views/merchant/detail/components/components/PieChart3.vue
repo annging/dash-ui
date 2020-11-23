@@ -56,16 +56,19 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['活动收入', '优惠券收入', '佣金支出','退款金额']
+          data: ['新客人数', '老客人数']
         },
         series: [
           {
-            name: '实际收入',
+            name: '新旧用户分析',
             type: 'pie',
             roseType: 'radius',
             radius: [50, 70],
             center: ['50%', '38%'],
-            data: this.chartData.series,
+            data: [
+              {value: this.chartData.newUser, name: '新客人数'},
+              {value: this.chartData.oldUser, name: '老客人数'}
+            ],
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

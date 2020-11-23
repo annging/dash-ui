@@ -9,6 +9,11 @@
                 <el-tag type="info" size="mini" v-if="merchant.authStatus===0">未认证</el-tag>
                 <el-tag type="info"  size="mini" v-if="merchant.authStatus===2 && merchant.authType===1">个人认证</el-tag>
                 <el-tag type="info"  size="mini" v-if="merchant.authStatus===2 && merchant.authType===2">企业认证</el-tag>
+                <span style="display: inline-block; width: 10px;"></span>
+                <el-tag type="info" size="mini" v-if="merchant.vipLevel===0">{{ vipLevelsName[merchant.vipLevel] }}</el-tag>
+                <el-tag type="info"  size="mini" v-if="merchant.vipLevel===1">{{ vipLevelsName[merchant.vipLevel] }}</el-tag>
+                <el-tag type="info"  size="mini" v-if="merchant.vipLevel===2">{{ vipLevelsName[merchant.vipLevel] }}</el-tag>
+                <span style="display:inline-block; padding-left: 5px; font-size: 12px;" v-if="merchant.vipEndTime">到期时间: {{ merchant.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </div>
               <div class="m-intro" v-html="merchant.intro"></div>
               <div class="m-other">
@@ -58,7 +63,8 @@ export default {
     return {
     	id: '',
     	merchant: Object.assign({}, defaultMerchant),
-      qrcodeImgUrl: ''
+      qrcodeImgUrl: '',
+      vipLevelsName: { 0: '免费会员', 1: '体验会员', 2: 'VIP会员' },
     }
   },
   computed: {

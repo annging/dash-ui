@@ -82,7 +82,8 @@ export default {
                 gap: 2,
                 label: {
                     show: true,
-                    position: 'inside'
+                    position: 'inside',
+                    formatter: '{b}: {c}人'
                 },
                 labelLine: {
                     length: 10,
