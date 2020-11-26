@@ -10,16 +10,9 @@
     </el-menu>
     <el-row>
       <el-form ref="form" :rules="rules" :model="recommendForm" label-width="100px" size="small">
-        <el-form-item label="活动">
-          <el-select v-model="recommendForm.activityId" placeholder="请选择活动" style="width: 100%" popper-class="paginationSelect">
-            <el-option v-loading="listLoading" v-for="item in activityList" :key="item.id" :label="item.id + '-' + activityTypes[item.type].label + '-' + item.title" :value="item.id">
-              <span class="label-id">{{ item.id }}</span>
-              <span class="label-type">{{ activityTypes[item.type].label }}</span>
-              <span class="label-title">{{ item.title }}</span>
-              <el-tag type="success" size="mini" v-if="item.specialActivity && item.specialActivity.isRecommend > 0" style="float: right; margin-top: 6px;">已推荐</el-tag>
-            </el-option>
-            <pagination v-show="activityTotal>0" :total="activityTotal" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
-          </el-select>
+        <el-form-item label="活动Id">
+          <el-input v-model="recommendForm.activityId"></el-input>
+          <div class="tips" style="font-size: 13px; color: #999"><router-link target="_blank" style="color: #409EFF" :to="'/activity/list'">打开活动列表</router-link></div>
         </el-form-item>
         <el-form-item label="权重">
           <el-input v-model="recommendForm.weight"></el-input>
