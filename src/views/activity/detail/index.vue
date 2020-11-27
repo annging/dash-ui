@@ -9,22 +9,29 @@
             <div class="a-intro">{{ activity.desc }}</div>
             <div class="a-meta"><span class="label">类型:</span>{{ activityTypes[activity.type] }}</div>
             <div><span class="label">时间:</span>{{ activity.startTime | moment("YYYY-MM-DD HH:mm:ss") }} 至 {{ activity.endTime | moment("YYYY-MM-DD HH:mm:ss") }}</div>
-            <div v-if="activity.createUserId">
+            <!--<div v-if="activity.createUserId">
               <span class="label">创建者:</span><router-link  target="_blank" style="color: #409EFF" :to="'/user/detail/' + activity.createUserId">{{ activity.createUserId }}</router-link>
             </div>
             <div><span class="label">商家: </span>
-              <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId + '/overview'">{{ activity.merchantId }}</router-link></div>
-          </div>
+              <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId + '/overview'">{{ activity.merchantId }}</router-link></div>-->
+            </div>
         </el-col>
       </el-row>
       <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px;">
         <el-menu-item :index="'/activity/detail/' + id + '/overview'">概览</el-menu-item>
+        <el-menu-item :index="'/activity/detail/' + id + '/order'">订单</el-menu-item>
         <el-menu-item :index="'/activity/detail/' + id + '/statistics'" style="">统计数据</el-menu-item>
       </el-menu>
       <router-view />
     </div>
     <div class="secondary-sidebar">
-      <div class="qrcodeImg"><img :src="qrcodeImgUrl"></div>
+      <div class="vertically-fixed">
+        <div class="qrcodeImg"><img :src="qrcodeImgUrl"></div>
+
+        <div class="merchant-info">
+          商家: <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId + '/overview'">{{ activity.merchantId }}</router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -120,6 +127,11 @@ export default {
     flex: 0 0 240px;
     padding-left: 40px;
   }
+  .vertically-fixed {
+    position: fixed;
+    z-index: 2;
+    height: 100%;
+  }
   .left-container {
     position: relative;
     z-index: 1;
@@ -142,13 +154,13 @@ export default {
   .activity-info {
     background-color: #f7f9fa;
     padding: 16px;
-    margin-top: 24px;
+    /* margin-top: 24px;*/
     margin-bottom: 8px;
     border-radius: 4px;
     border-color: #dddfe1;
     .a-logo {
-      width: 300px;
-      height: 220px;
+      width: 200px;
+      height: 168px;
       border-radius: 4px;
       overflow: hidden;
       text-align: center;
@@ -164,7 +176,7 @@ export default {
       line-height: 1.25;
       .a-title {
         color: #47525d;
-        font-size: 28px;
+        font-size: 24px;
       }
       .a-intro {
         padding-top: 8px;
@@ -183,12 +195,17 @@ export default {
       }
     }
     .left {
-      flex:0 0 320px;
+      flex:0 0 220px;
     }
   }
-  .qrcodeImg {
+  .merchant-info {
     margin-top: 30px;
-    width: 200px;
+  }
+  .qrcodeImg {
+    margin-top: 0px;
+    border: 1px solid #eee;
+    width: 198px;
+    height: 198px;
     img {
       width: 100%;
     }

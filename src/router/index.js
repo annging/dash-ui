@@ -243,6 +243,12 @@ export const constantRoutes = [
             component: () => import('@/views/activity/detail/statistics'),
             name: '活动详情数据',
             meta: { title: '活动详情数据', activeMenu: '/activity/list' }
+          },
+          {
+            path: 'order',
+            component: () => import('@/views/activity/detail/order'),
+            name: '活动订单',
+            meta: { title: '活动详情数据', activeMenu: '/activity/list' }
           }
         ]
       },
@@ -421,6 +427,12 @@ export const constantRoutes = [
             component: () => import('@/views/merchant/detail/order'),
             name: '商家详情-数据统计',
             meta: { title: '商家订单', activeMenu: '/merchant/index' }
+          },
+          {
+            path: 'vipHistory',
+            component: () => import('@/views/merchant/detail/vipHistory'),
+            name: '商家详情-会员纪录',
+            meta: { title: '商家会员纪录', activeMenu: '/merchant/index' }
           }
         ]
       },

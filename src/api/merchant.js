@@ -163,10 +163,19 @@ export function updateMerchantViPEndTime(query) {
   })
 }
 
-// /system/merchant/updateMerchantViPLevel 修改商家会员级别
-export function updateMerchantViPLevel(query) {
+// /system/merchant/updateMerchantViPLevel 修改商家会员级别  废弃
+/* export function updateMerchantViPLevel(query) {
   return request({
     url: '/system/merchant/updateMerchantViPLevel',
+    method: 'get',
+    params: query
+  })
+} */
+
+// /system/merchant/vip/update 修改商家会员级别
+export function updateMerchantViPLevel(query) {
+  return request({
+    url: '/system/merchant/vip/update',
     method: 'get',
     params: query
   })
@@ -198,5 +207,51 @@ export function getMerchantWalletDetail(query, id) {
     url: '/system/wallet/getDetail/' + id,
     method: 'get',
     params: query
+  })
+}
+
+// /system/merchant/vip/changePages 查询商家会员改变记录
+export function getMerchantVIPChangePages(query, data) {
+  return request({
+    url: '/system/merchant/vip/changePages',
+    method: 'post',
+    params: query,
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
+  })
+}
+
+// /system/merchant/vip/rechargePages 查询商家会员充值
+export function getMerchantVIPRechargePages(query, data) {
+  return request({
+    url: '/system/merchant/vip/rechargePages',
+    method: 'post',
+    params: query,
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
   })
 }

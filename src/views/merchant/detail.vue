@@ -31,6 +31,7 @@
           <el-menu-item :index="'/merchant/detail/' + id + '/statistics'">数据分析</el-menu-item>
           <el-menu-item :index="'/merchant/detail/' + id + '/wallet'">钱包</el-menu-item>
           <el-menu-item :index="'/merchant/detail/' + id + '/order'">订单</el-menu-item>
+          <el-menu-item :index="'/merchant/detail/' + id + '/vipHistory'">会员纪录</el-menu-item>
         </el-menu>
         <router-view />
 	    </div>
