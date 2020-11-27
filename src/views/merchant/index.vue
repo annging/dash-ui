@@ -127,14 +127,14 @@
 		        </el-table-column>
 		        <el-table-column
 	            label="会员到期时间"
-              width="130px"
+              width="135px"
               class-name="miniCol">
 	            <template slot-scope="{row}">
 	            	<!--<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span> <br />
                 <i style="color: #409EFF; cursor: pointer" class="el-icon-edit"></i>-->
 	            	<el-date-picker
 	            		size="mini"
-	            		style="width: 122px;"
+	            		style="width: 127px;"
 						      v-model="row.vipEndTime"
 						      type="datetime"
                   class="mini-dp"

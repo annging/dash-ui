@@ -58,7 +58,7 @@
             <el-table-column
               label="标题">
               <template slot-scope="{row}">
-                <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activity.id + '/' + row.activity.type + '/overview'">{{ row.activity.title }}</router-link>
+                <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activity.id + '/overview'">{{ row.activity.title }}</router-link>
               </template>
             </el-table-column>
             <el-table-column

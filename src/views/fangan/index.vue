@@ -87,7 +87,7 @@
               label="活动"
               width="80">
               <template slot-scope="{row}">
-                <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/' + row.type + '/overview'">{{ row.activityId }}</router-link>
+                <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/overview'">{{ row.activityId }}</router-link>
               </template>
             </el-table-column>
             <el-table-column

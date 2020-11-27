@@ -18,8 +18,8 @@
         </el-col>
       </el-row>
       <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px;">
-        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/overview'">概览</el-menu-item>
-        <el-menu-item :index="'/activity/detail/' + id + '/' + type + '/statistics'" style="">统计数据</el-menu-item>
+        <el-menu-item :index="'/activity/detail/' + id + '/overview'">概览</el-menu-item>
+        <el-menu-item :index="'/activity/detail/' + id + '/statistics'" style="">统计数据</el-menu-item>
       </el-menu>
       <router-view />
     </div>
@@ -59,10 +59,10 @@ export default {
   },
   created() {
     this.id = this.$route.params && this.$route.params.id
-    this.type = this.$route.params && this.$route.params.type
+    // this.type = this.$route.params && this.$route.params.type
     this.fetchData(this.id)
     // this.getParams()
-    this.getActivityImgUrl(this.id, this.type)
+    // this.getActivityImgUrl(this.id, this.type)
   },
   methods: {
     fetchData(id) {
@@ -71,6 +71,7 @@ export default {
           response.data.cover = JSON.parse(response.data.cover)
           response.data.activitySetting = JSON.parse(response.data.activitySetting)
           this.activity = response.data
+          this.getActivityImgUrl(this.id, this.activity.type)
         } else {
           this.$message({
             type: 'error',

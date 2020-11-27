@@ -245,7 +245,7 @@ export default {
     },
     handleView(index, row) {
       this.$router.push({
-        path: '/activity/detail/' + row.id + '/' + row.type
+        path: '/activity/detail/' + row.id
       })
     },
     handleEdit(index, row) {

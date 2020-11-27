@@ -23,8 +23,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="订单号"
-              width="135px">
+              label="订单号">
               <template slot-scope="{row}">
                 <span>{{ row.orderNum }}</span>
               </template>
@@ -32,7 +31,7 @@
             <el-table-column
               label="活动">
               <template slot-scope="{row}">
-                <span>{{ row.activity.title }}</span>
+                <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/overview'">{{ row.activityId }}</router-link>
               </template>
             </el-table-column>
             <el-table-column
@@ -42,15 +41,22 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="数量">
+              label="数量"
+              width="50">
               <template slot-scope="{row}">
                 <span>{{ row.amount }}</span>
               </template>
             </el-table-column>
             <el-table-column
+              label="原价">
+              <template slot-scope="{row}">
+                <span>{{ row.originPrice.toFixed(2) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
               label="金额">
               <template slot-scope="{row}">
-                <span>{{ row.finalPrice.toFixed(2) }}</span>
+                <span style="color: red">{{ row.finalPrice.toFixed(2) }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -66,13 +72,14 @@
                 <span>{{ row.createdAt | moment("YYYY-MM-DD HH:mm:ss") }}</span>
               </template>
             </el-table-column>
-            <!--<el-table-column fixed="right" label="操作">
+            <el-table-column label="操作" width="50">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleView(scope.$index, scope.row)">查看详情</el-button>
+                  type="text"
+                  @click="handleView(scope.$index, scope.row)">详情</el-button>
               </template>
-            </el-table-column>-->
+            </el-table-column>
           </el-table>
           <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
         </el-row>
@@ -80,7 +87,7 @@
 </template>
 
 <script>
-import { getOrders } from '@/api/statistics'
+import { getPageOrders } from '@/api/statistics'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -93,11 +100,11 @@ export default {
       listLoading: false,
       listQuery: {
         current: 1,
-        size: 10
+        size: 20
       },
       listFilter: {
       },
-      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
       orderStatus: { 1: '已下单待付款', 2: '已付款待核销', 3: '已发货', 4: '已核销', 5: '已完成', 6: '已取消', 7: '退款审核中', 8: '退款完成', 9: '审核中', 10: '已超时', 11: '审核未通过', 12: '拼团未成团' }
     }
   },
@@ -108,7 +115,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getOrders(this.listQuery, { merchantId: 60} ).then(response => {
+      getPageOrders(this.listQuery, { merchantId: this.id } ).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false

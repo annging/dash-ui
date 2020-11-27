@@ -183,3 +183,20 @@ export function getStores(query) {
     }
   })
 }
+
+// /system/wallet/get/{merchantId}  钱包信息查询
+export function getMerchantWallet(id) {
+  return request({
+    url: '/system/wallet/get/' + id,
+    method: 'get'
+  })
+}
+
+// /system/wallet/getDetail  钱包明细查询
+export function getMerchantWalletDetail(query, id) {
+  return request({
+    url: '/system/wallet/getDetail/' + id,
+    method: 'get',
+    params: query
+  })
+}

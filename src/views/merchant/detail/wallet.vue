@@ -3,7 +3,7 @@
 		<panel-wallet :wallet=wallet />
 		<div>
 			<div class="title">
-	      <div class="left">明细(开发中...)</div>
+	      <div class="left">明细</div>
 	      <div class="right">
 	      </div>
 	    </div>
@@ -50,7 +50,8 @@
 	        <el-table-column
 	          label="相关活动">
 	          <template slot-scope="{row}">
-	            <span>{{ row.activityId > -1 ? row.activity.title : '-' }}</span>
+	          	<router-link v-if="row.activityId && row.activity" target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/overview'">{{ row.activity.title }}</router-link>
+	            <span v-else>{{ row.activityId }}</span>
 	          </template>
 	        </el-table-column>
 	        <el-table-column
@@ -73,14 +74,14 @@
 	          </template>
 	        </el-table-column>
 	      </el-table>
-	      <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
+	      <pagination v-show="total>0" :total="total" :page.sync="listQuery.offset" :limit.sync="listQuery.limit" @pagination="getList" />
 	    </el-row>
 	  </div>
 	</div>
 </template>
 
 <script>
-import { accountOverview } from '@/api/account'
+import { getMerchantWallet, getMerchantWalletDetail } from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import PanelWallet from './components/PanelWallet'
 
@@ -94,8 +95,8 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        current: 1,
-        size: 20
+        offset: 1,
+        limit: 20
       },
       listFilter: {
 
@@ -105,24 +106,24 @@ export default {
   created() {
   	this.id = this.$route.params && this.$route.params.id
     this.getWallet()
+    this.getList()
   },
   methods: {
     getWallet() {
-      this.listLoading = true
-      accountOverview(this.listQuery, {userId: this.id}).then(response => {
-        this.wallet = response.data.records[0]
-        this.listLoading = false
+      getMerchantWallet(this.id).then(response => {
+        this.wallet = response.data
       })
     },
     getList() {
       this.listLoading = true
-      accountOverview(this.listQuery, {userId: this.id}).then(response => {
-        this.wallet = response.data.records[0]
+      getMerchantWalletDetail(this.listQuery, this.id).then(response => {
+        this.list = response.data.records
+        this.total = response.data.total
         this.listLoading = false
       })
     },
     handleFilter() {
-      this.listQuery.current = 1
+      this.listQuery.offset = 1
       this.getList()
     },
     handleClose(done) {
