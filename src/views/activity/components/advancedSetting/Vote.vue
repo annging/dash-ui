@@ -39,6 +39,62 @@
 	      <el-form-item label="获取口令的提示" prop="" v-if="activity.advancedSetting.registerOnlyAcceptWord">
 	      	<el-input v-model="activity.advancedSetting.shibbolethHint" placeholder="提示参与者如何获取口令，比如通过关注某公众号获取(选填）"></el-input>
 	      </el-form-item>
+
+        
+        <el-form-item label="自定义海报">
+          <el-switch
+            v-model="activity.advancedSetting.customPoster"
+            active-color="#13ce66"
+            :active-value="true"
+            :inactive-value="false">
+          </el-switch>
+        </el-form-item>
+        <el-form-item label="海报" prop="" v-if="activity.advancedSetting.customPoster">
+          <el-upload
+            :data="dataObj"
+            :multiple="false"
+            class="avatar-uploader"
+            action="http://upload-z2.qiniup.com"
+            :show-file-list="false"
+            :on-success="handleSuccess1"
+            :on-remove="handleRemove1"
+            :before-upload="beforeUpload"
+            style="display: inline-block; vertical-align: top">
+            <img v-if="activity.advancedSetting.posterUrl" :src="activity.advancedSetting.posterUrl" class="avatar">
+            <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <div slot="tip" class="el-upload__tip">尺寸650*1034</div>
+          </el-upload>
+          <el-button v-if="activity.advancedSetting.posterUrl" type="danger" plain size="mini" icon="el-icon-delete" @click.prevent="handleRemovePost" style="vertical-align: top: margin-left: 30px;">删除</el-button>
+        </el-form-item>
+        <el-form-item label="添加二维码">
+          <el-switch
+            v-model="activity.advancedSetting.customQrCode"
+            active-color="#13ce66"
+            :active-value="true"
+            :inactive-value="false">
+          </el-switch>
+        </el-form-item>
+        <el-form-item label="描述" prop="" v-if="activity.advancedSetting.customQrCode">
+          <el-input v-model="activity.advancedSetting.qrCodeDesc" placeholder="如:扫码进群领取资料(不超于30字)"></el-input>
+        </el-form-item>
+        <el-form-item label="二维码" prop="" v-if="activity.advancedSetting.customQrCode">
+          <el-upload
+            :data="dataObj"
+            :multiple="false"
+            class="avatar-uploader"
+            action="http://upload-z2.qiniup.com"
+            :show-file-list="false"
+            :on-success="handleSuccess2"
+            :on-remove="handleRemove2"
+            :before-upload="beforeUpload"
+            style="display: inline-block; vertical-align: top;">
+            <img v-if="activity.advancedSetting.qrCodeUrl" :src="activity.advancedSetting.qrCodeUrl" class="avatar1">
+            <i  v-else class="el-icon-plus avatar-uploader-icon1"></i>
+            <div slot="tip" class="el-upload__tip">尺寸134*134</div>
+          </el-upload>
+          <el-button v-if="activity.advancedSetting.qrCodeUrl" type="danger" plain size="mini" icon="el-icon-delete" @click.prevent="handleRemoveQrCode" style="vertical-align: top: margin-left: 30px;">删除</el-button>
+        </el-form-item>
+
 	      <el-form-item label="背景音乐" prop="">
 	      	<el-select v-model="activity.advancedSetting.bgMusicUrl" placeholder="请选择" style="width: 100%" popper-class="paginationSelect" @change="chooseMusic">
             <el-option v-for="item in bgMusicList" :key="item.id" :label="item.id + '-' + item.firstClass + '-' + item.secondClass + '-' + item.name" :value="item.url">
@@ -77,7 +133,13 @@ export default {
 		  default: function() {
         return {}
       }
-		}
+		},
+    dataObj: {
+      type: Object,
+      default: function() {
+        return { token: '' }
+      }
+    }
 	},
 	data() {
     return {
@@ -121,6 +183,32 @@ export default {
     			// this.activity.advancedSetting.bgMusicUrl = t.url
     		}
     	})
+    },
+    beforeUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isLt2M
+    },
+    handleSuccess1(res, file) {
+      this.activity.advancedSetting.posterUrl = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    },
+    handleRemove1(file) {
+      this.activity.advancedSetting.posterUrl = ''
+    },
+    handleRemovePost() {
+      this.activity.advancedSetting.posterUrl = ''
+    },
+    handleSuccess2(res, file) {
+      this.activity.advancedSetting.qrCodeUrl = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+    },
+    handleRemove2(file) {
+      this.activity.advancedSetting.qrCodeUrl = ''
+    },
+    handleRemoveQrCode() {
+      this.activity.advancedSetting.qrCodeUrl = ''
     }
   }
 }
@@ -143,4 +231,34 @@ export default {
   	display: inline-block;
   	line-height: 32px;
 	}
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  .avatar {
+    max-width: 300px;
+    max-height: 600px;
+    display: block;
+  }
+  .avatar-uploader-icon1 {
+    font-size: 28px;
+    color: #8c939d;
+    width: 134px;
+    height: 134px;
+    line-height: 134px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  .avatar1 {
+    max-width: 134px;
+    display: block;
+  }
 </style>
