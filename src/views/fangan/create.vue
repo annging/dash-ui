@@ -302,7 +302,7 @@ export default {
       console.log(file, fileList)
     },
     handleSuccess(res, file) {
-      this.schemeForm.imgUrl = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      this.schemeForm.imgUrl = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview() {
       this.dialogVisible = true;
@@ -311,7 +311,7 @@ export default {
       console.log(file, fileList)
     },
     handleSuccess1(res, file) {
-      this.schemeForm.bannerImg = 'http://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
+      this.schemeForm.bannerImg = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     handlePicturePreview1() {
       this.dialogVisible1 = true

@@ -55,10 +55,10 @@
     	<el-tab-pane label="高级设置" name="third">
     		<el-scrollbar class="tab-content-inner">
     			<div style="padding: 16px;">
-    				<advanced-apply-setting :activity=activity v-if="type==1"/><!-- 报名 -->
-    				<advanced-group-setting :activity=activity v-if="type==6"/><!-- 拼团 -->
-    				<advanced-cut-setting :activity=activity v-if="type==4"/><!-- 砍价 -->
-    				<advanced-vote-setting :activity=activity v-if="type==7"/><!-- 投票 -->
+    				<advanced-apply-setting :activity=activity :dataObj=dataObj v-if="type==1"/><!-- 报名 -->
+    				<advanced-group-setting  :activity=activity :dataObj=dataObj v-if="type==6"/><!-- 拼团 -->
+    				<advanced-cut-setting :activity=activity :dataObj=dataObj v-if="type==4"/><!-- 砍价 -->
+    				<advanced-vote-setting :activity=activity :dataObj=dataObj v-if="type==7"/><!-- 投票 -->
     				<advanced-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
     			</div>
     		</el-scrollbar>
@@ -321,6 +321,11 @@ export default {
 				1: {
 					bgMusicName:'',
 					bgMusicUrl:'',
+					customPoster: false, // 是否自定义海报
+					posterUrl: '', // 海报地址
+					customQrCode: false, // 是否自定义二维码
+					qrCodeDesc: '', // 二维码描述
+					qrCodeUrl: '', // 二维码url
 					distributionCommission:'',
 					recommendTtz:true,
 					registerOnlyAcceptWord:false,
@@ -330,11 +335,16 @@ export default {
 					virtual: false,
 					virtualViewCount: '',
 					virtualPersonCount:''
-				},
+				}, // 报名
 				4: {
 					buyOnlyBasePrice: false,
 					bgMusicName:'', // string 背景音乐名称
 					bgMusicUrl:'', // string 背景音乐地址
+					customPoster: false, // 是否自定义海报
+					posterUrl: '', // 海报地址
+					customQrCode: false, // 是否自定义二维码
+					qrCodeDesc: '', // 二维码描述
+					qrCodeUrl: '', // 二维码url
 					cutBySelf: false, // 自己砍价(开启后自己可以参与砍价,关闭则不允许)
 					needPassword: false, // 参与砍价需要输入口令
 					password: '', // 砍价口令
@@ -343,10 +353,15 @@ export default {
 					virtual: false,
 					virtualViewCount: '',
 					virtualPersonCount:''
-				},
+				}, // 砍价
 				6: {
 					bgMusicName:'', // string 背景音乐名称
 					bgMusicUrl:'', // string 背景音乐地址
+					customPoster: false, // 是否自定义海报
+					posterUrl: '', // 海报地址
+					customQrCode: false, // 是否自定义二维码
+					qrCodeDesc: '', // 二维码描述
+					qrCodeUrl: '', // 二维码url
 					distributionCommission:'', // number($float) 佣金金额(按每单多少元计算,单位:元)
 					distributionNum:'', // 	integer($int32) 活动分销份数
 					recommendTtz:true, // boolean 推荐团团站
@@ -360,10 +375,15 @@ export default {
 					registerOnlyAcceptWord:false,
 					registerWord:'',
 					shibbolethHint: ''
-				},
+				}, // 拼团
 				7: {
 					bgMusicName:'', // string 背景音乐名称
 					bgMusicUrl:'', // string 背景音乐地址
+					customPoster: false, // 是否自定义海报
+					posterUrl: '', // 海报地址
+					customQrCode: false, // 是否自定义二维码
+					qrCodeDesc: '', // 二维码描述
+					qrCodeUrl: '', // 二维码url
 					recommendTtz:true, // boolean 推荐团团站
 					virtual: false,
 					virtualViewCount: '',
@@ -371,7 +391,7 @@ export default {
 					registerOnlyAcceptWord:false,
 					registerWord:'',
 					shibbolethHint: ''
-				},
+				}, // 投票
 				10: null,
 				11: null,
 				12: null,
