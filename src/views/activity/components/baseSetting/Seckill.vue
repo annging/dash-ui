@@ -23,18 +23,18 @@
       <el-form-item label="活动标题" prop="title">
         <el-input v-model="activity.title" maxlength="50"></el-input>
       </el-form-item>
-      <el-form-item label="砍价开始" prop="startTime">
+      <el-form-item label="秒杀开始" prop="startTime">
       	<el-date-picker
 		      v-model="activity.startTime"
 		      type="datetime"
-		      placeholder="请选择砍价开始时间">
+		      placeholder="请选择秒杀开始时间">
 		    </el-date-picker>
       </el-form-item>
-      <el-form-item label="砍价结束" prop="endTime">
+      <el-form-item label="秒杀结束" prop="endTime">
       	<el-date-picker
 		      v-model="activity.endTime"
 		      type="datetime"
-		      placeholder="请选择砍价结束时间">
+		      placeholder="请选择秒杀结束时间">
 		    </el-date-picker>
       </el-form-item>
       <el-form-item label="活动详情">
@@ -139,7 +139,7 @@ import Tinymce from '@/components/Tinymce'
 import uuidv1 from 'uuid/v1'
 
 export default {
-	name: 'BaseCutPrice',
+	name: 'BaseSeckill',
 	components: { Tinymce, Dropzone },
 	props: {
 		activity: {
