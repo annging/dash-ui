@@ -69,10 +69,10 @@ const actions = {
       if (!data) {
         reject('Verification failed, please Login again.')
       }
-      console.log(data)
+      // console.log(data)
       const { nickName, wxImg } = data
 
-      console.log(nickName)
+      // console.log(nickName)
       commit('SET_NAME', nickName)
       commit('SET_AVATAR', wxImg)
       resolve(data)
