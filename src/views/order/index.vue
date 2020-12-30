@@ -38,7 +38,7 @@
             <el-table-column
               label="活动">
               <template slot-scope="{row}">
-                <span>{{ row.activity.title }}</span>
+              <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/overview'">{{ row.activityId }}</router-link>
               </template>
             </el-table-column>
             <el-table-column
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { getOrders } from '@/api/statistics'
+import { getPageOrders } from '@/api/statistics'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -99,7 +99,6 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        searchStr: '',
         current: 1,
         size: 20
       },
@@ -115,7 +114,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getOrders(this.listQuery, this.listFilter).then(response => {
+      getPageOrders(this.listQuery, this.listFilter).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false
