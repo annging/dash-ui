@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>先扫码看活动</div>
 </template>
 
 <script>

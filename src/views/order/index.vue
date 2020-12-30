@@ -38,17 +38,25 @@
             <el-table-column
               label="活动">
               <template slot-scope="{row}">
-              <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/overview'">{{ row.activityId }}</router-link>
+              <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/order'">{{ row.activityId }}</router-link>
               </template>
             </el-table-column>
             <el-table-column
-              label="活动类型">
+              label="活动类型"
+              width="70px">
               <template slot-scope="{row}">
                 <span>{{ activityTypes[row.activityType] }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="数量">
+              label="商家">
+              <template slot-scope="{row}">
+              <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + row.merchantId + '/order'">{{ row.merchantId }}</router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="数量"
+              width="70px">
               <template slot-scope="{row}">
                 <span>{{ row.amount }}</span>
               </template>
