@@ -281,7 +281,7 @@ export default {
         applyTry: [{ content: '' }],
         authStatus: 5
       },
-      vipLevels: [{ key: 0, label: '免费会员' }, { key: 1, label: '体验会员' }, { key: 2, label: 'VIP会员' }],
+      vipLevels: [{ key: 0, label: '免费会员' }, { key: 1, label: '体验会员' }, { key: 2, label: 'VIP会员' }, { key: 3, label: '旗舰会员' }],
       fileList: [],
       rules: {
         name: [
