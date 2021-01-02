@@ -41,7 +41,7 @@
               label="url"
               width="300">
               <template slot-scope="{row}">
-                <span>{{ row.url }}</span>
+                <a  target="_blank" style="color: #409EFF" :href="row.url">{{ row.url }}</a>
               </template>
             </el-table-column>
             <el-table-column

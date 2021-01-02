@@ -7,6 +7,7 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
+import platformRouter from './modules/platform'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -65,7 +66,7 @@ export const constantRoutes = [
       meta: { title: '概览', icon: 'dashboard' }
     }]
   }, //概览
-
+/*
   {
     path: '/platform',
     component: Layout,
@@ -181,7 +182,8 @@ export const constantRoutes = [
       }
     ]
   }, // 平台管理
-
+*/
+  platformRouter,
   {
     path: '/activity',
     component: Layout,
