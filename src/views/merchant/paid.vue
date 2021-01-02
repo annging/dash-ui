@@ -156,7 +156,7 @@ export default {
         vipLevel: 2
       },
       levels: { 0: '免费会员', 1: '体验会员', 2: 'VIP会员', 3: '旗舰会员' }, // '会员级别 0普通会员 1 体验会员 2会员'
-      typeOptions: [{ key: 2, label: 'VIP会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
+      typeOptions: [{ key: 2, label: 'VIP会员' }, { key: 3, label: '旗舰会员' }] // '会员级别 0普通会员 1 体验会员 2会员'
     };
   },
   created() {

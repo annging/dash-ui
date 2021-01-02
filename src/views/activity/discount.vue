@@ -61,7 +61,8 @@
           <el-table-column
             label="商家">
             <template slot-scope="{row}">
-              <span>{{ row.merchant.name }}</span>
+              <span v-if="row.merchant">{{ row.merchant.name }}</span>
+              <span v-else>{{ row.merchantId}}</span>
             </template>
           </el-table-column>
           <el-table-column
