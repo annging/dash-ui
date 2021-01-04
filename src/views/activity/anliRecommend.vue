@@ -194,12 +194,12 @@ export default {
         let data = {}
         if (type === 'isRecommend') {
           data ={
-            id: row.id,
+            id: row.activityId,
             isRecommend: status
           }
         } else if (type === 'isGood') {
           data ={
-            id: row.id,
+            id: row.activityId,
             isGood: status
           }
         }

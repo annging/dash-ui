@@ -135,6 +135,33 @@ export function getActivitys(query, data) {
   })
 }
 
+// /system/activity/addOrUpdateOrDelete 指定活动 增删改 删除
+export function addOrUpdateOrDelete(data) {
+  return request({
+    url: '/system/activity/addOrUpdateOrDelete',
+    method: 'post',
+    data,
+    transformRequest: [function (data) {
+      // Do whatever you want to transform the data
+      console.log(data);
+      let l = Object.keys(data).length;
+      let i = 0;
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]);
+        if (i < l -1) {
+          ret = ret + '&';
+          i++
+        }
+      }
+      return ret
+    }],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
 // /system/activity/getActivityInfo 指定活动 详情
 export function getActivityInfo(id) {
   return request({
