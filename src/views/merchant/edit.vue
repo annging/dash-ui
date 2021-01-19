@@ -25,7 +25,7 @@
             :before-upload="beforeUpload">
             <img v-if="merchantForm.logo" :src="merchantForm.logo" class="avatar">
             <i  v-else class="el-icon-plus avatar-uploader-icon"></i>
-            <div slot="tip" class="el-upload__tip">（尺寸为110*100最佳）</div>
+            <div slot="tip" class="el-upload__tip">（尺寸为140*140最佳）</div>
           </el-upload>
           <!--<el-dialog
             :visible.sync="dialogVisible"
@@ -59,7 +59,7 @@
             :on-change="handleChange"
             :on-exceed="handleExceed">
             <i class="el-icon-plus"></i>
-            <div slot="tip" class="el-upload__tip">（尺寸为254*144最佳,最多9张）</div>
+            <div slot="tip" class="el-upload__tip">（尺寸为750*400最佳,最多9张）</div>
           </el-upload>
           <!--<el-button size="mini" type="primary" @click="subPics">立即上传</el-button>-->
         </el-form-item>
@@ -81,23 +81,28 @@
           <el-input v-model="merchantForm.address.tips"></el-input>
         </el-form-item>
         <el-form-item label="宣传片">
-          <el-upload
-            :data="dataObj"
-            :multiple="false"
-            class="avatar-uploader"
-            action="http://upload-z2.qiniup.com"
-            :on-success="handleSuccess_introVideo"
-            :on-remove="handleRemove_introVideo"
-            :before-upload="beforeUpload_introVideo">
-            <video v-if="merchantForm.introVideo" controls width="500" class="avatar2">
-              <source :src="merchantForm.introVideo">
-              Sorry, your browser doesn't support embedded videos.
-            </video>
-            <i  v-else class="el-icon-plus avatar-uploader-icon2"></i>
-            <div slot="tip" class="el-upload__tip">（尺寸为720*416最佳）</div>
-          </el-upload>
+          <div style="display: flex; align-items: flex-start;">
+            <el-upload
+              :data="dataObj"
+              :multiple="false"
+              class="avatar-uploader"
+              action="http://upload-z2.qiniup.com"
+              :on-success="handleSuccess_introVideo"
+              :on-remove="handleRemove_introVideo"
+              :before-upload="beforeUpload_introVideo"
+              style="margin-right: 10px;">
+              <video v-if="merchantForm.introVideo" controls width="500" class="avatar2">
+                <source :src="merchantForm.introVideo">
+                Sorry, your browser doesn't support embedded videos.
+              </video>
+              <i  v-else class="el-icon-plus avatar-uploader-icon2"></i>
+              <div slot="tip" class="el-upload__tip">（尺寸为690*410最佳）</div>
+            </el-upload>
+            <el-button size="mini" @click.prevent="removeVideo()">删除</el-button>
+          </div>
         </el-form-item>
         <el-form-item label="团队展示">
+          <div style="font-size: 12px; color: #666; margin-top: 4px;">（尺寸为208*208最佳）</div>
           <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.teamIntros" :key="index">
             <el-upload
               :data="dataObj"
@@ -123,7 +128,8 @@
           </div>
           <el-button size="mini" @click.prevent="addTeam()">+添加</el-button>
         </el-form-item>
-        <el-form-item label="作品简介">
+        <el-form-item label="作品展示">
+          <div style="font-size: 12px; color: #666; margin-top: 4px;">（尺寸为650*344最佳）</div>
           <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in merchantForm.productIntros" :key="index">
             <el-upload
               :data="dataObj"
@@ -481,11 +487,11 @@ export default {
     },
     beforeUpload(file) {
       // const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传图片大小不能超过 2MB!')
+      const isLt20M = file.size / 1024 / 1024 < 20
+      if (!isLt20M) {
+        this.$message.error('上传图片大小不能超过 20MB!')
       }
-      return isLt2M
+      return isLt20M
     },
     beforeUpload_introVideo(file) {
       console.log('')
@@ -529,6 +535,9 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(`最多传9张，加上此次选取的 ${files.length} 张图片, 总共 ${files.length + fileList.length}`)
+    },
+    removeVideo() {
+      this.merchantForm.introVideo = ''
     },
     removePhone(item, index) {
       this.merchantForm.phone.splice(index,1)
@@ -731,5 +740,9 @@ export default {
   }
   .hiddenDown {
     display: none
+  }
+  .el-upload-list--picture-card .el-upload-list__item-thumbnail {
+    height: auto;
+    max-height: 100%;
   }
 </style>
