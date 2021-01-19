@@ -6,7 +6,6 @@
         <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
-        <el-menu-item index="5" :route="{path:'/activity/enableUserSaleActivity'}">分销活动</el-menu-item>
       </el-menu>
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
         <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加首页推荐</el-button>

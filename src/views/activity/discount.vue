@@ -6,16 +6,18 @@
         <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
-        <el-menu-item index="5" :route="{path:'/activity/enableUserSaleActivity'}">分销活动</el-menu-item>
       </el-menu>
-      <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
+      <!--<el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
         <el-input
-          v-model="listQuery.searchStr"
-          placeholder="请输入内容"
+          v-model="listFilter.title"
+          placeholder="请输入活动标题"
           prefix-icon="el-icon-search"
           size="small"
-          @keyup.enter.native="handleFilter" />
-      </el-row>
+          clearable
+          style="width: 300px; margin-right: 20px;"
+          @keyup.enter.native="handleFilter"
+          @clear="handleFilter" />
+      </el-row>-->
       <el-row class="list">
         <el-table
           v-loading="listLoading"
@@ -80,25 +82,36 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="推荐到首页?"
+            label="推荐?"
             width="90">
             <template slot-scope="{row}">
               <span>{{ row.specialActivity ? (row.specialActivity.isRecommend > 0 ? '是' : '否') : '否' }}</span>
             </template>
           </el-table-column>
-          <el-table-column
+          <!--<el-table-column
             label="优秀案例?"
             width="80">
             <template slot-scope="{row}">
               <span>{{ row.specialActivity ? (row.specialActivity.isGood > 0 ? '是' : '否') : '否' }}</span>
             </template>
-          </el-table-column>
-          <el-table-column label="操作" width="90">
+          </el-table-column>-->
+          <el-table-column label="操作" width="150">
             <template slot-scope="scope">
               <!--<el-button
                 size="mini"
                 type="text"
                 @click="handleView(scope.$index, scope.row)">查看</el-button>-->
+              <el-button
+                size="mini"
+                type="text"
+                style="color: #F56C6C"
+                v-if="scope.row.specialActivity && scope.row.specialActivity.isRecommend > 0"
+                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend', 0)">取消推荐</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                v-else
+                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isRecommend', 1)">推荐</el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -135,7 +148,7 @@ export default {
         size: 20
       },
       listFilter: {
-        type: ''
+        title: ''
       },
       clientHeight: '',
       maxHeight: 400,
@@ -215,6 +228,53 @@ export default {
               type: 'error',
               message: res.msg
             });
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })       
+      })
+    },
+    // 推荐到优惠券首页
+    setActivityWithGoodOrRecommend(index, row, type, status) {
+      this.$confirm('确认'+ (status ? '' : '取消') + (type === 'isRecommend' ? '推荐到首页' : '设为优秀案例') + '?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let data = {}
+        if (type === 'isRecommend') {
+          data ={
+            id: row.id,
+            isRecommend: status
+          }
+        } else if (type === 'isGood') {
+          data ={
+            id: row.id,
+            isGood: status
+          }
+        }
+        setActivityWithGoodOrRecommend(data).then(response => {
+          if (response.code === '200') {
+            if (!this.list[index].specialActivity) {
+              this.$set(this.list[index], 'specialActivity', {id: row.id, isRecommend: 0, isGood: 0})
+            }
+            if (type === 'isRecommend') { // 推荐
+              this.list[index].specialActivity.isRecommend = status
+            } else { // 优秀案例
+              this.list[index].specialActivity.isGood = status
+            }
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.msg
+            })
           }
         })
       }).catch(() => {

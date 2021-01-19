@@ -104,11 +104,11 @@ export default {
     },
     beforeUpload(file) {
       // const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+      const isLt20M = file.size / 1024 / 1024 < 20
+      if (!isLt20M) {
+        this.$message.error('上传头像图片大小不能超过 20MB!')
       }
-      return isLt2M
+      return isLt20M
     },
     fetchToken() {
       const _self = this

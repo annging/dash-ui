@@ -98,7 +98,7 @@
             label="会员"
             width="60px">
             <template slot-scope="{row}">
-              <span>{{ row.rechargeCategory.memberTypeId }}</span>
+              <span>{{ levels[row.rechargeCategory.memberTypeId] }}</span>
             </template>
           </el-table-column>
           <el-table-column
