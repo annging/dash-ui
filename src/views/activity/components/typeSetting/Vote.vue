@@ -16,7 +16,7 @@
             <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 120px; height: 150px;"></i>
           </el-upload>
           <div style="margin: 0 10px 0 0; width: 350px;">
-          	<el-input v-model="item.num" style="margin-bottom: 5px;" placeholder="编号" class="custon-prepend-120"><template slot="prepend">编号</template></el-input>
+          	<el-input v-model="item.orderVoteId" style="margin-bottom: 5px;" placeholder="自动生成，不需要输入" class="custon-prepend-120" disabled><template slot="prepend">编号</template></el-input>
           	<el-input v-model="item.ticketNum" style="margin-bottom: 5px;" placeholder="初始投票数" class="custon-prepend-120"><template slot="prepend">初始投票数</template></el-input>
             <el-input v-model="item.name" style="margin-bottom: 5px;" placeholder="名称" class="custon-prepend-120"><template slot="prepend">名称</template></el-input>
             <el-select v-model="item.group" placeholder="请选择" class="custon-prepend-120">
@@ -76,14 +76,14 @@
           <div style="padding: 30px 30px 50px 30px;">
             <div style="display: flex; align-items: flex-start; margin-top: 10px;">
               <div style="margin-bottom: 5px;width: 100px">
-                id
+                id(自动生成)
               </div>
               <div style="margin-bottom: 5px;width: 250px">
                 分组名称
               </div>
             </div>
             <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.groupNames" :key="index">
-              <el-input v-model="item.id" placeholder="id" style="margin-bottom: 5px;width: 100px; margin-right: 10px;"></el-input>
+              <el-input v-model="item.id" placeholder="id" disabled style="margin-bottom: 5px;width: 100px; margin-right: 10px;"></el-input>
               <el-input v-model="item.group" placeholder="分组名称" style="margin-bottom: 5px; width: 250px;margin-right: 10px;"></el-input>
               <el-button type="danger" plain size="small" @click.prevent="removeGroupName(item, index)">删除</el-button>
             </div>
@@ -189,7 +189,7 @@
                 </div>
               </div>
               <div class="editor-container" v-if="item.value.length < 9">
-                <dropzone v-if="dataObj.token" class="myVueDropzone" :id="'myVueDropzone-dialog-'+index" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneRVoteItem" @dropzone-success="(file, res) => dropzoneSVoteItem(file, res, index, 9)" @dropzone-error="dropzoneEVoteItem"/>
+                <dropzone v-if="dataObj.token" class="myVueDropzone" :id="'myVueDropzone-dialog-'+item.id" url="http://upload-z2.qiniup.com" :token="dataObj.token" :showRemoveLink="false" @dropzone-removedFile="dropzoneRVoteItem" @dropzone-success="(file, res) => dropzoneSVoteItem(file, res, index, 9)" @dropzone-error="dropzoneEVoteItem"/>
               </div>
             </div>
             <div v-if="item.type=='video'">
@@ -363,7 +363,10 @@ export default {
       // console.log(file)
       let url = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
 
-      this.voteItemContent[index].value.push(url)
+      let itemTemp = this.voteItemContent[index]
+      itemTemp.value.push(url)
+      // this.voteItemContent[index].value.push(url)
+      this.$set(this.voteItemContent, index, itemTemp)
       this.$message({ message: '上传成功', type: 'success' })
     },
     dropzoneSBigVoteItem(file, res) {
@@ -388,6 +391,13 @@ export default {
     dropzoneAVoteItem(file, index, number) {
     },
     deleteImgVoteItem(index, idx) {
+      if(idx) {
+        this.voteItemContent[index].value.splice(idx, 1)
+      } else {
+        this.voteItemContent[index].value = []
+      }
+    },
+    deleteImg(index, idx) {
       if(idx) {
         this.voteItemContent[index].value.splice(idx, 1)
       } else {
