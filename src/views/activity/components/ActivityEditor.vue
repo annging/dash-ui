@@ -195,7 +195,7 @@ export default {
 				userSaleSetting: {"isVerification":0,"levelOne":"","levelTwo":"","showFee":0},
 				enableAdvancedSetting: 0
 			},
-			dataObj: { token: '' },
+			dataObj: { token: '', key:'' },
 			activityRule: {
 				0: '',
 				1: "<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>",

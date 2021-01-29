@@ -2,7 +2,8 @@
 	<div>
 		<el-form ref="second" :rules="rules" :model="activity" label-width="150px" size="small">
 			      <el-form-item label="投票设置">
-        <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.defaultVote" :key="item.num+index">
+        <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.defaultVote" :key="item.orderVoteId + '' + index * 100000000000000">
+          <div v-show="false">{{ isVideo = isAssetTypeAnVideo(item.cover) }}</div>
         	<el-upload
             :data="dataObj"
             :multiple="false"
@@ -12,7 +13,11 @@
             :on-success="(res,file)=>{return handleDataSuccess(res,file, index)}"
             :before-upload="beforeUpload"
             style="margin-right: 15px;">
-            <img v-if="item.cover" :src="item.cover" class="avatar" style="width: 120px; max-height: 150px;">
+            <img v-if="item.cover && !isVideo" :src="item.cover" class="avatar" style="width: 120px; max-height: 150px;">
+            <video v-else-if="item.cover && isVideo" controls width="120">
+              <source :src="item.cover">
+              Sorry, your browser doesn't support embedded videos.
+            </video>
             <i v-else class="el-icon-plus avatar-uploader-icon" style="width: 120px; height: 150px;"></i>
           </el-upload>
           <div style="margin: 0 10px 0 0; width: 350px;">
@@ -82,7 +87,7 @@
                 分组名称
               </div>
             </div>
-            <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.groupNames" :key="index">
+            <div style="display: flex; align-items: flex-start; margin-top: 10px;" v-for="(item, index) in activity.activitySetting.groupNames" :key="item.id + '' + item.group + index * 10000000">
               <el-input v-model="item.id" placeholder="id" disabled style="margin-bottom: 5px;width: 100px; margin-right: 10px;"></el-input>
               <el-input v-model="item.group" placeholder="分组名称" style="margin-bottom: 5px; width: 250px;margin-right: 10px;"></el-input>
               <el-button type="danger" plain size="small" @click.prevent="removeGroupName(item, index)">删除</el-button>
@@ -238,6 +243,7 @@ import { getStores } from '@/api/merchant'
 import Dropzone from '@/components/Dropzone'
 import Tinymce from '@/components/Tinymce'
 import uuidv1 from 'uuid/v1'
+import { isAssetTypeAnImage, isAssetTypeAnVideo } from '@/utils'
 
 export default {
 	name: 'TypeVote',
@@ -256,7 +262,7 @@ export default {
 		dataObj: {
       type: Object,
       default: function() {
-        return { token: '' }
+        return { token: '', key: '' }
       }
     }
 	},
@@ -282,20 +288,26 @@ export default {
     	this.getStores()
     },
     beforeUpload(file) {
+      let suffix = file.name
+      let key = encodeURI(`${suffix}`)
+      this.dataObj.key = key
       // const isJPG = file.type === 'image/jpeg'
-      const isLt20M = file.size / 1024 / 1024 < 20
-      if (!isLt20M) {
-        this.$message.error('上传图片大小不能超过 20MB!')
+      const isLt200M = file.size / 1024 / 1024 < 200
+      if (!isLt200M) {
+        this.$message.error('上传图片大小不能超过 200MB!')
       }
-      return isLt20M
+      return isLt200M
     },
     handleDataSuccess(res, file,index) {
       this.activity.activitySetting.defaultVote[index].cover = 'https://ttz-user-file.qiniu.tuantuanzhan.cn/' + res.key
     },
     addVoteItem() {
-    	let _num = this.activity.activitySetting.defaultVote.length + 1
-    	_num = _num * 1 < 10 ? `00${_num}` : _num * 1 < 100 ?`0${_num}`: val;
-    	this.activity.activitySetting.defaultVote.push(({num:_num,name:'',cover:'',title:'',ticketNum:'',content:'[]',isimg:true}))
+      if (!this.activity.activitySetting.defaultVote) {
+        this.$set(this.activity.activitySetting,'defaultVote',[])
+      }
+      let _num = this.activity.activitySetting.defaultVote.length + 1
+      _num = _num * 1 < 10 ? `00${_num}` : _num * 1 < 100 ?`0${_num}`: val;
+      this.activity.activitySetting.defaultVote.push(({orderVoteId: '', name:'',cover:'',title:'',ticketNum:'',content:'[]'}))
     },
     removeVoteItem(item, index) {
     	this.activity.activitySetting.defaultVote.splice(index, 1)
@@ -328,7 +340,10 @@ export default {
       this.activity.activitySetting.groupNames.splice(index, 1)
     },
     addGroupName() {
-      this.activity.activitySetting.groupNames.push({'id':'','group': ''})
+      if (!this.activity.activitySetting.groupNames) {
+        this.$set(this.activity.activitySetting,'groupNames',[])
+      }
+      this.activity.activitySetting.groupNames.push({id: '',group: ''})
     },
     adJustObjectArray(array) {
       let arrayBoo = []
@@ -570,6 +585,12 @@ export default {
     },
     removeGroup(item, index) {
     	this.activity.activitySetting.groups.splice(index, 1)
+    },
+    isAssetTypeAnImage(name) {
+      return isAssetTypeAnImage(name)
+    },
+    isAssetTypeAnVideo(name) {
+      return isAssetTypeAnVideo(name)
     }
   }
 }
