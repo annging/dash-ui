@@ -300,9 +300,13 @@ export default {
     	voteHideByOrderVoteId(row.id).then(res => {
         if (res.code * 1 === 200) {
           this.$message({
-            message: '操作成功!',
+            message: '操作成功',
             type: 'success'
           })
+          setTimeout(() => {
+            this.handleEditVisible = false
+            this.list.splice(index, 1)
+          }, 1.5 * 1000)
         } else {
           this.$message({
             message: res.msg,
@@ -312,7 +316,7 @@ export default {
       })
     },
     handleDelete(index, row) {
-    	alert("待开发")
+    	alert("。。。")
     }
   }
 }
