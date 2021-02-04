@@ -250,6 +250,12 @@ export const constantRoutes = [
             component: () => import('@/views/activity/detail/order'),
             name: '活动订单',
             meta: { title: '活动详情数据', activeMenu: '/activity/list' }
+          },
+          {
+            path: 'voteList',
+            component: () => import('@/views/activity/detail/voteItemList'),
+            name: '投票选手',
+            meta: { title: '活动详情数据', activeMenu: '/activity/list' }
           }
         ]
       },

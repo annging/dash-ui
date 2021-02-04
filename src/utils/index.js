@@ -383,3 +383,9 @@ export function isAssetTypeAnVideo(name) {
   }
   return false
 }
+
+export function getAssetType(name) {
+  let nameArray = name.split('.')
+  let ext = nameArray[nameArray.length - 1]
+  return ext
+}

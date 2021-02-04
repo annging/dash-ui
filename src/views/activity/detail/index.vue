@@ -20,7 +20,8 @@
       <el-menu :default-active="activeTabMenu" mode="horizontal" router style="margin-bottom: 20px;">
         <el-menu-item :index="'/activity/detail/' + id + '/overview'">概览</el-menu-item>
         <el-menu-item :index="'/activity/detail/' + id + '/order'">订单</el-menu-item>
-        <el-menu-item :index="'/activity/detail/' + id + '/statistics'" style="">统计数据</el-menu-item>
+        <el-menu-item :index="'/activity/detail/' + id + '/statistics'">统计数据</el-menu-item>
+        <el-menu-item v-if="activity.type == 7 && groupNamesReady == true" :index="'/activity/detail/' + id + '/voteList'" @click="goVoteList(id)" >投票选手</el-menu-item>
       </el-menu>
       <router-view />
     </div>
@@ -55,6 +56,8 @@ export default {
       qrcodeImgUrl: '',
       typePage: { 1: 'pages/activeDetail/activeDetail', 2: '', 3: '', 4: 'pages/bargain/bargainDetail', 5: 'pages/seckill/seckillDetail', 6: 'pages/group/groupDetail', 7: 'pages/vote/voteDetail', 8: '', 9: '', '-1': 'pages/grpPurchase/grpPurchaseDetail' }, // 活动类型 1 报名,2 抽奖,3 海报,4 砍价,5 秒杀,6 拼团,7 投票,8 预约,9 助力,10 优惠券(代金券),11 优惠券(折扣券),12 优惠券(兑换券),13 优惠券(体验券)
       activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
+      groupNames: '',
+      groupNamesReady: false
     }
   },
   computed: {
@@ -72,12 +75,17 @@ export default {
     // this.getActivityImgUrl(this.id, this.type)
   },
   methods: {
+    goVoteList(id) {
+      this.$router.push({path:'/activity/detail/' + id + '/voteList',query:{groupNames: encodeURIComponent(JSON.stringify(this.groupNames))}});
+    },
     fetchData(id) {
       getActivityInfo(id).then(response => {
         if (response.code === '200') {
           response.data.cover = JSON.parse(response.data.cover)
           response.data.activitySetting = JSON.parse(response.data.activitySetting)
           this.activity = response.data
+          this.groupNames = response.data.activitySetting.groupNames || []
+          this.groupNamesReady = true
           this.getActivityImgUrl(this.id, this.activity.type)
         } else {
           this.$message({
@@ -91,7 +99,7 @@ export default {
       const page = this.typePage[type]
       if (!page) {
         return
-      }
+      } 
       const shareUser = JSON.parse(getUserInfo())
       // console.log(shareUser.id)
       getImgUrl({

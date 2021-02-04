@@ -183,22 +183,12 @@ export default {
     }
   },
   watch: {
-      // 如果 `clientHeight` 发生改变，这个函数就会运行
-      clientHeight: function () {
-        this.changeFixed(this.clientHeight)
-      }
-    },
+  },
   created() {
     this.getList()
   },
   mounted(){
-      // 获取浏览器可视区域高度
-      this.clientHeight =  `${document.documentElement.clientHeight}`;
-      let that = this;
-      window.onresize = function temp() {
-        that.clientHeight = `${document.documentElement.clientHeight}`;
-      };
-    },
+  },
   methods: {
     changeFixed(clientHeight){
       this.maxHeight = clientHeight - 85 - 110 - 100;

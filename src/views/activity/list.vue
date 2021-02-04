@@ -128,6 +128,13 @@
                 style="color: #F56C6C"
                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 <br />
+              <div v-if="scope.row.type == 7">
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleVoteItemEdit(scope.$index, scope.row)">选手编辑</el-button>
+                <br />
+              </div>
               <el-button
                 size="mini"
                 type="text"
@@ -309,6 +316,12 @@ export default {
     handleEdit(index, row) {
       this.$router.push({
         path: '/activity/edit/' + row.id + '/' + row.type + '/' + row.merchantId
+      })
+    },
+    handleVoteItemEdit(index, row) {
+      this.$router.push({
+        path: '/activity/detail/' + row.id + '/voteList',
+        query:{groupNames: encodeURIComponent(JSON.stringify(row.activitySetting.groupNames))}
       })
     },
     handleDelete(index, row) {

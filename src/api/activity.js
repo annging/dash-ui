@@ -319,3 +319,32 @@ export function getAdviser(adviserId) {
     method: 'get'
   })
 }
+
+// /api/v1/order/vote/queryOrderVoteByVoteGroupId 根据分组Id查询分组下的选手
+export function queryOrderVoteByVoteGroupId(query) {
+  return request({
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/order/vote/queryOrderVoteByVoteGroupId',
+    method: 'get',
+    params: query
+  })
+}
+
+// /api/v1/order/vote/updateOrderVoteBy  修改一个选手的信息，商家端用
+export function updateOrderVoteBy(data) {
+  return request({
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/order/vote/updateOrderVoteBy',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+// /api/v1/order/vote/hide/{orderVoteId}  隐藏投票订单
+export function voteHideByOrderVoteId(orderVoteId) {
+  return request({
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/order/vote/hide/' + orderVoteId,
+    method: 'get'
+  })
+}
