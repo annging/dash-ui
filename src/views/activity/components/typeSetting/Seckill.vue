@@ -251,7 +251,7 @@ export default {
     },
     editCustom(type, index) {
     	if (index > -1) {
-    		this.editItem = this.activity.requireColumns[index]
+    		this.editItem = JSON.parse(JSON.stringify(this.activity.requireColumns[index]))
     		if (this.editItem.ext) {
     			if (typeof(this.editItem.ext)=='string') {
 		    		this.editItem.ext = JSON.parse(this.editItem.ext)
