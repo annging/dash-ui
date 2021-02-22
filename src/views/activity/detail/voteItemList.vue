@@ -16,6 +16,10 @@
         <el-option  label="全部" value="" />
         <el-option v-for="(item, index) in groupNames" :key="item.id" :label="item.group" :value="item.id" />
       </el-select>
+      <el-select size="small" v-model="listQuery.orderBy" style="width: 200px" class="filter-item" @change="handleFilter" placeholder="排序">
+        <el-option  label="投票排名" :value="2" />
+        <el-option  label="最新参赛" :value="1" />
+      </el-select>
       <el-button size="small" class="filter-item" type="primary" plain icon="el-icon-search" @click="handleFilter">
           搜索
       </el-button>
@@ -202,7 +206,7 @@ export default {
         offset: 0,
         limit: 10,
         search: '',
-        orderBy: 1,  // 1 按创建时间排序 2 按得票最多排序
+        orderBy: 2 ,  // 1 按创建时间排序 2 按得票最多排序
         voteGroupId: ''
       },
       activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券',  '-1': '团购' },
