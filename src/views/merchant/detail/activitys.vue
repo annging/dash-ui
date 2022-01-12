@@ -74,18 +74,29 @@
           </template>
         </el-table-column>
       </el-table>
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="fetchData" />
     </el-row>
 	</div>
 </template>
 
 <script>
-import { getActivityByMerchantId } from '@/api/merchant'
+import { getActivitys } from '@/api/activity'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
+  components: { Pagination },
   data() {
     return {
     	id: '',
     	listLoading: false,
+      total: 0,
+      listQuery: {
+        current: 1,
+        size: 20
+      },
+      listFilter: {
+        merchantId: 0
+      },
     	activityList: [],
     	activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
     	status: { 1: '正常', 2: '已隐藏' },
@@ -95,15 +106,15 @@ export default {
   },
   created() {
 		this.id = this.$route.params && this.$route.params.id
-    this.fetchData(this.id)
+    this.fetchData()
   },
   methods: {
-  	fetchData(id) {
+  	fetchData() {
   		this.listLoading = true
-      getActivityByMerchantId(id).then(response => {
-	      	if (response.data) {
-	      		if (response.data.length > 0) {
-		          response.data.forEach(item => {
+      getActivitys(this.listQuery, {merchantId: this.id}).then(response => {
+	      	if (response.data.records) {
+	      		if (response.data.records.length > 0) {
+		          response.data.records.forEach(item => {
 		            if (item.cover && item.cover !== 'string') {
 		              item.cover = JSON.parse(item.cover)
 		            }
@@ -112,7 +123,8 @@ export default {
 		            }
 		          })
 		        }
-	      		this.activityList = response.data
+	      		this.activityList = response.data.records
+            this.total = response.data.total
 		      }
 		      this.listLoading = false
       }).catch((err) => {
@@ -121,7 +133,7 @@ export default {
     },
     handleView(index, row) {
       this.$router.push({
-        path: '/activity/detail/' + row.id + '/' + row.type
+        path: '/activity/detail/' + row.id
       })
     },
   }

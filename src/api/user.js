@@ -120,17 +120,17 @@ export function toLeadExcel(data) {
   })
 }
 
-export function login(query) {
+export function login(data) {
   return request({
     url: '/system/login',
     method: 'post',
-    params: query
+    data
   })
 }
 
 export function getInfo(token) {
   return request({
-    url: '/vue-admin-template/user/info',
+    url: '/user/info',
     method: 'get',
     params: { token }
   })
@@ -149,7 +149,7 @@ export function getUserInfo(userId) {
 
 export function logout() {
   return request({
-    url: '/vue-admin-template/user/logout',
+    url: '/user/logout',
     method: 'post'
   })
 }

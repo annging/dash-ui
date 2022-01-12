@@ -6,7 +6,6 @@
         <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
-        <el-menu-item index="5" :route="{path:'/activity/enableUserSaleActivity'}">分销活动</el-menu-item>
       </el-menu>
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;">
         <el-button type="primary" size="small" style="min-width: 120px; margin-right: 20px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加首页推荐</el-button>
@@ -50,7 +49,7 @@
               <el-table-column
                 label="标题">
                 <template slot-scope="{row}">
-                  <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activity.id + '/' + row.activity.type + '/overview'">{{ row.activity.title || row.activity.activitySetting.title }}</router-link>
+                  <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activity.id + '/overview'">{{ row.activity.title || row.activity.activitySetting.title }}</router-link>
                 </template>
               </el-table-column>
               <el-table-column
@@ -138,7 +137,7 @@ export default {
       },
       clientHeight: '',
       maxHeight: 400,
-      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
       status: { 1: '正常', 2: '已隐藏' }
     }
   },

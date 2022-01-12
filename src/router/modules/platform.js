@@ -65,10 +65,41 @@ const platformRouter = {
             name: 'activityset',
             meta: { title: '活动设置' },
             hidden: true
+          },
+          {
+            path: 'banner',
+            name: 'banner',
+            redirect: '/platform/mer/banner/index',
+            component: () => import('@/views/platform/mer/banner'),
+            meta: { title: '首页BANNER'},
+            hidden: true,
+            children: [
+              {
+                path: 'index',
+                component: () => import('@/views/platform/mer/banner/index'),
+                name: 'bannerList',
+                meta: { title: 'banner列表', activeMenu: '/platform/mer'},
+                hidden: true
+              },
+              {
+                path: 'create',
+                component: () => import('@/views/platform/mer/banner/create'),
+                name: 'createBanner',
+                meta: { title: '新增', activeMenu: '/platform/mer' },
+                hidden: true
+              },
+              {
+                path: 'edit/:id(\\d+)',
+                name: 'editBanner',
+                component: () => import('@/views/platform/mer/banner/edit'),
+                meta: { title: '编辑', activeMenu: '/platform/mer' },
+                hidden: true,
+              }
+            ]
           }
         ]
       },
-      /*{
+      {
         path: 'user',
         name: ' userSet',
         redirect: '/platform/user/index',
@@ -83,7 +114,7 @@ const platformRouter = {
             hidden: true
           }
         ]
-      },*/
+      }
     ]
   }
 

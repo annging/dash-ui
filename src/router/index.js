@@ -7,7 +7,7 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-
+import platformRouter from './modules/platform'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -66,7 +66,7 @@ export const constantRoutes = [
       meta: { title: '概览', icon: 'dashboard' }
     }]
   }, //概览
-
+/*
   {
     path: '/platform',
     component: Layout,
@@ -130,10 +130,41 @@ export const constantRoutes = [
             name: 'activityset',
             meta: { title: '活动设置' },
             hidden: true
+          },
+          {
+            path: 'banner',
+            name: 'banner',
+            redirect: '/platform/mer/banner/index',
+            component: () => import('@/views/platform/mer/banner'),
+            meta: { title: '首页BANNER'},
+            hidden: true,
+            children: [
+              {
+                path: 'index',
+                component: () => import('@/views/platform/mer/banner/index'),
+                name: 'bannerList',
+                meta: { title: 'banner列表', activeMenu: '/platform/mer'},
+                hidden: true
+              },
+              {
+                path: 'create',
+                component: () => import('@/views/platform/mer/banner/create'),
+                name: 'createBanner',
+                meta: { title: '新增', activeMenu: '/platform/mer' },
+                hidden: true
+              },
+              {
+                path: 'edit/:id(\\d+)',
+                name: 'editBanner',
+                component: () => import('@/views/platform/mer/banner/edit'),
+                meta: { title: '编辑', activeMenu: '/platform/mer' },
+                hidden: true,
+              }
+            ]
           }
         ]
       },
-      /*{
+      {
         path: 'user',
         name: ' userSet',
         redirect: '/platform/user/index',
@@ -148,10 +179,11 @@ export const constantRoutes = [
             hidden: true
           }
         ]
-      },*/
+      }
     ]
   }, // 平台管理
-
+*/
+  platformRouter,
   {
     path: '/activity',
     component: Layout,
@@ -194,10 +226,10 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'detail/:id(\\d+)/:type',
+        path: 'detail/:id(\\d+)',
         name: 'detail',
         component: () => import('@/views/activity/detail/index'),
-        redirect: '/activity/detail/:id(\\d+)/:type/overview',
+        redirect: '/activity/detail/:id(\\d+)/overview',
         meta: { title: '活动详细数据', icon: 'activity', activeMenu: '/activity/list' },
         hidden: true,
         children: [
@@ -211,6 +243,18 @@ export const constantRoutes = [
             path: 'statistics',
             component: () => import('@/views/activity/detail/statistics'),
             name: '活动详情数据',
+            meta: { title: '活动详情数据', activeMenu: '/activity/list' }
+          },
+          {
+            path: 'order',
+            component: () => import('@/views/activity/detail/order'),
+            name: '活动订单',
+            meta: { title: '活动详情数据', activeMenu: '/activity/list' }
+          },
+          {
+            path: 'voteList',
+            component: () => import('@/views/activity/detail/voteItemList'),
+            name: '投票选手',
             meta: { title: '活动详情数据', activeMenu: '/activity/list' }
           }
         ]
@@ -376,8 +420,26 @@ export const constantRoutes = [
           {
             path: 'statistics',
             component: () => import('@/views/merchant/detail/statistics'),
-            name: '商家详情-数据统计',
+            name: '商家详情-数据统计1',
             meta: { title: '商家详情', activeMenu: '/merchant/index' }
+          },
+          {
+            path: 'wallet',
+            component: () => import('@/views/merchant/detail/wallet'),
+            name: '商家详情-数据统计2',
+            meta: { title: '商家账户', activeMenu: '/merchant/index' }
+          },
+          {
+            path: 'order',
+            component: () => import('@/views/merchant/detail/order'),
+            name: '商家详情-数据统计3',
+            meta: { title: '商家订单', activeMenu: '/merchant/index' }
+          },
+          {
+            path: 'vipHistory',
+            component: () => import('@/views/merchant/detail/vipHistory'),
+            name: '商家详情-会员纪录',
+            meta: { title: '商家会员纪录', activeMenu: '/merchant/index' }
           }
         ]
       },

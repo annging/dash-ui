@@ -186,7 +186,7 @@ export default {
       industryTypeName: {
         1: '教育培训', 2: '餐饮美食', 3: '美容SPA', 4: '生活娱乐', 5: '运动健身', 6: '知识付费', 7: '电商团购'
       },
-      vipLevels: [{ key: 0, label: '免费会员' }, { key: 2, label: 'VIP会员' }],
+      vipLevels: [{ key: 0, label: '免费会员' }, { key: 2, label: 'VIP会员' }, { key: 3, label: '旗舰会员' }],
       rules: {
         title: [
           { required: true, message: '请输入方案标题', trigger: 'blur' },
@@ -279,11 +279,11 @@ export default {
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+      const isLt20M = file.size / 1024 / 1024 < 20
+      if (!isLt20M) {
+        this.$message.error('上传头像图片大小不能超过 20MB!')
       }
-      return isLt2M
+      return isLt20M
     },
     fetchToken() {
       const _self = this

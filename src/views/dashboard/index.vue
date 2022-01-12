@@ -161,14 +161,14 @@ export default {
         }
       })
       this.userDataQuery.time = new Date()
-      userData(this.userDataQuery).then(response => {
+      /* userData(this.userDataQuery).then(response => {
         if (response.data) {
           this.userData = response.data
         }
-      })
+      }) */
     },
     goFangan() {
-      this.$router.push({ path: '/activity/fangan/create' })
+      this.$router.push({ path: '/fangan/create' })
     },
     handleSetLineChartData(type) {
       // this.lineChartData = lineChartData[type]

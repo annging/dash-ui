@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-loading="pageLoading">
     <el-row type="flex" class="filter-container" style="display: none">
       <div class="filter" style="float: right; position: relative; z-index: 9">
         <el-button plain size="mini" @click="pickTime(7)">近7日</el-button>
@@ -15,7 +15,11 @@
       </div>
     </el-row>
     <panel-activitys :activityDataStatistics=activityDataStatistics />
-    <panel-activityp :activityTurnoverRate=activityTurnoverRate />
+    <panel-activityp v-if="activityTurnoverRate.series" :activityTurnoverRate=activityTurnoverRate />
+    <panel-discounts :couponStatistics=couponStatistics />
+    <panel-income v-if="actualIncome.series" :actualIncome=actualIncome />
+    <panel-user v-if="userAnalysis" :userAnalysis=userAnalysis />
+
   </div>
 </template>
 
@@ -23,6 +27,9 @@
 import { dataAnalysis } from '@/api/merchant'
 import PanelActivitys from './components/PanelActivitys'
 import PanelActivityp from './components/PanelActivityp'
+import PanelDiscounts from './components/PanelDiscounts'
+import PanelIncome from './components/PanelIncome'
+import PanelUser from './components/PanelUser'
 
 const defaultDataAnalysis = {
 	id: undefined
@@ -32,7 +39,10 @@ export default {
   name: 'Statistics',
   components: {
     PanelActivitys, // 活动数据统计
-    PanelActivityp // 活动成交率漏斗
+    PanelActivityp, // 活动成交率漏斗
+    PanelDiscounts, // 优惠券数据统计
+    PanelIncome, // 实际收入
+    PanelUser // 用户分析
   },
   data() {
     return {
@@ -65,11 +75,19 @@ export default {
         }
       },
       activityDataStatistics: {
-        "activityStatistics": '-',
-        "pageView": '-',
-        "forwardingNumber": '-'
+        activityStatistics: '-',
+        pageView: '-',
+        forwardingNumber: '-'
       },
       activityTurnoverRate: {},
+      couponStatistics: {
+        pageView: '-',
+        drawNum: '-',
+        used: ''
+      },
+      actualIncome: {},
+      userAnalysis: {
+      },
       message: '',
       data_time_end: []
     }
@@ -89,17 +107,34 @@ export default {
   	fetchData(id) {
       this.pageLoading = true
       dataAnalysis({merchantId: id}).then(response => {
-        _Temp = response.data
-        this.activityDataStatistics = _Temp.activityDataStatistics
-        this.activityTurnoverRate = _Temp.activityTurnoverRate.map(item => {
+        let _temp = response.data
+        this.$set(this.activityDataStatistics,'activityStatistics', _temp.activityDataStatistics.activityStatistics)
+        this.$set(this.activityDataStatistics,'pageView', _temp.activityDataStatistics.pageView)
+        this.$set(this.activityDataStatistics,'forwardingNumber', _temp.activityDataStatistics.forwardingNumber)
+        this.$set(this.couponStatistics,'drawNum', _temp.couponStatistics.drawNum)
+        this.$set(this.couponStatistics,'pageView', _temp.couponStatistics.pageView)
+        this.$set(this.couponStatistics,'used', _temp.couponStatistics.used)
+        let _activityTurnoverRate = _temp.activityTurnoverRate.series.map(item => {
           return {
             value: item.data ? item.data : 0,
             name: item.name
           }
         })
+        this.$set(this.activityTurnoverRate,'series',_activityTurnoverRate)
+        let _actualIncome = _temp.actualIncome.series.map(item => {
+          return {
+            value: item.data ? item.data : 0,
+            name: item.name
+          }
+        })
+        this.$set(this.actualIncome,'series',_actualIncome)
+
+        this.$set(this.userAnalysis,'newUser', _temp.userAnalysis.newUser)
+        this.$set(this.userAnalysis,'oldUser', _temp.userAnalysis.oldUser)
+
         this.pageLoading = false
       }).catch((err) => {
-        this.pageLoading = false
+        console.log(err)
       })
     },
     pickTime(days) {

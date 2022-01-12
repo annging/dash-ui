@@ -38,17 +38,25 @@
             <el-table-column
               label="活动">
               <template slot-scope="{row}">
-                <span>{{ row.activity.title }}</span>
+              <router-link target="_blank" style="color: #409EFF" :to="'/activity/detail/' + row.activityId + '/order'">{{ row.activityId }}</router-link>
               </template>
             </el-table-column>
             <el-table-column
-              label="活动类型">
+              label="活动类型"
+              width="70px">
               <template slot-scope="{row}">
                 <span>{{ activityTypes[row.activityType] }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              label="数量">
+              label="商家">
+              <template slot-scope="{row}">
+              <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + row.merchantId + '/order'">{{ row.merchantId }}</router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="数量"
+              width="70px">
               <template slot-scope="{row}">
                 <span>{{ row.amount }}</span>
               </template>
@@ -88,7 +96,7 @@
 </template>
 
 <script>
-import { getOrders } from '@/api/statistics'
+import { getPageOrders } from '@/api/statistics'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -99,13 +107,12 @@ export default {
       total: 0,
       listLoading: false,
       listQuery: {
-        searchStr: '',
         current: 1,
         size: 20
       },
       listFilter: {
       },
-      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券' },
+      activityTypes: { 1: '报名', 2: '抽奖', 3: '海报', 4: '砍价', 5: '秒杀', 6: '拼团', 7: '投票', 8: '预约', 9: '助力', 10: '代金券', 11: '折扣券', 12: '兑换券', 13: '体验券', '-1': '团购' },
       orderStatus: { 1: '已下单待付款', 2: '已付款待核销', 3: '已发货', 4: '已核销', 5: '已完成', 6: '已取消', 7: '退款审核中', 8: '退款完成', 9: '审核中', 10: '已超时', 11: '审核未通过', 12: '拼团未成团' }
     }
   },
@@ -115,7 +122,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getOrders(this.listQuery, this.listFilter).then(response => {
+      getPageOrders(this.listQuery, this.listFilter).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listLoading = false

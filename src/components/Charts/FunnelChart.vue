@@ -4,6 +4,7 @@
 
 <script>
 import echarts from 'echarts'
+require('echarts/theme/macarons') // echarts theme
 import resize from './mixins/resize'
 
 export default {
@@ -47,7 +48,7 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(document.getElementById(this.id))
+      this.chart = echarts.init(document.getElementById(this.id), 'macarons')
 
       this.chart.setOption({
         tooltip: {
@@ -81,7 +82,8 @@ export default {
                 gap: 2,
                 label: {
                     show: true,
-                    position: 'inside'
+                    position: 'inside',
+                    formatter: '{b}: {c}人'
                 },
                 labelLine: {
                     length: 10,

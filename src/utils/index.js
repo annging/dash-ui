@@ -353,3 +353,39 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+export function isAssetTypeAnImage(name) {
+  let nameArray = name.split('.')
+  let ext = nameArray[nameArray.length - 1]
+  const imgList = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'psd', 'svg', 'tiff']
+  let result = ''
+  if (ext) {
+    ext = ext.toLocaleLowerCase()
+    result = imgList.find(item => item === ext)
+  }
+  if (result) {
+    return true
+  }
+  return false
+}
+
+export function isAssetTypeAnVideo(name) {
+  let nameArray = name.split('.')
+  let ext = nameArray[nameArray.length - 1]
+  const videoList = ['mp4', 'webm', 'avi', 'rmvb', '3gp', 'flv']
+  let result = ''
+  if (ext) {
+    ext = ext.toLocaleLowerCase()
+    result = videoList.find(item => item === ext)
+  }
+  if (result) {
+    return true
+  }
+  return false
+}
+
+export function getAssetType(name) {
+  let nameArray = name.split('.')
+  let ext = nameArray[nameArray.length - 1]
+  return ext
+}

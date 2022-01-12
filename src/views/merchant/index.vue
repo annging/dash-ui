@@ -99,8 +99,8 @@
 	            <template slot-scope="{row}">
 			          <span>{{ row.merchantAggregate.employeeCount }}</span>
 			        </template>
-	          </el-table-column>
-		        <el-table-column
+	          	</el-table-column>
+		        <!--<el-table-column
 	            label="创建者"
 	            width="80">
 	            <template slot-scope="{row}">
@@ -113,7 +113,7 @@
 	            <template slot-scope="{row}">
 	            	<span>{{ row.formUser ? row.formUser.nickName : '-'  }}</span>
 		          </template>
-		        </el-table-column>
+		        </el-table-column>-->
 	          <el-table-column
 	            label="会员"
 	            width="86"
@@ -127,14 +127,14 @@
 		        </el-table-column>
 		        <el-table-column
 	            label="会员到期时间"
-              width="130px"
+              width="135px"
               class-name="miniCol">
 	            <template slot-scope="{row}">
 	            	<!--<span v-if="row.vipEndTime">{{ row.vipEndTime | moment("YYYY-MM-DD HH:mm:ss") }}</span> <br />
                 <i style="color: #409EFF; cursor: pointer" class="el-icon-edit"></i>-->
 	            	<el-date-picker
 	            		size="mini"
-	            		style="width: 122px;"
+	            		style="width: 127px;"
 						      v-model="row.vipEndTime"
 						      type="datetime"
                   class="mini-dp"
@@ -208,7 +208,12 @@ export default {
 	    	name: ''
       },
 	    qrcodeImgUrl: '',
-	    levels: { 0: '免费会员', 1: '体验会员', 2: 'VIP会员' } // '会员级别 0普通会员 1 体验会员 2会员'
+	    levels: {
+        0: '免费会员',
+        1: '体验会员',
+        2: 'VIP会员',
+        3: '旗舰会员'
+      } 
     }
   },
   created() {

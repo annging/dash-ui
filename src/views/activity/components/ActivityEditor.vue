@@ -37,6 +37,7 @@
     				<base-group-setting :activity=activity :dataObj=dataObj v-if="type==6"/><!-- 拼团 -->
     				<base-cut-setting :activity=activity :dataObj=dataObj v-if="type==4"/><!-- 砍价 -->
     				<base-vote-setting :activity=activity :dataObj=dataObj v-if="type==7"/><!-- 投票 -->
+    				<base-seckill-setting :activity=activity :dataObj=dataObj v-if="type==5"/><!-- 秒杀 -->
     				<base-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     			</div>
     		</el-scrollbar>
@@ -48,6 +49,7 @@
     				<type-group-setting :activity=activity :merchantId=merchantId v-if="type==6"/><!-- 拼团 -->
     				<type-cut-setting :activity=activity :merchantId=merchantId v-if="type==4"/><!-- 砍价 -->
     				<type-vote-setting :activity=activity :merchantId=merchantId :dataObj=dataObj v-if="type==7"/><!-- 投票 -->
+    				<type-seckill-setting :activity=activity :merchantId=merchantId :dataObj=dataObj v-if="type==5"/><!-- 秒杀 -->
     				<type-discount-setting :activity=activity :merchantId=merchantId v-if="discountTypes.indexOf(type*1) != -1"/><!-- 10 11 12 13 4个优惠券 -->
     			</div>
     		</el-scrollbar>
@@ -59,6 +61,7 @@
     				<advanced-group-setting  :activity=activity :dataObj=dataObj v-if="type==6"/><!-- 拼团 -->
     				<advanced-cut-setting :activity=activity :dataObj=dataObj v-if="type==4"/><!-- 砍价 -->
     				<advanced-vote-setting :activity=activity :dataObj=dataObj v-if="type==7"/><!-- 投票 -->
+    				<advanced-seckill-setting :activity=activity :dataObj=dataObj v-if="type==5"/><!-- 秒杀 -->
     				<advanced-discount-setting :activity=activity v-if="discountTypes.indexOf(type*1) != -1"/><!-- 优惠券 -->
     			</div>
     		</el-scrollbar>
@@ -79,18 +82,21 @@ import BaseGroupSetting from './baseSetting/Group'
 import BaseCutSetting from './baseSetting/CutPrice'
 import BaseVoteSetting from './baseSetting/Vote'
 import BaseDiscountSetting from './baseSetting/Discount'
+import BaseSeckillSetting from './baseSetting/Seckill'
 
 import TypeApplySetting from './typeSetting/Apply'
 import TypeGroupSetting from './typeSetting/Group'
 import TypeCutSetting from './typeSetting/CutPrice'
 import TypeVoteSetting from './typeSetting/Vote'
 import TypeDiscountSetting from './typeSetting/Discount'
+import TypeSeckillSetting from './typeSetting/Seckill'
 
 import AdvancedApplySetting from './advancedSetting/Apply'
 import AdvancedGroupSetting from './advancedSetting/Group'
 import AdvancedCutSetting from './advancedSetting/CutPrice'
 import AdvancedDiscountSetting from './advancedSetting/Discount'
 import AdvancedVoteSetting from './advancedSetting/Vote'
+import AdvancedSeckillSetting from './advancedSetting/Seckill'
 
 import uuidv1 from 'uuid/v1'
 
@@ -102,16 +108,19 @@ export default {
 		BaseCutSetting,
 		BaseVoteSetting,
 		BaseDiscountSetting,
+		BaseSeckillSetting,
 		TypeApplySetting,
 		TypeGroupSetting,
 		TypeCutSetting,
 		TypeVoteSetting,
 		TypeDiscountSetting,
+		TypeSeckillSetting,
 		AdvancedApplySetting,
 		AdvancedGroupSetting,
 		AdvancedCutSetting,
 		AdvancedVoteSetting,
 		AdvancedDiscountSetting,
+		AdvancedSeckillSetting
 	},
 	props: {
 		isEdit: {
@@ -191,6 +200,7 @@ export default {
 				0: '',
 				1: "<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>",
 				4: "<p>1.点击我要砍价，报名成功后并邀请好友帮砍，砍至底价（心理预期价位）后可直接付款购买;</p><br/><p>2.本次活动以先到先得原则，先完成砍价获得电子券的才有资格获得商品;</p><br/><p>3.砍价完成后凭电子券与商家兑换商品; 若为预付款商品，则需付完剩余款项方可兑换商品;</p><br/><p>4.本次活动不可赠送或转让，以砍价活动信息为准;</p><br/><p>5.活动最终解释权归发布者所有，与团团站平台无关。</p>",
+				5: '<p>1.点击立即报名提交相关信息后即可参与;</p><br/><p>2.本次活动以先到先得原则，先成功完成报名获得电子券的才有资格获得商品;</p><br/><p>3.报名完成后凭电子券与客服核销;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>',
 				6: '<p>1. 开团成为团长，并邀请好友参团，在拼团有效时间内凑齐成团人数，即可拼团成功；也可直接参与其它团长的团;</p><br/><p>2. 拼团有效时间内未凑齐成团人数，即拼团失败。系统自动取消订单并全额退款，支付金额将会原路退回付款账户；</p><br/><p>3. 拼团有效时间为24小时，即拼团允许邀请好友参团的时间，可在拼团详情页查看倒计时；</p><br/><p>4.拼团成功后，可在【电子券】中，查看自己的拼团订单;</p><br/><p>5.活动最终解释权归发布者所有，与团团站平台无关。</p>',
 				7: '<p>1.每个用户每天只能给同一个候选对象投1票;</p><br/><p>2.参赛选手在活动结束前每天都可以邀请好友给你投票;</p><br/><p>3.严禁刷票，一经发现将取消其参赛资格;</p><br/><p>4.活动最终解释权归发布者所有，与团团站平台无关。</p>',
 				10: '',
@@ -226,6 +236,18 @@ export default {
 					listShowType:0,
 					showPhone: false
 				},
+				5: {
+					advancePay:'', // 秒杀预付款(非全额付款情况下的预支付金额,单位:元)
+					basePrice: '', // 底价(砍后最低价,单位:元)
+					buttonText:'', // 秒杀按钮文案(类型: 立即秒杀…)
+					fullPay: true,
+					individualLimit:'', // 单人限制(单人购买个数,单位:人)
+					leaveMsg:true, // 参与报名是否可以留言
+					listShowType:1, // 报名列表显示(类型: 人数,头像和昵称…)
+					originPrice: '', // 原价(商品原价,单位:元)
+					originStock: '',
+					repertory:''
+				}, // 秒杀
 				6: {
 					advancePay:'',
 					agglomerationTime:'',
@@ -354,6 +376,19 @@ export default {
 					virtualViewCount: '',
 					virtualPersonCount:''
 				}, // 砍价
+				5: {
+					bgMusicName:'',
+					bgMusicUrl:'',
+					customPoster: false, // 是否自定义海报
+					posterUrl: '', // 海报地址
+					customQrCode: false, // 是否自定义二维码
+					qrCodeDesc: '', // 二维码描述
+					qrCodeUrl: '', // 二维码url
+					recommendTtz:true,
+					virtual: false,
+					virtualViewCount: '',
+					virtualPersonCount:'',
+				}, // 秒杀
 				6: {
 					bgMusicName:'', // string 背景音乐名称
 					bgMusicUrl:'', // string 背景音乐地址

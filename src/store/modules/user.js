@@ -36,10 +36,10 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ name: username.trim(), pwd: password }).then(response => {
-        commit('SET_TOKEN', response.data.token)
-        setToken(response.data.token)
-        setUserInfo(response.data.user)
+      login({ username: username.trim(), pwd: password }).then(response => {
+        const { data } = response
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -50,11 +50,11 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      /*getInfo(state.token).then(response => {
+      getInfo(state.token).then(response => {
         const { data } = response
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          return reject('Verification failed, please Login again.')
         }
 
         const { name, avatar } = data
@@ -64,37 +64,21 @@ const actions = {
         resolve(data)
       }).catch(error => {
         reject(error)
-      })*/
-      const data = JSON.parse(getUserInfo())
-      if (!data) {
-        reject('Verification failed, please Login again.')
-      }
-      console.log(data)
-      const { nickName, wxImg } = data
-
-      console.log(nickName)
-      commit('SET_NAME', nickName)
-      commit('SET_AVATAR', wxImg)
-      resolve(data)
+      })
     })
   },
 
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      removeToken() // must remove  token  first
-      removeUserInfo()
-      resetRouter()
-      commit('RESET_STATE')
-      resolve()
-      /*logout(state.token).then(() => {
+      logout(state.token).then(() => {
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
         resolve()
       }).catch(error => {
         reject(error)
-      })*/
+      })
     })
   },
 

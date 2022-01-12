@@ -135,6 +135,33 @@ export function getActivitys(query, data) {
   })
 }
 
+// /system/activity/addOrUpdateOrDelete 指定活动 增删改 删除
+export function addOrUpdateOrDelete(data) {
+  return request({
+    url: '/system/activity/addOrUpdateOrDelete',
+    method: 'post',
+    data,
+    transformRequest: [function (data) {
+      // Do whatever you want to transform the data
+      console.log(data);
+      let l = Object.keys(data).length;
+      let i = 0;
+      let ret = ''
+      for (let it in data) {
+        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]);
+        if (i < l -1) {
+          ret = ret + '&';
+          i++
+        }
+      }
+      return ret
+    }],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+}
+
 // /system/activity/getActivityInfo 指定活动 详情
 export function getActivityInfo(id) {
   return request({
@@ -219,7 +246,7 @@ export function getRequirecolumns() {
 // /api/v1/activity/common/create 创建活动, data里返回的是活动id
 export function createActivity(data) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API +  '/api/v1/activity/common/create',
+    url: '/api/v1/activity/common/create',
     method: 'post',
     data: data,
     headers: {
@@ -289,6 +316,35 @@ export function deleteAdviser(adviserId) {
 export function getAdviser(adviserId) {
   return request({
     url: '/system/scheme/adviser/get/' + adviserId,
+    method: 'get'
+  })
+}
+
+// /api/v1/order/vote/queryOrderVoteByVoteGroupId 根据分组Id查询分组下的选手
+export function queryOrderVoteByVoteGroupId(query) {
+  return request({
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/order/vote/queryOrderVoteByVoteGroupId',
+    method: 'get',
+    params: query
+  })
+}
+
+// /api/v1/order/vote/updateOrderVoteBy  修改一个选手的信息，商家端用
+export function updateOrderVoteBy(data) {
+  return request({
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/order/vote/updateOrderVoteBy',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+// /api/v1/order/vote/hide/{orderVoteId}  隐藏投票订单
+export function voteHideByOrderVoteId(orderVoteId) {
+  return request({
+    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/order/vote/hide/' + orderVoteId,
     method: 'get'
   })
 }

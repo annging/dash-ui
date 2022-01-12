@@ -122,7 +122,7 @@ export function CancelRecommended(query) {
 // https://www.tuantuanzhan.cn/api/v1/merchant/dataAnalysis 数据分析
 export function dataAnalysis(query) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/merchant/dataAnalysis',
+    url: '/api/v1/merchant/dataAnalysis',
     method: 'get',
     params: query,
     headers: {
@@ -134,7 +134,7 @@ export function dataAnalysis(query) {
 // /api/v1/activity/common/getByMerchantId/{merchantId} 查询商家主页活动
 export function getActivityByMerchantId(id) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/activity/common/getByMerchantId/' + id,
+    url: '/api/v1/activity/common/getByMerchantId/' + id,
     method: 'get',
     headers: {
       loginToken: 'adminLoginToken'
@@ -145,7 +145,7 @@ export function getActivityByMerchantId(id) {
 // /api/v1/merchant/update 创建/更新商户,id大于0就是更新,等于0是新增
 export function updateMerchant(data) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/merchant/update',
+    url: '/api/v1/merchant/update',
     method: 'post',
     data: data,
     headers: {
@@ -163,10 +163,19 @@ export function updateMerchantViPEndTime(query) {
   })
 }
 
-// /system/merchant/updateMerchantViPLevel 修改商家会员级别
-export function updateMerchantViPLevel(query) {
+// /system/merchant/updateMerchantViPLevel 修改商家会员级别  废弃
+/* export function updateMerchantViPLevel(query) {
   return request({
     url: '/system/merchant/updateMerchantViPLevel',
+    method: 'get',
+    params: query
+  })
+} */
+
+// /system/merchant/vip/update 修改商家会员级别
+export function updateMerchantViPLevel(query) {
+  return request({
+    url: '/system/merchant/vip/update',
     method: 'get',
     params: query
   })
@@ -175,11 +184,74 @@ export function updateMerchantViPLevel(query) {
 // /api/v1/store/query/merchant 根据商户id查询商户的所有门店
 export function getStores(query) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/store/query/merchant',
+    url: '/api/v1/store/query/merchant',
     method: 'get',
     params: query,
     headers: {
       loginToken: 'adminLoginToken'
     }
+  })
+}
+
+// /system/wallet/get/{merchantId}  钱包信息查询
+export function getMerchantWallet(id) {
+  return request({
+    url: '/system/wallet/get/' + id,
+    method: 'get'
+  })
+}
+
+// /system/wallet/getDetail  钱包明细查询
+export function getMerchantWalletDetail(query, id) {
+  return request({
+    url: '/system/wallet/getDetail/' + id,
+    method: 'get',
+    params: query
+  })
+}
+
+// /system/merchant/vip/changePages 查询商家会员改变记录
+export function getMerchantVIPChangePages(query, data) {
+  return request({
+    url: '/system/merchant/vip/changePages',
+    method: 'post',
+    params: query,
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
+  })
+}
+
+// /system/merchant/vip/rechargePages 查询商家会员充值
+export function getMerchantVIPRechargePages(query, data) {
+  return request({
+    url: '/system/merchant/vip/rechargePages',
+    method: 'post',
+    params: query,
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        //如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data);
+      return data;
+    }]
   })
 }

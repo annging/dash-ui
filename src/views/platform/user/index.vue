@@ -2,7 +2,7 @@
 	<div class="main-content">
 	  <div class="left-container">
 	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
-		    <el-menu-item index="1" :route="{path:'/platform/user/index'}">我要赚钱列表</el-menu-item>
+		    <el-menu-item index="1" :route="{path:'/platform/user/index'}">我要赚钱列表(待开发)</el-menu-item>
 	    </el-menu>
       
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
@@ -107,21 +107,31 @@
               <span>{{ row.userSaleSetting.levelTwo }}</span>
             </template>
           </el-table-column>
+          <el-table-column
+            label="状态"
+            width="90">
+            <template slot-scope="{row}">
+              <el-tag type="info" size="mini" v-if="row.specialActivity && row.specialActivity.isDistri > 0">已下架</el-tag>
+              <el-tag type="success" size="mini" v-else>已上架</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="120">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="text"
-                @click="handleView(scope.$index, scope.row)">查看</el-button>
+                @click="handleSetWeight(scope.$index, scope.row)">权重</el-button>
               <el-button
                 size="mini"
                 type="text"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                v-if="scope.row.specialActivity && scope.row.specialActivity.isDistri > 0"
+                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isDistri', 0)">上架</el-button>
               <el-button
                 size="mini"
                 type="text"
                 style="color: #F56C6C"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                v-if="scope.row.specialActivity && scope.row.specialActivity.isDistri > 0"
+                @click="setActivityWithGoodOrRecommend(scope.$index, scope.row, 'isDistri', 1)">下架</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -133,7 +143,7 @@
 </template>
 
 <script>
-import { getActivitys, setActivityWithGoodOrRecommend, setWeight, deleteActivityById } from '@/api/activity'
+import { getSpecialActivity, setActivityWithGoodOrRecommend, setWeight, deleteActivityById } from '@/api/activity'
 import { fetchList} from '@/api/merchant'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -152,7 +162,7 @@ export default {
       listFilter: {
         title: '',
         type: '',
-        enableUserSale: 1
+        isDistri: 1
       },
       clientHeight: '',
       maxHeight: 400,
@@ -208,7 +218,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      getActivitys(this.listQuery, this.listFilter).then(response => {
+      getSpecialActivity(this.listQuery, this.listFilter).then(response => {
         if (response.data.records.length > 0) {
           response.data.records.forEach(item => {
             if (item.cover && item.cover !== 'string') {
@@ -237,9 +247,15 @@ export default {
       this.listQuery.current = 1
       this.getList()
     },
+    handleSetWeight(index, row) {
+      console.log(1)
+    },
+    handleUpDown(index, row) {
+      console.log(2)
+    },
     handleView(index, row) {
       this.$router.push({
-        path: '/activity/detail/' + row.id + '/' + row.type
+        path: '/activity/detail/' + row.id
       })
     },
     handleEdit(index, row) {
@@ -277,7 +293,13 @@ export default {
     // 推荐到首页/设为优秀案例
     setActivityWithGoodOrRecommend(index, row, type, status) {
       let data = {}
-      if (type === 'isRecommend') {
+      if (type === 'isDistri') {
+        data = {
+          id: row.id,
+          isDistri: status
+        }
+      }
+      else if (type === 'isRecommend') {
         data = {
           id: row.id,
           isRecommend: status
@@ -291,12 +313,14 @@ export default {
       setActivityWithGoodOrRecommend(data).then(response => {
         if (response.code === '200') {
           if (!this.list[index].specialActivity) {
-            this.$set(this.list[index], 'specialActivity', {id: row.id, isRecommend: 0, isGood: 0})
+            this.$set(this.list[index], 'specialActivity', {id: row.id, isRecommend: 0, isGood: 0, isDistri: 0})
           }
           if (type === 'isRecommend') { // 推荐到首页
             this.list[index].specialActivity.isRecommend = status
-          } else { // 优秀案例
+          } else if (type === 'isGood') { // 优秀案例
             this.list[index].specialActivity.isGood = status
+          } else if (type === 'isDistri') {
+            this.list[index].specialActivity.isDistri = status
           }
           this.$message({
             type: 'success',

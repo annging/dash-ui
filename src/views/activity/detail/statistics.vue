@@ -1,3 +1,3 @@
 <template>
-	<div>21</div>
+	<div>统计数据</div>
 </template>

@@ -2,13 +2,15 @@
   <div>
     <div class="title">
       <div class="left">活动成交率漏斗</div>
-      <div class="right">
+      <div class="right" style="display: none;">
         <svg-icon icon-class="filter" />
         <span>筛选</span>
       </div>
     </div>
     <el-row :gutter="20" class="panel-group" style="clear: both">
+      <el-col :xs="12" :sm="12" :lg="18" class="card-panel-col" style="background-color: #F2F6FC; padding: 30px 0; margin: 10px;">
       <funnel-chart width="100%" :chartData=activityTurnoverRate />
+      </el-col>
     </el-row>
   </div>
 </template>

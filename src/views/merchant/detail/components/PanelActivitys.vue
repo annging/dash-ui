@@ -2,7 +2,7 @@
   <div>
     <div class="title">
       <div class="left">活动数据统计</div>
-      <div class="right">
+      <div class="right" style="display: none">
         <svg-icon icon-class="filter" />
         <span>筛选</span>
       </div>
@@ -52,7 +52,11 @@ export default {
     activityDataStatistics: {
       type: Object,
         default: function() {
-          return {}
+          return {
+            activityStatistics: '-',
+            pageView: '-',
+            forwardingNumber: '-'
+          }
         }
     }
   },

@@ -4,8 +4,8 @@
 	    <el-menu default-active="1" class="" mode="horizontal" router style="margin-bottom: 20px;">
 		    <el-menu-item index="1" :route="{path:'/platform/level/index'}">会员等级</el-menu-item>
 	    </el-menu>
-		  <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
-        <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加会员等级</el-button>
+		  <!--<el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
+        <el-button type="primary" size="small" style="min-width: 120px;" icon="el-icon-circle-plus-outline" @click="goCreate">添加会员等级</el-button>-->
       </el-row>
       <el-row class="list">
         <el-table
@@ -65,7 +65,7 @@
               <span>{{ row.annual }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="110">
+          <!--<el-table-column label="操作" width="110">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -77,7 +77,7 @@
                 style="color: #F56C6C"
                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
-          </el-table-column>
+          </el-table-column>-->
         </el-table>
         <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.size" @pagination="getList" />
       </el-row>
@@ -94,7 +94,7 @@ export default {
   components: { Pagination },
   data() {
     return {
-      list: [{ id: 1, name: '免费会员', storeNo: '1', staffNo: '5', monthFee: '0', semiAnnual: '0', annual: '0' }, { id: 2, name: ' VIP会员', storeNo: '5', staffNo: '25', monthFee: '299.00', semiAnnual: '999.00', annual: '1499.00' }],
+      list: [{ id: 1, name: '免费会员', storeNo: '1', staffNo: '5', monthFee: '0', semiAnnual: '0', annual: '0' }, { id: 2, name: ' VIP会员', storeNo: '5', staffNo: '25', monthFee: '299.00', semiAnnual: '999.00', annual: '1499.00' }, { id: 3, name: ' 旗舰会员', storeNo: '30', staffNo: '180', monthFee: '399.00', semiAnnual: '1499.00', annual: '2699.00' }],
       total: 0,
       listLoading: false,
       listQuery: {

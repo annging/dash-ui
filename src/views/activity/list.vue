@@ -6,7 +6,6 @@
         <el-menu-item index="4" :route="{path:'/activity/discount'}">优惠券活动列表</el-menu-item>
         <el-menu-item index="2" :route="{path:'/activity/recommendActivity'}">首页推荐</el-menu-item>
         <el-menu-item index="3" :route="{path:'/activity/recommendAnli'}">优秀案例</el-menu-item>
-        <el-menu-item index="5" :route="{path:'/activity/enableUserSaleActivity'}">分销活动</el-menu-item>
       </el-menu>
       <el-row type="flex" class="filter-container" style="margin-bottom: 20px;" justify="space-between">
         <div>
@@ -94,7 +93,7 @@
             label="状态"
             width="60">
             <template slot-scope="{row}">
-              <span>{{status[row.status]}}</span>
+              <span>{{ status[row.status] }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -129,6 +128,13 @@
                 style="color: #F56C6C"
                 @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                 <br />
+              <div v-if="scope.row.type == 7">
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleVoteItemEdit(scope.$index, scope.row)">选手编辑</el-button>
+                <br />
+              </div>
               <el-button
                 size="mini"
                 type="text"
@@ -236,7 +242,7 @@ export default {
           { required: true, message: '请选择一个活动类型', trigger: 'blur' }
         ]
       },
-      merchantActivityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖', disabled: true }, { key: 3, label: '海报', disabled: true }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀', disabled: true }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约', disabled: true }, { key: 9, label: '助力', disabled: true }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }, { key: -1, label: '团购', disabled: true }],
+      merchantActivityTypes: [{ key: 1, label: '报名' }, { key: 2, label: '抽奖', disabled: true }, { key: 3, label: '海报', disabled: true }, { key: 4, label: '砍价' }, { key: 5, label: '秒杀' }, { key: 6, label: '拼团' }, { key: 7, label: '投票' }, { key: 8, label: '预约', disabled: true }, { key: 9, label: '助力', disabled: true }, { key: 10, label: '代金券' }, { key: 11, label: '折扣券' }, { key: 12, label: '兑换券' }, { key: 13, label: '体验券' }, { key: -1, label: '团购', disabled: true }],
       merchantList: [],
       merchantTotal: 0,
       merchantListQuery: {
@@ -277,8 +283,9 @@ export default {
       getActivitys(this.listQuery, this.listFilter).then(response => {
         if (response.data.records.length > 0) {
           response.data.records.forEach(item => {
-            if (item.cover && item.cover !== 'string') {
-              item.cover = JSON.parse(item.cover)
+            let coverTmp = JSON.parse(item.cover)
+            if (item.cover && typeof coverTmp !== 'string') {
+              item.cover = coverTmp
             }
             if (item.activitySetting) {
               item.activitySetting = JSON.parse(item.activitySetting)
@@ -304,12 +311,18 @@ export default {
     },
     handleView(index, row) {
       this.$router.push({
-        path: '/activity/detail/' + row.id + '/' + row.type
+        path: '/activity/detail/' + row.id
       })
     },
     handleEdit(index, row) {
       this.$router.push({
         path: '/activity/edit/' + row.id + '/' + row.type + '/' + row.merchantId
+      })
+    },
+    handleVoteItemEdit(index, row) {
+      this.$router.push({
+        path: '/activity/detail/' + row.id + '/voteList',
+        query:{groupNames: encodeURIComponent(JSON.stringify(row.activitySetting.groupNames))}
       })
     },
     handleDelete(index, row) {

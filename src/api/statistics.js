@@ -15,6 +15,7 @@ export function userData(query) {
   })
 }
 
+// 这个暂时废弃
 export function getOrders(query, data) {
   return request({
     url: '/system/order/getOrders',
@@ -33,6 +34,29 @@ export function getOrders(query, data) {
       }
       data = JSON.stringify(data);
       return data;
+    }]
+  })
+}
+
+// /system/order/pages 分页查询根据条件订单信息
+export function getPageOrders(query, data) {
+  return request({
+    url: '/system/order/pages',
+    method: 'post',
+    params: query,
+    data,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    transformRequest: [function (data, headers) {
+      for (let it in data) {
+        // 如果为空 删除
+        if (data[it] === '') {
+          delete data[it]
+        }
+      }
+      data = JSON.stringify(data)
+      return data
     }]
   })
 }
