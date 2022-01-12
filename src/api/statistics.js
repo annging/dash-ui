@@ -50,13 +50,13 @@ export function getPageOrders(query, data) {
     },
     transformRequest: [function (data, headers) {
       for (let it in data) {
-        //如果为空 删除
+        // 如果为空 删除
         if (data[it] === '') {
           delete data[it]
         }
       }
-      data = JSON.stringify(data);
-      return data;
+      data = JSON.stringify(data)
+      return data
     }]
   })
 }

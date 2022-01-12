@@ -93,7 +93,7 @@
             label="状态"
             width="60">
             <template slot-scope="{row}">
-              <span>{{status[row.status]}}</span>
+              <span>{{ status[row.status] }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -283,8 +283,9 @@ export default {
       getActivitys(this.listQuery, this.listFilter).then(response => {
         if (response.data.records.length > 0) {
           response.data.records.forEach(item => {
-            if (item.cover && item.cover !== 'string') {
-              item.cover = JSON.parse(item.cover)
+            let coverTmp = JSON.parse(item.cover)
+            if (item.cover && typeof coverTmp !== 'string') {
+              item.cover = coverTmp
             }
             if (item.activitySetting) {
               item.activitySetting = JSON.parse(item.activitySetting)

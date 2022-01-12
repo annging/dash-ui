@@ -238,20 +238,20 @@ import maps from 'qqmap'
 import Tinymce from '@/components/Tinymce'
 
 const defaultMerchantForm = {
-    id: 0,
-    name: '', 
-    logo: '',
-    intro: '',
-    introImgs: [],
-    phone: [{ content: '' }],
-    wechat: '',
-    address: { province: '', city: '', distinct: '', detail: '', tips: '' },
-    introVideo: '',
-    teamIntros: [{ img: '', name: '', intro: '' }],
-    productIntros: [{ img: '', intro: '' }],
-    advantage: [{ title: '', content: '' }],
-    showApplyTry: 0,
-    applyTry: [{ content: '' }]
+  id: 0,
+  name: '', 
+  logo: '',
+  intro: '',
+  introImgs: [],
+  phone: [{ content: '' }],
+  wechat: '',
+  address: { province: '', city: '', distinct: '', detail: '', tips: '' },
+  introVideo: '',
+  teamIntros: [{ img: '', name: '', intro: '' }],
+  productIntros: [{ img: '', intro: '' }],
+  advantage: [{ title: '', content: '' }],
+  showApplyTry: 0,
+  applyTry: [{ content: '' }]
 }
 
 const key = 'UUSBZ-O7S3K-US5JP-AY4LI-KQA7K-O2B6S'
@@ -294,7 +294,7 @@ export default {
           { required: true, message: '品牌名称', trigger: 'blur' }
         ],
         logo: [
-          { required: true, message: '请上传品牌Logo', trigger: 'change' }
+          { required: false, message: '请上传品牌Logo', trigger: 'change' }
         ],
         phone: [
           { validator: checkPhone, required: true, trigger: 'blur' }
@@ -327,7 +327,30 @@ export default {
     onSubmit() {
       let that = this
       this.$refs.merchantForm.validate((valid) => {
-        if (valid) {
+
+        let merchant = JSON.parse(JSON.stringify(this.merchantForm))
+        updateMerchant(merchant).then(res => {
+          if (res.code * 1 == 200) {
+            this.$message({
+              message: this.id > 0 ? '修改成功' : '添加成功',
+              type: 'success',
+              onClose: function() {
+                if (that.merchantForm.authStatus < 5) {
+                  that.$router.push({ path: '/merchant/index' })
+                } else {
+                  that.$router.push({ path: '/merchant/dailingqu' })
+                }
+              }
+            })
+          } else {
+            this.$message({
+              message: res.msg,
+              type: 'error'
+            })
+          }
+        })
+        
+        if (false) { // valid
           let merchant = JSON.parse(JSON.stringify(this.merchantForm))
           merchant.phone = this.adJustObjectArray(merchant.phone)
           merchant.teamIntros = this.adJustObjectArray(merchant.teamIntros)

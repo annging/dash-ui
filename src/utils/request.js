@@ -47,7 +47,7 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 200, it is judged as an error. 208也是正常
-    if (res.code * 1 !== 200 && res.code * 1 !== 208) {
+    if (res.code * 1 !== 20000 && res.code * 1 !== 200 && res.code * 1 !== 208) {
       Message({
         message: res.msg || 'Error',
         type: 'error',

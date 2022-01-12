@@ -122,7 +122,7 @@ export function CancelRecommended(query) {
 // https://www.tuantuanzhan.cn/api/v1/merchant/dataAnalysis 数据分析
 export function dataAnalysis(query) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/merchant/dataAnalysis',
+    url: '/api/v1/merchant/dataAnalysis',
     method: 'get',
     params: query,
     headers: {
@@ -134,7 +134,7 @@ export function dataAnalysis(query) {
 // /api/v1/activity/common/getByMerchantId/{merchantId} 查询商家主页活动
 export function getActivityByMerchantId(id) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/activity/common/getByMerchantId/' + id,
+    url: '/api/v1/activity/common/getByMerchantId/' + id,
     method: 'get',
     headers: {
       loginToken: 'adminLoginToken'
@@ -145,7 +145,7 @@ export function getActivityByMerchantId(id) {
 // /api/v1/merchant/update 创建/更新商户,id大于0就是更新,等于0是新增
 export function updateMerchant(data) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/merchant/update',
+    url: '/api/v1/merchant/update',
     method: 'post',
     data: data,
     headers: {
@@ -184,7 +184,7 @@ export function updateMerchantViPLevel(query) {
 // /api/v1/store/query/merchant 根据商户id查询商户的所有门店
 export function getStores(query) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API + '/api/v1/store/query/merchant',
+    url: '/api/v1/store/query/merchant',
     method: 'get',
     params: query,
     headers: {

@@ -30,7 +30,7 @@
         <div class="qrcodeImg"><img :src="qrcodeImgUrl"></div>
 
         <div class="merchant-info">
-          商家: <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId + '/overview'">{{ activity.merchantId }}</router-link>
+          商家: <router-link target="_blank" style="color: #409EFF" :to="'/merchant/detail/' + activity.merchantId + '/overview'">{{ activity.merchant.name }}</router-link>
         </div>
       </div>
     </div>
@@ -99,7 +99,7 @@ export default {
       const page = this.typePage[type]
       if (!page) {
         return
-      } 
+      }
       const shareUser = JSON.parse(getUserInfo())
       // console.log(shareUser.id)
       getImgUrl({

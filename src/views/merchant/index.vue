@@ -99,8 +99,8 @@
 	            <template slot-scope="{row}">
 			          <span>{{ row.merchantAggregate.employeeCount }}</span>
 			        </template>
-	          </el-table-column>
-		        <el-table-column
+	          	</el-table-column>
+		        <!--<el-table-column
 	            label="创建者"
 	            width="80">
 	            <template slot-scope="{row}">
@@ -113,7 +113,7 @@
 	            <template slot-scope="{row}">
 	            	<span>{{ row.formUser ? row.formUser.nickName : '-'  }}</span>
 		          </template>
-		        </el-table-column>
+		        </el-table-column>-->
 	          <el-table-column
 	            label="会员"
 	            width="86"

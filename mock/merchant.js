@@ -1,83 +1,135 @@
-import Mock from 'mockjs'
+const Mock = require('mockjs')
 
 const List = []
 const count = 50
-
-const baseContent = '<p>I am testing data, I am testing data.</p><p><img src="https://wpimg.wallstcn.com/4c69009c-0fd4-4153-b112-6cb53d1cf943"></p>'
-const image_uri = 'https://wpimg.wallstcn.com/e4558086-631c-425c-9430-56ffb46e70b3'
+const image_uri = ["https://wpimg.wallstcn.com/e4558086-631c-425c-9430-56ffb46e70b3"]
 
 for (let i = 0; i < count; i++) {
   List.push(Mock.mock({
     id: '@increment',
-    name: '@first',
-    avatar: image_uri,
-    activity: {
-      total: '@integer(1, 10000)',
-      fangwen: '@integer(1, 10000)',
-      canyu: '@integer(1, 10000)',
+    name: '@cword(2, 15)',
+    logo: image_uri[0],
+    intro: '@cword(20-50)',
+    introImgs: JSON.stringify(image_uri),
+    phone: JSON.stringify([
+      '15219999999'
+    ]),
+    wechat: '@sentence(3-15)',
+    address: JSON.stringify({ province: '山西省', city: '西安市', distinct: '高新区', detail: '潮汕大街1111', tips: '' }),
+    introVideo: '',
+    teamIntros: JSON.stringify([{ img: '', name: '', intro: '' }]),
+    productIntros: JSON.stringify([{ img: '', intro: '' }]),
+    advantage: JSON.stringify([{ title: '', content: '' }]),
+    showApplyTry: 0,
+    applyTry: JSON.stringify([{ content: '' }]),
+    authStatus: 5,
+    merchantAggregate: {
+      activityCount: '@integer(1, 50)',
+      visitCount: '@integer(1, 5000)',
+      participationCount: '@integer(1, 500)',
+      totalIncome: '@float(0, 10000, 2, 2)',
+      employeeCount: '@integer(1, 50)'
     },
-    account: {
-      incharge: '@float(0, 100, 2, 2)'
+    stores: [{ name: '@cword(5, 30)' }],
+    createUserId: '@integer(1, 5000)',
+    user: {
+      id: this.createUserId,
+      nickName: '@cword(5-15)'
     },
-    stores: '@integer(1, 10)',
-    staffs: '@integer(1, 100)',
-    level: {
-      'name|1': ['免费会员', 'vip会员', '旗舰版会员'],
-      endTime: Mock.Random.date('T'),
-      'status|1': ['已过期', '未过期']
-    }
-    /*activityEndTime: +Mock.Random.date('T'),
-    activityRule: baseContent,
-    activitySetting: baseContent,
-    activityStartTime: +Mock.Random.date('T'),
-    address: '',
-    advancedSetting: '',
-    content: '',
-    cover: image_uri,
-    createUserId: '@integer',
-    createdAt: '@datetime',
-    desc: '',
-    enableActivityTime: '@integer(0, 1)',
-    enableAdvancedSetting: '@integer(0, 1)',
-    enableUserSale: '@integer(0, 1)',
-    endTime: +Mock.Random.date('T'),
-    ext: '',
-    merchantId: '@integer(1, 10)',
-    requireColumns: '',
-    startTime: +Mock.Random.date('T'),
-    title: '@title(5, 10)',
-    type: '@integer(0, 1)',
-    updatedAt: +Mock.Random.date('T'),
-    userSaleSetting: ''
-    author: '@first',
-    reviewer: '@first',
-    title: '@title(5, 10)',
-    content_short: 'mock data',
-    content: baseContent,
-    forecast: '@float(0, 100, 2, 2)',
-    importance: '@integer(1, 3)',
-    'type|1': ['CN', 'US', 'JP', 'EU'],
-    'status|1': ['published', 'draft'],
-    display_time: '@datetime',
-    comment_disabled: true,
-    pageviews: '@integer(300, 5000)',
-    image_uri,
-    platforms: ['a-platform']*/
+    'vipLevel|1': [0, 1, 2, 3],
+    vipEndTime: '@datetime',
+    'recommend|1': [0, 1]
   }))
 }
 
-const data1 = Mock.mock({
-  'items|30': [{
-    id: '@increment',
-    name: '@first',
-    'status|1': ['已通过', '未通过'],
-    'type|1': ['个人认证', '企业认证'],
-    creater: 'name',
-    create_time: '@datetime',
-  }]
-})
+module.exports = [
+  {
+    url: '/system/merchant/getMerchants',
+    type: 'post',
+    response: config => {
+      const { current = 1, size = 20 } = config.query
+      const { name, vipLevel, authStatus } = config.body
 
+      let mockList = List.filter(item => {
+        if (name && item.name.indexOf(name) < 0) return false
+        if (authStatus && item.authStatus !== parseInt(authStatus)) return false
+        if (vipLevel && item.vipLevel !== parseInt(vipLevel)) return false
+        return true
+      })
 
-export default [
+      const merchantList = mockList.filter((item, index) => index < size * current && index >= size * (current - 1))
+
+      return {
+        code: 20000,
+        data: {
+          total: mockList.length,
+          records: merchantList
+        }
+      }
+    }
+  },
+  {
+    url: '/system/merchant/getMerchantInfo',
+    type: 'post',
+    response: config => {
+      const { merchantId } = config.query
+      for (const merchant of List) {
+        if (merchant.id === +merchantId) {
+          return {
+            code: '200',
+            data: merchant
+          }
+        }
+      }
+    }
+  },
+  {
+    url: '/api/v1/store/query/merchant',
+    type: 'get',
+    response: config => {
+      const { merchantId } = config.query
+      for (const merchant of List) {
+        if (merchant.id === +merchantId) {
+          return {
+            code: '200',
+            data: merchant
+          }
+        }
+      }
+    }
+  },
+  {
+    url: '/api/v1/merchant/update',
+    type: 'post',
+    response: _ => {
+      return {
+        code: 200,
+        data: 'success'
+      }
+    }
+  },
+  {
+    url: '/system/merchant/getRecommendedMerchants',
+    type: 'post',
+    response: config => {
+      const { current = 1, size = 20 } = config.query
+      const { vipLevel, authStatus } = config.body
+
+      let mockList = List.filter(item => {
+        if (authStatus && item.authStatus !== parseInt(authStatus)) return false
+        if (vipLevel && item.vipLevel !== parseInt(vipLevel)) return false
+        return true
+      })
+
+      const merchantList = mockList.filter((item, index) => index < size * current && index >= size * (current - 1))
+
+      return {
+        code: 20000,
+        data: {
+          total: mockList.length,
+          records: merchantList
+        }
+      }
+    }
+  },
 ]
-

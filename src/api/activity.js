@@ -246,7 +246,7 @@ export function getRequirecolumns() {
 // /api/v1/activity/common/create 创建活动, data里返回的是活动id
 export function createActivity(data) {
   return request({
-    url: process.env.VUE_APP_XIAOCHENGXU_API +  '/api/v1/activity/common/create',
+    url: '/api/v1/activity/common/create',
     method: 'post',
     data: data,
     headers: {
