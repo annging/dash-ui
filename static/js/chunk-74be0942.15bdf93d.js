@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-74be0942"],{"987dd":function(e,n,t){"use strict";t.r(n);var u=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("div",[e._v("先扫码看活动")])},c=[],d={data:function(){return{}},computed:{},methods:{}},o=d,r=t("2877"),a=Object(r["a"])(o,u,c,!1,null,"473b0dfb",null);n["default"]=a.exports}}]);
