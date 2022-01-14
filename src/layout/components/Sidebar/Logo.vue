@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       title: '',
-      logo: '/images/logo.png'
+      logo: './images/logo.png'
     }
   }
 }
