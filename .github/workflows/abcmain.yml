@@ -15,6 +15,6 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.2
         with:
-          ACCESS_TOKEN: ${{ secrets.dash--ui-secret }}
+          ACCESS_TOKEN: ${{ secrets.dash--ui-secret }} # Required no
           branch: gh-pages # The branch the action should deploy to.
           folder: dist # The folder the action should deploy.

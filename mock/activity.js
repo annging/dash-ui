@@ -70,6 +70,19 @@ for (let i = 0; i < count; i++) {
   }))
 }
 
+const advisers = []
+const count1 = 30
+
+for (let i = 0; i < count1; i++) {
+  advisers.push(Mock.mock({
+    id: '@increment',
+    name: '@cname',
+    icon: image_uri[0]
+  }))
+}
+
+
+
 module.exports = [
   {
     url: '/system/activity/getActivitys',
@@ -106,6 +119,25 @@ module.exports = [
             code: '200',
             data: activity
           }
+        }
+      }
+    }
+  },
+  {
+    url: '/system/scheme/adviser/pageAdvisers',
+    type: 'get',
+    response: config => {
+      const { offset = 1, limit = 20 } = config.query
+
+      const mockAdviserList = advisers;
+
+      const adviserList = mockAdviserList.filter((item, index) => index < limit * offset && index >= limit * (offset - 1))
+
+      return {
+        code: 20000,
+        data: {
+          total: mockAdviserList.length,
+          records: adviserList
         }
       }
     }

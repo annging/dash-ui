@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-    <div class="logo-title">团团站管理中心</div>
+    <div class="logo-title">管理中心</div>
     <!--<breadcrumb class="breadcrumb-container" />-->
 
     <div class="right-menu">
@@ -161,9 +161,8 @@ export default {
     .notice-container {
       display: inline-block;
       height: 100%;
-      vertical-align: top;
+      vertical-align: -1px;
       margin-right: 15px;
-      line-height: 50px;
     }
 
     .right-menu-item {

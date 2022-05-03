@@ -5,7 +5,7 @@
       <panel-group :marketingData=marketingData
      @handleSetLineChartData="handleSetLineChartData" />
 
-      <el-row style="position: relative; background:#fff;padding:16px 16px 0;margin-bottom:32px; display: none;">
+      <el-row style="position: relative; background:#fff;padding:16px 16px 0;margin-bottom:32px;">
         <div class="filter" style="float: right; position: relative; z-index: 9">
           <el-button plain size="mini" @click="pickTime(7)">近7日</el-button>
           <el-button plain size="mini" @click="pickTime(15)">近15日</el-button>
@@ -21,15 +21,15 @@
         <line-chart :chart-data="lineChartData" />
       </el-row>
       <panel-user
-      :userData=userData style="display: none"/>
+      :userData=userData style=""/>
     </div>
     <div class="secondary-sidebar">
       <div class="" style="margin-top: 30px;">
-        <el-button slot="reference" type="primary" size="medium" class="btn-create" @click="goFangan">创建方案 ▾</el-button>
+        <el-button slot="reference" type="primary" size="medium" class="btn-create" @click="goFangan">创建方案 +</el-button>
         <el-popover
           width="200"
           v-model="createPopvisible"
-          trigger="click" style="display: none">
+          trigger="click">
           <div class="newActvity-section">
             <span class="popover-content-item">
               <div class="popover--item">
@@ -77,7 +77,6 @@
               </div>
             </span>
           </div>
-          <el-button slot="reference" type="primary" size="medium" class="btn-create">创建方案 ▾</el-button>
         </el-popover>
         <ul class="action-menu">
           <!--<li class="menu-item"><el-link :underline="false"><svg-icon icon-class="user" /><span class="text">对账</span></el-link></li>-->
@@ -94,24 +93,24 @@ import PanelGroup from './components/PanelGroup'
 import PanelUser from './components/PanelUser'
 import LineChart from './components/LineChart'
 
-const lineChartData = {
+const lineChartDataBase = {
   newMerchant: {
-    actualData: [["2020-5-6", 120 ], ["2020-5-7", 82 ], ["2020-5-8", 91 ], ["2020-5-9", 154 ], ["2020-5-10", 162 ], ["2020-5-11", 140 ], ["2020-5-12", 145]],
+    actualData: [["2022-5-6", 120 ], ["2022-5-7", 82 ], ["2022-5-8", 91 ], ["2022-5-9", 154 ], ["2022-5-10", 162 ], ["2022-5-11", 140 ], ["2022-5-12", 145]],
     title: '每日新增商家',
     toFixed: 0
   },
   newActivity: {
-    actualData: [["2020-5-6", 2 ], ["2020-5-7", 5 ], ["2020-5-8", 7 ], ["2020-5-9", 154 ], ["2020-5-10", 9 ], ["2020-5-11", 0 ], ["2020-5-12", 10]],
+    actualData: [["2022-5-6", 2 ], ["2022-5-7", 5 ], ["2022-5-8", 7 ], ["2022-5-9", 154 ], ["2022-5-10", 9 ], ["2022-5-11", 0 ], ["2022-5-12", 10]],
     title: '每日新增活动',
     toFixed: 0
   },
   totalGetin: {
-    actualData: [["2020-5-6", 20 ], ["2020-5-7", 50 ], ["2020-5-8", 70 ], ["2020-5-9", 1540 ], ["2020-5-10", 90 ], ["2020-5-11", 0 ], ["2020-5-12", 100]],
+    actualData: [["2022-5-6", 20 ], ["2022-5-7", 50 ], ["2022-5-8", 70 ], ["2022-5-9", 1540 ], ["2022-5-10", 90 ], ["2022-5-11", 0 ], ["2022-5-12", 100]],
     title: '每日累计参与人数',
     toFixed: 0
   },
   newIncharge: {
-    actualData: [["2020-5-6", 2.10 ], ["2020-5-7", 5.90 ], ["2020-5-8", 7.00 ], ["2020-5-9", 154.00 ], ["2020-5-10", 9.00 ], ["2020-5-11", 0 ], ["2020-5-12", 10.00]],
+    actualData: [["2022-5-6", 2.10 ], ["2022-5-7", 5.90 ], ["2022-5-8", 7.00 ], ["2022-5-9", 154.00 ], ["2022-5-10", 9.00 ], ["2022-5-11", 0 ], ["2022-5-12", 10.00]],
     title: '每日总收入(元)',
     toFixed: 2
   }
@@ -131,7 +130,7 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newMerchant,
+      lineChartData: lineChartDataBase.newMerchant,
       createPopvisible: false, // 创建活动弹窗
       marketingData: {
         accumulationPeople: 0,
@@ -140,9 +139,9 @@ export default {
         merchantsTotal: 0
       },
       userData: {
-        newUser: 0,
-        openCount: 0,
-        visitPeople: 0
+        newUser: 100,
+        openCount: 12834,
+        visitPeople: 548
       },
       userDataQuery: {
         time: ''
@@ -171,8 +170,7 @@ export default {
       this.$router.push({ path: '/fangan/create' })
     },
     handleSetLineChartData(type) {
-      // this.lineChartData = lineChartData[type]
-      this.lineChartData = []
+      this.lineChartData = lineChartDataBase[type];
     },
     pickTime(days) {
       const end = new Date()

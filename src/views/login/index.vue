@@ -1,52 +1,56 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
-      <div class="title-container">
-        <h3 class="title">欢迎登录团团站管理中心</h3>
+    <div class="header fixed">
+      <h2><span>T</span>tzhan</h2>
+    </div>
+    <div class="inner-wrapper">
+      <div class="login-or-register-img">
+        <svg role="presentation" aria-hidden="true" class="dig-Illustration dig-Illustration-spot" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg"><title></title><path fill-rule="evenodd" clip-rule="evenodd" d="M208.3 86.252c-31.6 4.9-56.7 5.4-93.7 14.4-8.1 1.9-27.9 4.5-30.5 7.8-.4 2 1.2 1.4 1.1 3.1 14.3 55.2 27.8 122.8 45 174.7 5 16.4 7 23.5 7.6 26.7.9 4.3 1.3 5.3 2.6 5.6.8.2 1.1.5 1.6 1.9 1.6 4.2 6 1.3 11.8.8 13.7-2.4 29.4-5.6 42.8-8.7 12.3-.4 60.5-10.1 84.7-18.2 2.7-1.4-2.3-9.9-3.1-11.6-.7-12.7-10.8-43.4-15.4-59.3-9.1-33.9-21.1-69.6-32.6-102.8-2.9-8.1-4.8-14.1-8.1-22.1-2.9-8.4-5.1-13.1-13.8-12.3z" fill="#007891"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M253.3 194.552c1.4 8.8 10.2 30.6 13 42.2-7.9.8-17.3 7.3-24.9 9.1-1.6.8-13.8.9-15.9 1.3-4.7 2-5.5 3.1-5.3 9.3-.5 10.4 5.8 16 15.1 18.3 6.8 1.5 13.7-.1 20.6-1.6 3.4-.4 4.3-1.7 5.4-.7 16.3 2.7 9.2 2.4 22.1 9.6 7.9 3 14.4 6.9 17.2 16-7.1-2.4-13.7-4.1-18.9-5.5-8.6 3.5-28 6.9-35.1 8.4-2.9.2-12.1 2.9-18.5 5.1-7.3 5.8-8.1 14.3-3.9 22.5-3 10.1 2.2 14.5 10.4 19.7 10.2 5 21.2 3.9 31.4 9.6 3.7 1.1 13.8 10 18.4 13.3 3.6 2.8 5 3.7 5.7 6.3-.2.3-4-2.9-4.2-2.8.3.5 5 6.2 5.5 6.7 1.1 1.1.6 4.7 2.3 5.1.6.3 1.4 1.1 1.9 2 3.6 7.4 16.5 16.9 22.8 22.1 3.8 2.9 35.9 17.1 40.1 19.9 7.6 5 12.5 17.8 17.8 25.2 1.5 3 2.5 3.1 2.7 5.6 0 1.1.1 1.4.8 1.6 12.8-3.7 19.3-20.4 27.1-29.8 8.3-9.9 14.1-14.7 21.6-23.4 9.5-10.7 15.9-14.5 16.1-25.5-8.8-11-36.5-34.6-40.8-40.6-11.4-10.7-25.6-51.9-30.6-60.7-9.6-14.1-30.8-65.2-51.2-76.6-7.7-2.3-28.5-6-36.4-6.1-9.6-1.3-25.8-4.3-29.2-5.5-1.9-.3-2.4-1.5-3.1-.1z" fill="#D19063"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M171.2.252c-34.9 1.5-67 7.8-101.3 13.8-7.3.8-18 3.7-27.7 4.7-6.2 1.2-26.7 2.4-22.9 8.2-10-5.7-2.7 80.4-4.6 104-.6 37.3-.5 97.5-.7 123.7.4 24-2 20.7 6.1 32.2 6.5 5.3 14.3 9.7 22.6 11.4 3.6 1.4 6.8-1 8.6-2.9.4-2-7.1-2.5-8.4-3.6-15.5-5.7-22.7-12-21.2-31.4.4-59.6.8-149.2.3-215.7.5-15.7-5.9-17.3 9.5-9.2 6 2.4 7.8 6.6 11.8 10.4 3.5 2.3 4.5 3.3 5.3 4.7 4 16.3 3.4 21.9 3.8 43.9 1.7 46.5 2.3 53.4 2.2 134.3.2 19.1.2 38.1 1.3 53.6.4 7.5-1.7 8.8 4.6 9.1 2.6 0 2.6.3 1.8-10.4.1-2.2-1.7-7.4-.5-8.9 2-3.4.8-30.9.8-45.3-.5-15.3.8-95.8-1.7-107-1.4-18.7 2.3-54.5-6-71.4-6.6-4.1-9.1-11-17-14.2-5.3-2.9-9.9-4.9-14.7-7-.1 0 0-.5.1-1.1.2-.8.4-1 1.4-1.2 34.7-5.7 69.2-10.9 105-17.3 9.8-2 30.3-3.1 45.4-4.2 4-.2 7.2-1.1 10.1.9 24.7 10.7 19.9 39.2 21.2 61.3 1.1 1 5.7 1.4 7.4.5.4-2.6.4-18.7-.2-23.3 1.4-26-16.3-45.3-42.4-42.6zm11.6 29.3c-35.5 4.5-81.6 12.1-115.8 15-1.2 2.3 6.2 1.7 9.5 1.7 27.1-1.8 56.5-7.2 83-10.2 9-1.8 24.9-3.2 33.8-4.5 2.6-3-7-2.1-10.5-2zm82.6 8.7c-2.7 3.8-4.8 11.1-7 15.4-2.5 6.5-7.5 15.7-8.9 21.6-.9 4.2-1 5.6 3.2 4.9 1.4-.3 1.5-.4 2.8-3 3.7-7.9 10.3-21.3 13.8-29.2 3.2-7.6 8.5-11.1-3.9-9.7zm-93.1 10.8c-20.2 2.5-50.4 8.8-71.6 13.2-1.9.6-13.8 1.3-15.8 1.5-2.1.4-6.5 3.2-8.5 4-.6 0-.8.2-.9 1-1 5.9-1.4 57.2-2 57 .2 24.1 1.9 70 .3 93.2-.6 10.5-1.6 49.2 4.7 48.1 5.1 5 19.7 4.2 25.3-.2 1.7-4.4-22.8 8.6-24.4-13.2-1.3-19.5 1.9-85.9-1.3-113.7.2-8.1 0-60.9.4-69.4 4.8-6.8 15.7-5.1 24.5-6.2 24.3-4.7 52.1-11 75.6-13.1 6.4 5.9 5.3 12.6 5.9 21.9 0 7.1.3 9.1 6 6.7-.2-18.7 1.5-33.6-18.2-30.8zm124.2 20.9c-9 6-19 19.1-27.5 27.5-6.8 7.2-15.7 15-4.8 12.9 11.3-7.8 27.6-29 37.9-36.6 8.2-5.3-2.2-4.7-5.6-3.8zm37.5 20c-5.5 3.4 8.7 3.8 9.2.8.7-1.7-8.7-1.6-9.2-.8zm-21.1 10.6c-16.2 7.7-33.6 23.5-49.7 33.9-3.5 2.4 2.1 2.6 4 1.7 5.1-1.7 11.6-5.8 29.8-19.1 9.7-7.7 18.4-11.2 26.9-16.2.6-1.8-4.5-2-5.8-2.2-1.2 0-1.9.2-5.2 1.9zm-193.8 188.1c-12.2 2.7-25 6.5-37.6 9.4-6.9 2.6-29.6-1.5-35.4 2.4 9.4 1.2 23.2 2.8 33.8.6 5.2-.9 61-13.5 39.2-12.4zm327.1 94.5c-10 6.4-23.7 28.1-33.9 38.6-7.6 8.6-15.6 19.5-23.5 27.9-8.3 9.2-9.7 13.9-17.3 22.8-3.6 3.2 6.1 5.1 7.5 2.7.9-.5 10.3-15.2 13.3-19 5.4-6.2 15-16.1 19.8-22.3 13.6-14.6 24.7-30.4 37.2-44.9 1.9-2.1 3.4-2.9 4.7-3.8-.9-1.9-6.5-3.4-7.8-2zm14.3 26.2c-5 1.7-7.9 9.8-6 15 2.6 5.1 8.6 6 14.3 5.6 1.7-1.4 4-3.1 6-4.1 14.2-7.6-5.8-19.9-14.3-16.5zm9.3 4.6c6.7 7 5.1 8.9-2.8 13-2.4 2.2-5 .9-5.9-1.8-.5-1.1 1.9-2.4 1.9-3.4.8-4.7 3.6-11.5 6.8-7.8zm11.3 31.7c-4.5 6.6-12.3 17.6-18.3 24.8-5.6 8.8-12.1 16.4-19.2 24.5-5.1 5.3-5.1 7.1.4 2.6 2.1-1.7 4.7-4.2 15.2-14.2 3.6-3.3 11.8-16.6 14.3-18.7 1.1-1 8.4-10.5 10.1-13 .7-.8 3.4-4.5 3.4-4.7-.4-1.3-4.8-2.2-5.9-1.3zm-68.8 13.3c-2.9.6-1 2.3-2.7 4.6-1.3 2.2-1.2 4.8-1.4 7.4 20.3 19.6 43.8-16.4 4.1-12zm10.8 3.5c2.4 1.2 3.4 3.6 2.4 6-1.1 1.6-4.1 6-6.3 5.2-.7-.4-2.6-2.1-3.5-2.9 0-3.4.8-5.9 2.6-9.3 1.7.1 3.4-.1 4.8 1z" fill="currentColor"></path><g fill="#1E1919"><path fill-rule="evenodd" clip-rule="evenodd" d="m312.3 210.753-1.9.7c1.6 10.6 7.8 23.8 10.7 33.6.6 1.3.6 2-.1 1.1-2.2-2-4.6-3.7-7.1-5.2-4.1-4.9-22.3-1.9-23.5-10.4-2.1-5.6-5.4-11.7-5.1-18 0-2-.5-2.2-3.5-1.5-4.6.6-2.1 4-2.3 7.4 2.6 18.6 12.2 15.6-1.8 17-3.3.7-12.1.5-13.1 2.5 0 3.6 19-2.5 10 2.9-3.4 2.4-9 6.5-9.7 9.4 2 2.6 5 .2 8.9-2.9 2-1.6 8.5-6.2 11.4-7.9.4-1.1 4.1-.1 9 1.1-5.2 2-15.2 12.5-16.2 15.3 3.8.5 2.8 0 10.4-6.7 13.5-13.7 15.8-5.5 30.1 3.7 7.7 5.7 5 3.3 15.6 14.1 2.7 2.8 2.9 3 3.9 2.8 1.6-.2 4.5-2.1 4.7-3.2-.8-1.4-9.2-9.9-8.7-10-1.6-4.7-5.6-13-7.5-17.7-.8-1.9-1.6-8.7-2.3-10.2-.1-.7-3.9 0-4.2 0-.3 0-.8-1.6-2.8-10-2.2-8.9-2-8.3-2.5-8.4-.4-.1-1.4.1-2.4.5zm-67 34.7c-8.4 1.8 1.7 3.5.8 10.8-8.1 4.6-11.1 6.9-17.3 4.2-1.1-.6-5.8-4.5-7.1-3.8-2.2.2-2 .9.7 3.5 3.1 2.9 4.3 3.3 10.6 3.3h4.7c2.9-1.5 12.7-6.2 13.4-7.3 1.8-2-.4-8.3-1-9.9-1-1.9-2.4-1.3-4.8-.8zm15.1 24.7c-1 1-4.5 1.1-5.1 2 0 .1-1 .1-2.3 0-3.1-.1-6.2-.7-9 1.9-1.6 1.5-2 2.5-1 2.8 4.5.7 10.7 1.6 14.2 3.2 5.6 1.5 5.9 3.6 9.4 1.5 1-.8 1.6-1 2.3-1 1.2.3 3.4-2.2 4-3.1 1-1.4 5.1.8 8 .5 4.8 0 6.8 1.6 9.9 3.6 6.8 3.9 18.6 11.6 26 12.5 2.4.2 8.5-1.3 3.2-3.1-5.8-2.5-16.6-7.9-22.2-11.1-5.4-2.9-5.2-3.6-12.7-4-4.2-.1-8.4-1.1-11.1-2.8.6-1.7-14-3.4-13.6-2.9zm9.7 29.2c-2.6.9-1.6 1.4-1.8 2.7-3.3-.8-12.9-3.5-15.6-.8 2.7.7 9.6 2.2 12.3 3.5-6.6.4-14.8-.4-18.9 4.1-3.1 4.4-1.9 13.4 2.4 16-3.2.4-25.3-1.3-19.7 3 1.4.4 16.3-.4 16.5.6 2.6.8 5.7 1.3 9.5 1.3 3.5 0 9.9.6 10.9 1 1.5.4-2.5.5-3.9 1.1-12 4-11.1 19.5.2 22.5 1.1.1.8.7 1.2 1.2 4.7 1.4 16.4 1.1 20.6-3.1 5.1-4.2 2.6-15.9-.1-19.4.6.2 2.4.6 5.2 1.3 1.2.3 1.4.4 1.2 1-3.9 12.1.1 24 1.6 35.5 7.4 1.1 6.3-2.2 4.5-9.5-2.3-7.5-3.6-20.4-1.8-25.5.5-.8 5.7-.7 5.1-2.4-2.6-1.4-5.2-.5-3.7-4.4.3-1.4 3.4-1.5 4-2.8.2-4.2 4.7-17 4.4-20.5-.5-.4-4.6 0-5 .5-2.8 5.7-5.5 14.2-6.4 20.5 0 .9-.9 3.7-1.4 4.2-1.2.6-11.1-3.4-14.1-2.8 4.9-3 5.2-12.1 2.3-16.4 0-.5-6-6.7-6-7.4.9-1.5.7-4.1-.4-5.3 0-.7-.8-.6-3.1.3zm46-.5c-1.3 24.5 8.8 53.5 23.3 73.5 10.5 12.9 28.9 25.2 39.6 32.7 2 2.8 7.2 0 8.8-1.2 1.6-2.3-6-5.2-7.3-6.2-36.7-20.7-49.6-43.3-59-84-.7-3.9-1.7-11.7-1.8-13.3.2-.8-3.8-2.4-3.6-1.5zm-51.9 8.7 4.6.4c5.8 4.6 8.5 15.2 2 19.4-.4.2-2.2.2-5.6-.1-3.6-.3-4.6-.5-5.8-.5-2.4-.8-10.6-6.2-9.8-11.2.2-9.4 4.1-8.7 14.6-8zm6.5 23c0 .2-.3.3-.7.3-1.5.2 1-1.1.7-.3zm-2.7 2.8c7.6.7-.3 12.9.8 18.8-5.1-.2-9.8-5.9-10.6-10.4.4-4 4.3-11.1 9.8-8.4zm10.4 3.5c2.7 4.3 3.5 15.2-2.7 16.2-1.6 0-2.2-.5-1-1 1.4.5.6-7.7 1.2-8.4.8-.7-.5-12.5 2.5-6.8zm58.5 37.7c-4.3.9-3 2.4-5 5.7-3.8 8.5-6.6 15-4.9 24.4.7 1.5 3.1 16.8 7.2 13.1 1.4-3.4-2.9-16.6-1.5-21.1 0-4.6 4.2-14.7 7.3-20 2.1-3.3-.3-2.8-3.1-2.1z"></path><path d="M230.4 217.853c9.5-1.9 11.5-7.1 11.9 2.6-7.6 3.3-43.2 11.9-53.4 13.8-8.8 2-24.9 7.3-35.3 8.3-6.9 1.2-16.3 2.9-25.4 4.2-1.8.2-3.2-4.4-.7-4.7 11.4-3.7 24.8-5.2 36.2-7.2 22.7-5.3 43.6-10 66.7-17z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M168.3 118.253c-11.8 1-32 9.6-39.2 22.3-12 24-8.1 48.6 15.9 62.7 7.8 4.1 18 5 27 3.2 22.5-1.2 39.8-17.7 40.5-39.9 2.3-13.2-4.7-30-12.3-39.9-7.9-8.7-20-9.5-31.9-8.4zm25.4 65.7c-2-17.6-13.5-20.5-26.7-16-10.6 5.6-14 21.7-15.4 32 5.9 3.7 14 4.9 20.6 3.7 2.1-.4 11.1-1.3 12.1-2.4 3.1-1.6 11.6-8.8 11.1-9.5-.4-.4-1-2.8-1.7-7.8zm-13.5-62.4c13.7 2.7 20.6 19.7 24.1 31.1 2.6 10.1.8 20-1.4 29.6-2.4-20-17.8-21.2-34.4-17.8-15.5 3.5-20.8 15.2-23.6 30.8-16.9-12.7-16.2-37.3-7.3-54.6 8.5-12.2 25.8-22.1 42.6-19.1zm-27.1 14.2c10-5.1 30.4-1.2 25.4 13-3.9 11-33.7 9.7-28.3-4.9 1-3.2-4.6-3 2.9-8.1zm15.6 4.6c-2.7-2.2-6.8-5.6-9.6-1.8-2.5 2.4-3.4 8.1-2 10.8 1.7 2.3 9.7 4.7 10.6 3.3 4.3-2.5 5.4-8.9 1-12.3z"></path></g></svg>
       </div>
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="用户名"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-        />
-      </el-form-item>
+        <el-form-item prop="username">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            ref="username"
+            v-model="loginForm.username"
+            placeholder="用户名"
+            name="username"
+            type="text"
+            tabindex="1"
+            auto-complete="on"
+          />
+        </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
-          :type="passwordType"
-          placeholder="密码"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            :key="passwordType"
+            ref="password"
+            v-model="loginForm.password"
+            :type="passwordType"
+            placeholder="密码"
+            name="password"
+            tabindex="2"
+            auto-complete="on"
+            @keyup.enter.native="handleLogin"
+          />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          </span>
+        </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登  录</el-button>
+        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登  录</el-button>
 
-      <el-divider content-position="center">其他方式</el-divider>
-      <router-link style="display: block;color: white; text-align: center;" to="/wxlogin"><svg-icon icon-class="wx" style="width: 2em; height: 2em; color: white; margin-bottom: 5px;" /><br /><span style="font-size: 12px;">微信登录</span></router-link>
+        <!--<el-divider content-position="center">其他方式</el-divider>
+        <router-link style="display: block;color: white; text-align: center;" to="/wxlogin"><svg-icon icon-class="wx" style="width: 2em; height: 2em; color: white; margin-bottom: 5px;" /><br /><span style="font-size: 12px;">微信登录</span></router-link>-->
 
-    </el-form>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -73,7 +77,7 @@ export default {
     return {
       loginForm: {
         username: '',
-        password: ''
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -127,9 +131,53 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#fff;
-$cursor: #fff;
+$bg:#fff;
+$light_gray:#737373;
+$cursor: #1e1919;
+
+.header.fixed {
+    top: 0;
+    right: 0;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    height: 76px;
+    z-index: 99;
+    font-size: 0;
+    background-color: #fff;
+    border-bottom: 1px solid #d0d4d9;
+    box-shadow: 0px 1px 1px #d0d4d9;
+    h2 {
+      font-size: 20px;
+      text-align: center;
+      line-height: 50px;
+      margin-left:-100px;
+      span {
+        color: #409EFF;
+      }
+    }
+}
+
+.inner-wrapper {
+    display: inline-block;
+    padding-top: 66px;
+}
+
+.login-or-register-img {
+  padding: 100px 0 0;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 90px;
+  margin-bottom: 31px;
+  margin-top: 35px;
+  width: 300px;
+}
+
+.dig-Illustration {
+    color: #1e1919;
+    height: 100%;
+    width: 100%;
+}
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -139,9 +187,10 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+  text-align: center;
   .el-input {
     display: inline-block;
-    height: 47px;
+    height: 42px;
     width: 85%;
 
     input {
@@ -149,9 +198,9 @@ $cursor: #fff;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
-      padding: 12px 5px 12px 15px;
+      padding: 2px 5px 2px 15px;
       color: $light_gray;
-      height: 47px;
+      height: 38px;
       caret-color: $cursor;
 
       &:-webkit-autofill {
@@ -162,18 +211,19 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
+    border: 1px solid rgba(0, 0, 0, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0px;
+    color: #1e1919;
+    margin-bottom: 32px;
   }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+$bg:#fff;
+$dark_gray:#1e1919;
+$light_gray:#737373;
 
 .login-container {
   min-height: 100%;
@@ -182,12 +232,15 @@ $light_gray:#eee;
   overflow: hidden;
 
   .login-form {
+    display: inline-block;
     position: relative;
-    width: 520px;
+    width: 420px;
     max-width: 100%;
-    padding: 100px 35px 0;
+    padding: 40px 35px 0;
     margin: 0 auto;
     overflow: hidden;
+    text-align: left;
+    vertical-align: middle;
   }
 
   .tips {
@@ -203,29 +256,17 @@ $light_gray:#eee;
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
+    padding: 0px 5px 0px 15px;
     color: $dark_gray;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
   }
 
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-
   .show-pwd {
     position: absolute;
     right: 10px;
-    top: 7px;
+    top: 2px;
     font-size: 16px;
     color: $dark_gray;
     cursor: pointer;

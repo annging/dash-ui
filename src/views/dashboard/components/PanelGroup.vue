@@ -117,7 +117,7 @@ export default {
   }
 
   .card-panel {
-    height: 108px;
+    height: 88px;
     cursor: pointer;
     font-size: 12px;
     position: relative;
@@ -158,14 +158,13 @@ export default {
 
     .card-panel-icon {
       float: left;
-      font-size: 42px;
+      font-size: 32px;
     }
 
     .card-panel-description {
-      float: right;
+      float: left;
       font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
+      margin: 20px 0 0 10px;
 
       .card-panel-text {
         line-height: 18px;

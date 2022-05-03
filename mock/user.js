@@ -12,13 +12,13 @@ const users = {
   'admin-token': {
     roles: ['admin'],
     introduction: 'I am a super administrator',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    avatar: 'https://notion-avatar.vercel.app/api/img/eyJmYWNlIjozLCJub3NlIjo4LCJtb3V0aCI6MTUsImV5ZXMiOjgsImV5ZWJyb3dzIjoxMywiZ2xhc3NlcyI6NCwiaGFpciI6MjUsImFjY2Vzc29yaWVzIjowLCJkZXRhaWxzIjowLCJiZWFyZCI6MCwiZmxpcCI6MCwiY29sb3IiOiJyZ2JhKDI1NSwgMCwgMCwgMCkiLCJzaGFwZSI6Im5vbmUifQ==',
     name: 'Super Admin'
   },
   'editor-token': {
     roles: ['editor'],
     introduction: 'I am an editor',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+    avatar: 'https://notion-avatar.vercel.app/api/img/eyJmYWNlIjozLCJub3NlIjo4LCJtb3V0aCI6MTUsImV5ZXMiOjgsImV5ZWJyb3dzIjoxMywiZ2xhc3NlcyI6NCwiaGFpciI6MjUsImFjY2Vzc29yaWVzIjowLCJkZXRhaWxzIjowLCJiZWFyZCI6MCwiZmxpcCI6MCwiY29sb3IiOiJyZ2JhKDI1NSwgMCwgMCwgMCkiLCJzaGFwZSI6Im5vbmUifQ==s',
     name: 'Normal Editor'
   }
 }
